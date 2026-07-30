@@ -32,15 +32,34 @@
   <div class="c-ring" id="cRing"></div>
 
   <!-- Loading Screen -->
+  <!-- Loading Screen — Radiance Preloader -->
   <div class="loading-screen" id="loadingScreen">
-    <div class="loading-split top"></div>
-    <div class="loading-split bottom"></div>
+    <!-- Ambient radial glow -->
+    <div class="loader-glow-field"></div>
+
+    <!-- Floating ambient particles (pure CSS) -->
+    <div class="loader-particles">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Central content -->
     <div class="loading-content">
+      <!-- Logo + SVG circular progress ring -->
       <div class="loading-logo-wrap">
-        <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png" alt="MSC Logo" class="loading-logo-img" />
+        <div class="loader-ring-wrap">
+          <svg class="loader-ring-svg" viewBox="0 0 200 200">
+            <circle class="loader-ring-track" cx="100" cy="100" r="88" />
+            <circle class="loader-ring-fill" cx="100" cy="100" r="88" id="loaderRingFill" />
+          </svg>
+        </div>
+        <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
+          alt="MSC Logo" class="loading-logo-img" />
       </div>
-      <div class="loading-bar-wrap">
-        <div class="loading-bar-line"></div>
+
+      <!-- Brand text -->
+      <div class="loader-text-group">
+        <span class="loader-brand-line">MICROSOFT STUDENT COMMUNITY</span>
+        <span class="loader-chapter-line">SRM UNIVERSITY AP</span>
       </div>
     </div>
   </div>

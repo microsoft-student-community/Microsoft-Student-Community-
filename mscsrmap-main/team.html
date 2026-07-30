@@ -49,16 +49,14 @@
 
     <!-- Central content -->
     <div class="loading-content">
-      <!-- SVG circular progress ring -->
-      <div class="loader-ring-wrap">
-        <svg class="loader-ring-svg" viewBox="0 0 200 200">
-          <circle class="loader-ring-track" cx="100" cy="100" r="88" />
-          <circle class="loader-ring-fill" cx="100" cy="100" r="88" id="loaderRingFill" />
-        </svg>
-      </div>
-
-      <!-- Logo (centered inside ring) -->
+      <!-- Logo + SVG circular progress ring -->
       <div class="loading-logo-wrap">
+        <div class="loader-ring-wrap">
+          <svg class="loader-ring-svg" viewBox="0 0 200 200">
+            <circle class="loader-ring-track" cx="100" cy="100" r="88" />
+            <circle class="loader-ring-fill" cx="100" cy="100" r="88" id="loaderRingFill" />
+          </svg>
+        </div>
         <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
           alt="MSC Logo" class="loading-logo-img" />
       </div>
