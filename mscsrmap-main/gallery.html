@@ -105,17 +105,12 @@
           <button class="filter-pill" data-filter="community">Community</button>
         </div>
 
-        <!-- Search Bar & Upload Button -->
+        <!-- Search Bar -->
         <div class="gallery-actions">
           <div class="gallery-search-box">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" id="gallerySearch" placeholder="Search frames, tags..." aria-label="Search gallery" />
           </div>
-
-          <button class="msc-upload-trigger" id="openUploadBtn">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <span>Upload Photo</span>
-          </button>
         </div>
 
       </div>
@@ -190,74 +185,6 @@
     </div>
   </div>
 
-  <!-- Interactive Client-Side Photo Upload Modal -->
-  <div class="upload-modal" id="uploadModal" aria-hidden="true" role="dialog">
-    <div class="upload-modal-backdrop" id="uploadBackdrop"></div>
-    <div class="upload-modal-card">
-      <div class="upload-modal-header">
-        <div>
-          <h3 class="upload-modal-title">Upload New Photo</h3>
-          <p class="upload-modal-subtitle">Add a photo to the community visual archive</p>
-        </div>
-        <button class="upload-modal-close" id="closeUploadBtn"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-
-      <form id="uploadForm" class="upload-form">
-        <!-- Drag & Drop Container -->
-        <div class="drop-zone" id="dropZone">
-          <input type="file" id="fileInput" accept="image/*" class="drop-zone-input" />
-          <div class="drop-zone-content" id="dropZoneContent">
-            <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-            <p class="drop-title">Drag & drop your photo here</p>
-            <p class="drop-hint">or click to browse files (PNG, JPG, WEBP)</p>
-          </div>
-          <div class="drop-zone-preview" id="dropZonePreview" style="display:none;">
-            <img src="" id="uploadPreviewImg" alt="Upload Preview" />
-            <button type="button" class="preview-remove-btn" id="removePreviewBtn"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="photoTitle">Event / Photo Title</label>
-            <input type="text" id="photoTitle" placeholder="e.g. Solution Day Hackathon" required />
-          </div>
-          <div class="form-group">
-            <label for="photoCategory">Category</label>
-            <select id="photoCategory" required>
-              <option value="hackathon">Hackathon</option>
-              <option value="workshop">Workshop</option>
-              <option value="festival">Festival</option>
-              <option value="community">Community</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="photoDate">Event Date</label>
-            <input type="text" id="photoDate" placeholder="e.g. FEB 20, 2025" required />
-          </div>
-          <div class="form-group">
-            <label for="photoStats">Key Highlights (separated by semicolons)</label>
-            <input type="text" id="photoStats" placeholder="e.g. Attendees: 150+; Duration: 24h" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="photoDesc">Description</label>
-          <textarea id="photoDesc" rows="3" placeholder="Brief caption describing this frame..." required></textarea>
-        </div>
-
-        <div class="upload-form-actions">
-          <button type="button" class="form-btn cancel" id="cancelUploadBtn">Cancel</button>
-          <button type="submit" class="form-btn submit">
-            <i class="fa-solid fa-plus"></i> <span>Add to Gallery</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -276,6 +203,9 @@
               <a href="https://discord.com/invite/wZ55nBhWtJ/" target="_blank"><i class="fab fa-discord"></i></a>
             </div>
           </div>
+        </div>
+        <div class="footer-right">
+          <p>© 2026 Microsoft Student Community — SRM University AP. All rights reserved.</p>
         </div>
       </div>
     </div>
