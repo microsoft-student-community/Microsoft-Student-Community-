@@ -1,0 +1,16 @@
+# Microsoft Student Community (MSC) - SRM University AP
+
+The Microsoft Student Community (MSC) at SRM University AP is a vibrant, student-led engineering collective. Our mission is to bridge the gap between classroom theory and production-grade code. We focus on modern tech ecosystems, specifically Azure Cloud, AI Integration, Web Development, and Systems Design.
+
+## Core Sections
+- Home (/): Overview of the community, our mission, and upcoming hackathons.
+- About (/about): Detailed history, core pillars (Impact, Innovation, Scale), and our trajectory.
+- Events (/events): A comprehensive list of upcoming and past tech events, bootcamps, and hackathons.
+- Gallery (/gallery): A visual chronicle of our community moments, hardware exhibitions, and tech meetups.
+- Team (/team): The faces behind MSC. Profiles of our Chief Board, Core Board, and Technical Members.
+- Event Portal (/event-portal): A dedicated dashboard for active event participants to manage their teams and view updates.
+
+## Technical Focus
+Our members build with Microsoft technologies and industry-standard tools to ship real products before they graduate. We prioritize peer mentorship, large-scale campus hackathons, and open-source contributions.
+
+For more information, visit https://mscsrmap.edu.in

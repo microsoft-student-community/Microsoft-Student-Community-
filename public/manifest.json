@@ -1,0 +1,16 @@
+{
+  "name": "Microsoft Student Community - SRM University AP",
+  "short_name": "MSC SRMAP",
+  "description": "A vibrant student-led tech community focused on Azure, AI, and cloud computing.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f14",
+  "theme_color": "#0078d4",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
