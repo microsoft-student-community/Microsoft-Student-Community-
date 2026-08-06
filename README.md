@@ -2,52 +2,39 @@
 
 [![CI Pipeline](https://github.com/YUVRAJ-SINGH-3178/Microsoft-Student-Community-/actions/workflows/ci.yml/badge.svg)](https://github.com/YUVRAJ-SINGH-3178/Microsoft-Student-Community-/actions/workflows/ci.yml)
 
-The official Next.js App Router application for the Microsoft Student Community at SRM University AP. This platform powers the main website, event registrations, gallery, team management, and the internal Admin dashboard.
+The official web platform for the Microsoft Student Community at SRM University AP. Built to manage event registrations, payment processing, team matchmaking, and the internal admin dashboard.
 
 ## Tech Stack
-- **Framework:** Next.js 14+ (App Router, Server Components)
-- **Database/Auth:** Supabase (PostgreSQL, Row Level Security)
-- **Styling:** CSS Modules / Vanilla CSS (Dark mode, glassmorphism design system)
+- **Framework:** Next.js (App Router, TypeScript)
+- **Database & Auth:** Supabase (PostgreSQL, Row Level Security)
+- **Payments:** Razorpay
+- **Emails:** Resend
 - **Rate Limiting:** Upstash Redis
-- **Deploy:** Vercel (Recommended)
+- **Deploy & Cron:** Vercel
 
-## Setup Instructions
+## Setup
 
-### 1. Clone the repository
-\`\`\`bash
-git clone <your-repo-url>
-cd msc-srmap
-\`\`\`
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-### 2. Install Dependencies
-\`\`\`bash
-npm install
-\`\`\`
+2. **Environment Configuration**
+   Copy `.env.example` to `.env.local` and populate the required keys for Supabase, Razorpay, Upstash, and Resend.
 
-### 3. Environment Configuration
-Copy the `.env.example` file to `.env.local`:
-\`\`\`bash
-cp .env.example .env.local
-\`\`\`
-Fill in the Supabase URL, Anon Key, and Service Role Key from your Supabase dashboard.
+3. **Database Configuration**
+   Apply the SQL migrations from `supabase/migrations/` via the Supabase SQL Editor to initialize tables, functions (RPCs), and RLS policies.
 
-### 4. Run Development Server
-\`\`\`bash
-npm run dev
-\`\`\`
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. **Run Locally**
+   ```bash
+   npm run dev
+   ```
 
-### 5. Build for Production
-\`\`\`bash
-npm run build
-npm start
-\`\`\`
-
-## Key Features
-- **Role-Based Access Control:** Protects `/admin` and `/dashboard` using Supabase Auth and `member_profiles.role`.
-- **Event Portal:** Dedicated dashboard for students participating in ongoing hackathons.
-- **Dynamic Telemetry:** Real-time stats powered by Supabase aggregation.
-- **Global Error Handling:** Custom `error.tsx` and `not-found.tsx` to prevent hard crashes.
+## Core Features
+- **Event Registrations:** Database-level row locking and capacity checks to prevent overselling.
+- **Payments:** Secure Razorpay integration for paid events with webhook-driven state confirmation.
+- **Automated Workflows:** Vercel Cron jobs for expiring abandoned payment reservations and database keepalives.
+- **Admin Dashboard:** Role-based access control (RBAC) protecting internal community management tools.
 
 ## License
 Proprietary - Microsoft Student Community — SRM University AP.
