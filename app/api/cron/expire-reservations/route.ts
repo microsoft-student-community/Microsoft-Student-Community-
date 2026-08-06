@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAdminSupabaseClient } from "@/utils/supabase/admin";
+import { createAdminClient } from "@/utils/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supabase = getAdminSupabaseClient();
+    const supabase = createAdminClient();
 
     // Call the database function to expire payment reservations
     const { data, error } = await supabase.rpc("expire_payment_reservations");
