@@ -1,5 +1,7 @@
 # Microsoft Student Community (MSC) - SRM University AP
 
+[![CI Pipeline](https://github.com/YUVRAJ-SINGH-3178/Microsoft-Student-Community-/actions/workflows/ci.yml/badge.svg)](https://github.com/YUVRAJ-SINGH-3178/Microsoft-Student-Community-/actions/workflows/ci.yml)
+
 The official Next.js App Router application for the Microsoft Student Community at SRM University AP. This platform powers the main website, event registrations, gallery, team management, and the internal Admin dashboard.
 
 ## Tech Stack
