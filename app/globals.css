@@ -3055,10 +3055,6 @@ section {
   transform: translateX(120%);
 }
 
-.board-card:last-child {
-  /* removed border-right */
-}
-
 .board-image {
   margin-bottom: 1.25rem;
 }
@@ -3182,10 +3178,6 @@ section {
 
 .team-card:hover::after {
   transform: translateX(120%);
-}
-
-.team-card:last-child {
-  /* removed */
 }
 
 .team-image {
