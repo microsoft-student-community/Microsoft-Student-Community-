@@ -8,6 +8,19 @@ alter table public.registrations add column if not exists status text not null d
 alter table public.registrations add column if not exists idempotency_key uuid;
 alter table public.registrations add column if not exists reservation_expires_at timestamptz;
 
+create table if not exists public.payments (
+  id uuid primary key default gen_random_uuid(),
+  event_id uuid references public.events(id) on delete set null,
+  razorpay_order_id text,
+  razorpay_payment_id text unique,
+  amount integer not null,
+  charge_type text,
+  payer_email text,
+  status text not null default 'pending',
+  verified_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
 alter table public.payments add column if not exists registration_id uuid references public.registrations(id) on delete set null;
 alter table public.payments add column if not exists user_id uuid references auth.users(id) on delete set null;
 alter table public.payments add column if not exists gateway_payload jsonb;
