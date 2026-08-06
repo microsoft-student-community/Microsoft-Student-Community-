@@ -7,6 +7,7 @@ import {
   readJsonObject,
   requireUser,
 } from "@/utils/apiSecurity";
+import { sendRegistrationEmail } from "@/utils/resend";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -57,12 +58,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const hashPayload = crypto.randomUUID();
     const { data, error } = await auth.supabase.rpc("register_for_event", {
       p_event_id: eventId,
       p_idempotency_key: idempotencyKey,
       p_form_data: formData,
       p_team_data: teamData,
-      p_hash_payload: crypto.randomUUID(),
+      p_hash_payload: hashPayload,
     });
     if (error) {
       // The function deliberately exposes stable business errors only.
@@ -76,6 +78,30 @@ export async function POST(request: NextRequest) {
     }
 
     const registration = Array.isArray(data) ? data[0] : data;
+
+    if (registration.registration_status === 'confirmed' || registration.registration_status === 'waitlisted') {
+      auth.supabase
+        .from('events')
+        .select('title, start_date, location')
+        .eq('id', eventId)
+        .single()
+        .then(({ data: ev }: { data: any }) => {
+          if (ev) {
+            sendRegistrationEmail({
+              to: auth.user.email || '',
+              name: (formData as any)?.fullName || auth.user.user_metadata?.full_name || 'Participant',
+              eventTitle: ev.title,
+              eventDate: new Date(ev.start_date).toLocaleString(),
+              eventLocation: ev.location || 'TBA',
+              status: registration.registration_status as 'confirmed' | 'waitlisted',
+              hashPayload: hashPayload,
+              isTeam: !!teamData,
+              teamName: (teamData as any)?.team_name || undefined,
+            }).then(() => {}, (e: any) => console.error("Fire-and-forget email error:", e));
+          }
+        }, (e: any) => console.error("Event lookup for email failed:", e));
+    }
+
     return noStoreJson({ registration }, 201, limit.headers);
   } catch (error) {
     console.error("Event registration failed:", error);

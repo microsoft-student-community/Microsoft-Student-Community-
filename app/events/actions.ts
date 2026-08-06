@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/utils/supabase/admin";
+import { sendTeamJoinNotificationEmail } from "@/utils/resend";
 
 /**
  * Submit a public (unauthenticated) registration for an event.
@@ -191,6 +192,20 @@ export async function joinMatchmakingTeam(teamId: string, memberData: any) {
     console.error("Failed to join team:", updateError);
     return { error: "Failed to join team. Please try again." };
   }
+
+  // Fire-and-forget notification email to team leader
+  supabase.from("events").select("title").eq("id", team.event_id).single().then(({ data: ev }: { data: any }) => {
+    if (ev) {
+      sendTeamJoinNotificationEmail({
+        to: team.leader_email,
+        leaderName: team.leader_name || 'Team Leader',
+        teamName: team.team_name,
+        eventTitle: ev.title,
+        newMemberName: memberData.fullName || 'Participant',
+        newMemberEmail: memberData.email || '',
+      }).then(() => {}, (e: any) => console.error("Team join email error:", e));
+    }
+  }, (e: any) => console.error("Team join event lookup error:", e));
 
   return {
     success: true,

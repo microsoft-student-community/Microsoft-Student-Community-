@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { NextRequest } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { noStoreJson } from "@/utils/apiSecurity";
+import { sendRegistrationEmail } from "@/utils/resend";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -66,6 +67,16 @@ export async function POST(request: NextRequest) {
 
   try {
     const admin = createAdminClient();
+
+    // Check status before confirming to prevent duplicate emails on retries
+    const { data: order } = await admin
+      .from("payment_orders")
+      .select("status, event_id, registration_id, user_id")
+      .eq("razorpay_order_id", payment.order_id)
+      .maybeSingle();
+      
+    const wasAlreadyPaid = order?.status === 'paid';
+
     const { error } = await admin.rpc("confirm_captured_payment", {
       p_razorpay_order_id: payment.order_id,
       p_razorpay_payment_id: payment.id,
@@ -75,6 +86,29 @@ export async function POST(request: NextRequest) {
       console.error("Webhook payment confirmation transaction failed:", error);
       return noStoreJson({ error: "Payment confirmation pending" }, 500);
     }
+
+    if (order && !wasAlreadyPaid) {
+      Promise.all([
+        admin.from('events').select('title, start_date, location').eq('id', order.event_id).single(),
+        admin.from('registrations').select('hash_payload, team_data').eq('id', order.registration_id).single(),
+        admin.auth.admin.getUserById(order.user_id)
+      ]).then(([{ data: ev }, { data: reg }, { data: userData }]) => {
+        if (ev && reg && userData?.user) {
+          sendRegistrationEmail({
+            to: userData.user.email || '',
+            name: userData.user.user_metadata?.full_name || 'Participant',
+            eventTitle: ev.title,
+            eventDate: new Date(ev.start_date).toLocaleString(),
+            eventLocation: ev.location || 'TBA',
+            status: 'confirmed',
+            hashPayload: reg.hash_payload,
+            isTeam: !!reg.team_data,
+            teamName: (reg.team_data as any)?.team_name || undefined,
+          }).catch(e => console.error("Webhook email error:", e));
+        }
+      }).catch(e => console.error("Webhook data fetch error:", e));
+    }
+
   } catch (error) {
     console.error("Razorpay webhook failure:", error);
     return noStoreJson({ error: "Payment confirmation pending" }, 500);
