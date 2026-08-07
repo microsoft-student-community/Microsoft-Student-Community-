@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Events — Microsoft Student Community · SRM University AP",
-  description:
-    "Browse past and upcoming events from MSC SRMAP — hackathons, workshops, bootcamps, and tech festivals.",
+ title: "Events — Microsoft Student Community · SRM University AP",
+ description:
+ "Browse past and upcoming events from MSC SRMAP — hackathons, workshops, bootcamps, and tech festivals.",
 };
 
 export default function EventsLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }) {
-  return <>{children}</>;
+ return <>{children}</>;
 }

@@ -12,7 +12,7 @@ import {
   type SetStateAction,
 } from "react";
 import { cn } from "@/lib/utils";
-import { login, requestPasswordReset } from "./actions";
+import { createClient } from "@/utils/supabase/client";
 
 type BlobData = {
   size: number;
@@ -29,14 +29,18 @@ export default function LoginPage() {
   const [showResetForm, setShowResetForm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const blobsData = useMemo<BlobData[]>(() => {
-    return Array.from({ length: 6 }).map(() => ({
+  const supabase = createClient();
+
+  const [blobsData, setBlobsData] = useState<BlobData[]>([]);
+
+  useEffect(() => {
+    setBlobsData(Array.from({ length: 6 }).map(() => ({
       size: Math.random() * 200 + 150,
       left: Math.random() * 80 + 10,
       top: Math.random() * 80 + 10,
       animationDelay: Math.random() * -20,
       animationDuration: Math.random() * 15 + 15,
-    }));
+    })));
   }, []);
 
   const blobRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -67,10 +71,28 @@ export default function LoginPage() {
     setError(null);
     setSuccess(null);
 
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
     try {
-      const result = await login(new FormData(event.currentTarget));
-      if (result?.error) {
-        setError(result.error);
+      const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+        setError(error.message);
+      } else if (authData.user) {
+        // Fetch role to determine redirect
+        const { data: profile } = await supabase
+          .from('member_profiles')
+          .select('role')
+          .eq('id', authData.user.id)
+          .single();
+          
+        if (profile?.role === 'admin' || profile?.role === 'core_member' || profile?.role === 'coremember') {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/event-portal";
+        }
       }
     } finally {
       setLoading(false);
@@ -83,16 +105,24 @@ export default function LoginPage() {
     setError(null);
     setSuccess(null);
 
-    try {
-      const formData = new FormData(event.currentTarget);
-      if (formData.get("new_password") !== formData.get("confirm_password")) {
-        setError("Passwords do not match.");
-        return;
-      }
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const new_password = formData.get("new_password") as string;
+    const confirm_password = formData.get("confirm_password") as string;
 
-      const result = await requestPasswordReset(formData);
-      if (result?.error) {
-        setError(result.error);
+    if (new_password !== confirm_password) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from("password_reset_requests")
+        .insert([{ email, new_password, status: "pending" }]);
+        
+      if (error) {
+        setError(error.message);
         return;
       }
 

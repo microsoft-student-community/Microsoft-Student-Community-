@@ -141,6 +141,8 @@ export async function middleware(request: NextRequest) {
                             currentPath.startsWith('/api/');
 
       if (isProtected) {
+
+        
         if (!session) {
           if (isApiOrAction) {
             return new NextResponse(JSON.stringify({ error: 'Unauthorized: Missing session' }), {

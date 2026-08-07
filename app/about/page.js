@@ -219,7 +219,7 @@ export default function About() {
           type="video/mp4"
         />
       </video>
-      <div className="background-overlay"></div>
+      <div className="background-overlay" suppressHydrationWarning></div>
       <ParticleBackground particleColor="rgba(0, 120, 212, alpha)" />
 
       {/* Cinematic Hero */}

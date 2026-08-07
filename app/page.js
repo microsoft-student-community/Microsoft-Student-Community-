@@ -146,7 +146,7 @@ export default function Home() {
           type="video/mp4"
         />
       </video>
-      <div className="background-overlay"></div>
+      <div className="background-overlay" suppressHydrationWarning></div>
       <ParticleBackground particleColor="rgba(0, 120, 212, alpha)" />
 
       {/* Checkpoint Navigation Dots */}
