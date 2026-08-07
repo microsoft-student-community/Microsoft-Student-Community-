@@ -33,7 +33,7 @@ const AnalyticsDashboard = dynamic(() => import('./AnalyticsDashboard'), {
 import SettingsTab from './SettingsTab'
 import PasswordRequestsTab from './PasswordRequestsTab'
 
-export const triggerHaptic = (type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') => {
+const triggerHaptic = (type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') => {
   if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
     try {
       switch (type) {
