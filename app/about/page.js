@@ -367,10 +367,16 @@ export default function About() {
               </p>
               <div className="blueprint-credits-table">
                 <div className="credit-row">
-                  <span className="credit-row-label">Built by</span>
-                  <span className="credit-row-value">
-                    Microsoft Student Community — SRM University AP
-                  </span>
+                  <span className="credit-row-label">Founded by</span>
+                  <span className="credit-row-value">Jayanth Ramakrishnan</span>
+                </div>
+                <div className="credit-row">
+                  <span className="credit-row-label">Guided by</span>
+                  <span className="credit-row-value">Murali & Tomy Sir</span>
+                </div>
+                <div className="credit-row">
+                  <span className="credit-row-label">Established</span>
+                  <span className="credit-row-value">SRM University AP</span>
                 </div>
               </div>
             </div>
@@ -413,8 +419,7 @@ export default function About() {
                   <div>
                     <h3 className="bento-card-title">The Vision</h3>
                     <p className="bento-card-desc">
-                      To position ourselves as a student focused community and
-                      create visionaries of tomorrow
+                      To become the definitive student engineering collective — where curiosity meets deployment, and every single member ships something meaningful before they graduate. We build for the web, the cloud, and the future.
                     </p>
                   </div>
                 </div>
@@ -433,9 +438,7 @@ export default function About() {
                   <div>
                     <h3 className="bento-card-title">The Mission</h3>
                     <p className="bento-card-desc">
-                      To provide a student led and student focused platform for
-                      interaction and ideas. Committed towards bringing
-                      diversity in people and domains.
+                      Bridge the gap between classroom theory and production-grade code. Through interactive bootcamps, hackathons, and structured peer mentorship, we give students the real-world reps they need to build confidently.
                     </p>
                   </div>
                 </div>
@@ -503,11 +506,7 @@ export default function About() {
                 </div>
                 <h4>Foundations</h4>
                 <p>
-                  The community has successfully led major events providing
-                  student focused opportunities with events like HackMSC and
-                  Zero Jam which have formed a major part of the
-                  community&apos;s legacy and strengthen our vision for
-                  tomorrow.
+                  A handful of curious students, weekend meetups, and a shared Google Drive. The community was raw, but the ambition to learn cloud architecture and modern systems design was undeniable.
                 </p>
               </article>
             </div>
@@ -523,10 +522,7 @@ export default function About() {
                 </div>
                 <h4>Execution</h4>
                 <p>
-                  The community continues in the tradition of the star events
-                  while bringing new ideas to diversify student outreach to
-                  different courses and specializations. Thus fulfilling the
-                  student first commitment.
+                  Large-scale campus hackathons, Azure bootcamps, and an expanding alumni network. MSC is now a recognized engineering force, shipping tools and hosting training sessions for hundreds of developers.
                 </p>
               </article>
             </div>
@@ -542,10 +538,7 @@ export default function About() {
                 </div>
                 <h4>Evolution</h4>
                 <p>
-                  The community aims to be the forerunner in student led
-                  communities in providing students with opportunities while
-                  being transparent in its objective of working for all students
-                  and providing support.
+                  Global student collaborations, contributing to open-source at scale, and incubating student-led startups that solve practical challenges. We are scaling our impact beyond the campus borders.
                 </p>
               </article>
             </div>
