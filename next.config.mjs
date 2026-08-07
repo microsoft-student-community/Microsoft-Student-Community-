@@ -2,6 +2,7 @@
 import { fileURLToPath } from 'node:url';
 
 const nextConfig = {
+  cleanDistDir: true,
   poweredByHeader: false,
   compress: true,
   // Prevent server-side bundling of browser-only / edge-incompatible packages

@@ -10,6 +10,7 @@ import {
   joinMatchmakingTeam,
 } from "../events/actions";
 import { createClient } from "@/utils/supabase/client";
+import { X, Download } from "lucide-react";
 
 function openRazorpayCheckout(options: any): Promise<any> {
   return new Promise((resolve) => {
@@ -546,7 +547,7 @@ export default function EventPortalTabs({
           {event.status !== "completed" && (
             <button
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-white/40 hover:text-white hover:bg-white/5"}`}
+              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-[#0078d4]/10 text-[#0078d4] border border-[#0078d4]/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-slate-500 hover:text-white hover:bg-white/5"}`}
             >
               <i
                 className={`fas ${isWaitlistMode ? "fa-clock" : "fa-user-plus"}`}
@@ -555,22 +556,14 @@ export default function EventPortalTabs({
             </button>
           )}
 
-          {event.status !== "completed" && reqs.allow_teams && (
-            <button
-              onClick={() => setActiveTab("matchmaking")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "matchmaking" ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.1)]" : "text-white/40 hover:text-white hover:bg-white/5"}`}
-            >
-              <i className="fas fa-users-viewfinder"></i>
-              Find a Team
-            </button>
-          )}
+          
 
           <button
             onClick={() => setActiveTab("check")}
             className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
               activeTab === "check"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
-                : "text-white/40 hover:text-white hover:bg-white/5"
+                : "text-slate-500 hover:text-white hover:bg-white/5"
             }`}
           >
             <i className="fas fa-search"></i> Check Team Details
@@ -582,7 +575,7 @@ export default function EventPortalTabs({
               className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
                 activeTab === "certificate"
                   ? "bg-green-500/10 text-green-400 border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
-                  : "text-white/40 hover:text-white hover:bg-white/5"
+                  : "text-slate-500 hover:text-white hover:bg-white/5"
               }`}
             >
               <i className="fas fa-certificate"></i> E-Certificate
@@ -601,7 +594,7 @@ export default function EventPortalTabs({
                     ? "Join Event Waitlist"
                     : "Event Registration"}
                 </h2>
-                <p className="text-white/40 text-sm">
+                <p className="text-slate-500 text-sm">
                   Secure your spot by filling out the form below.
                 </p>
               </div>
@@ -687,8 +680,8 @@ export default function EventPortalTabs({
                   )}
 
                   {reqs.allow_external_students && (
-                    <div className="flex flex-col gap-3 p-5 bg-blue-500/10 border border-blue-500/20 rounded-xl mb-2">
-                      <h4 className="text-[13px] font-bold text-blue-400 uppercase tracking-wider">
+                    <div className="flex flex-col gap-3 p-5 bg-[#0078d4]/10 border border-[#0078d4]/20 rounded-xl mb-2">
+                      <h4 className="text-[13px] font-bold text-[#0078d4] uppercase tracking-wider">
                         Are you an SRMAP Student?
                       </h4>
                       <div className="flex gap-6">
@@ -884,7 +877,7 @@ export default function EventPortalTabs({
                         {isCreatingTeam && (
                           <div className="flex flex-col gap-6 p-5 bg-white/5 rounded-xl border border-white/10 mb-6">
                             <div className="flex flex-col gap-2 mb-2 border-b border-white/10 pb-6">
-                              <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-wider">
+                              <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider">
                                 Team Name
                               </label>
                               <input
@@ -895,7 +888,7 @@ export default function EventPortalTabs({
                                 className="p-3 bg-black/40 border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full mb-4 transition-colors"
                               />
 
-                              <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-wider">
+                              <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider">
                                 How many members are you registering right now?
                               </label>
                               <select
@@ -919,7 +912,7 @@ export default function EventPortalTabs({
 
                               {teamSize > 1 && (
                                 <>
-                                  <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-wider mt-2">
+                                  <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider mt-2">
                                     Who is the Team Lead?
                                   </label>
                                   <select
@@ -957,7 +950,7 @@ export default function EventPortalTabs({
                                   <h5 className="text-sm font-bold text-white/80 mt-4">
                                     Member {num + 1} Details
                                   </h5>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="flex flex-col gap-2">
                                       <label className="text-[12px] font-semibold text-[#a1a1aa] uppercase tracking-wider">
                                         Name
@@ -1063,27 +1056,7 @@ export default function EventPortalTabs({
                                 </div>
                               ))}
 
-                            {teamSize < reqs.max_team_size && (
-                              <div className="flex flex-col gap-3 p-5 bg-cyan-500/10 border border-cyan-500/20 rounded-xl mt-4">
-                                <label className="flex items-start gap-3 cursor-pointer">
-                                  <input
-                                    type="checkbox"
-                                    name="lookingForMembers"
-                                    className="w-5 h-5 mt-0.5 accent-cyan-500 rounded border-white/20 bg-black/50"
-                                  />
-                                  <div>
-                                    <span className="text-sm font-bold text-cyan-400 block">
-                                      Make my Team Public (Matchmaking)
-                                    </span>
-                                    <span className="text-[11px] text-white/50 block mt-1">
-                                      If checked, your team will appear in the
-                                      &quot;Find a Team&quot; tab so other
-                                      participants can join you!
-                                    </span>
-                                  </div>
-                                </label>
-                              </div>
-                            )}
+                            
                           </div>
                         )}
                       </div>
@@ -1112,7 +1085,7 @@ export default function EventPortalTabs({
                 <h2 className="text-2xl font-bold text-cyan-400 mb-2">
                   Team Matchmaking
                 </h2>
-                <p className="text-white/40 text-sm">
+                <p className="text-slate-500 text-sm">
                   Looking for a team? Browse teams that are actively seeking
                   members and join one instantly!
                 </p>
@@ -1120,18 +1093,18 @@ export default function EventPortalTabs({
 
               {liveTeams.length === 0 ? (
                 <div className="text-center p-12 bg-white/5 rounded-2xl border border-white/10">
-                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-white/40">
+                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500">
                     <i className="fas fa-users-slash text-2xl"></i>
                   </div>
                   <h3 className="text-lg font-bold text-white mb-1">
                     No Open Teams
                   </h3>
-                  <p className="text-sm text-white/40">
+                  <p className="text-sm text-slate-500">
                     Check back later or register a new team yourself!
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {liveTeams.map((team: any) => (
                     <div
                       key={team.id}
@@ -1151,13 +1124,13 @@ export default function EventPortalTabs({
                             <i className="fas fa-user-tie text-xs"></i>
                           </div>
                           <div>
-                            <p className="text-xs text-white/40">Team Leader</p>
+                            <p className="text-sm text-slate-400">Team Leader</p>
                             <p className="text-sm font-bold text-white">
                               {team.leader_name}
                             </p>
                           </div>
                         </div>
-                        <p className="text-xs text-white/60 pl-11">
+                        <p className="text-xs text-slate-400 pl-11">
                           {team.leader_year} Year &bull; {team.leader_branch}
                         </p>
                       </div>
@@ -1183,7 +1156,7 @@ export default function EventPortalTabs({
                 <h2 className="text-2xl font-bold text-white mb-2">
                   Check Team Details & Retrieve Ticket
                 </h2>
-                <p className="text-white/40 text-sm">
+                <p className="text-slate-500 text-sm">
                   Enter the Team Lead&apos;s email address to recover your
                   registration form and QR code.
                 </p>
@@ -1237,7 +1210,7 @@ export default function EventPortalTabs({
                   <h2 className="text-2xl font-bold text-white mb-4">
                     E-Certificates Locked
                   </h2>
-                  <p className="text-white/40 text-center max-w-md">
+                  <p className="text-slate-500 text-center max-w-md">
                     Please go to the <b>&quot;Check Team Details&quot;</b> tab
                     and enter your email address to view your certificate!
                   </p>
@@ -1252,7 +1225,7 @@ export default function EventPortalTabs({
                   <h2 className="text-2xl font-bold text-white mb-4">
                     No Certificate Assigned Yet
                   </h2>
-                  <p className="text-white/40 text-center max-w-md">
+                  <p className="text-slate-500 text-center max-w-md">
                     {event.status === "completed"
                       ? "The administration is currently processing the certificates for this event. Check back shortly!"
                       : "Certificates will be available here after the event concludes and attendance is verified."}
@@ -1278,7 +1251,7 @@ export default function EventPortalTabs({
                     <h2 className="text-2xl font-bold text-white mb-2">
                       Your E-Certificates
                     </h2>
-                    <p className="text-white/40 text-sm">
+                    <p className="text-slate-500 text-sm">
                       Download official certificates for all checked-in members
                       below.
                     </p>
@@ -1306,12 +1279,12 @@ export default function EventPortalTabs({
                       </h3>
 
                       {!unlockedCerts[member.id] ? (
-                        <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center">
-                          <i className="fas fa-shield-halved text-3xl text-blue-400 mb-4"></i>
+                        <div className="w-full max-w-md bg-[#18181b]/60 border border-white/10 rounded-[16px] shadow-md p-8 flex flex-col items-center text-center">
+                          <i className="fas fa-shield-halved text-3xl text-[#0078d4] mb-4"></i>
                           <h4 className="text-md font-bold text-white mb-2">
                             Verify Your Identity
                           </h4>
-                          <p className="text-white/40 text-xs mb-4">
+                          <p className="text-slate-500 text-xs mb-4">
                             Enter your{" "}
                             <b>
                               {member.regNum
@@ -1397,16 +1370,16 @@ export default function EventPortalTabs({
             onClick={() => setShowTicketModal(false)}
           >
             <div
-              className="relative max-w-lg w-full flex flex-col items-center"
+              className="relative max-w-lg w-full flex flex-col items-center pt-8"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setShowTicketModal(false)}
-                className="absolute -top-3 -right-3 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white z-10 border border-white/10 transition-colors"
+                className="absolute top-0 right-0 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-xs font-bold flex items-center gap-2 backdrop-blur-md border border-white/20 transition-all cursor-pointer z-50 shadow-lg"
               >
-                <i className="fas fa-times"></i>
+                <X className="w-4 h-4" /> Close
               </button>
-              <div ref={ticketRef}>
+              <div ref={ticketRef} className="w-full">
                 <TicketTemplate
                   event={event}
                   registration={currentReg}
@@ -1414,12 +1387,20 @@ export default function EventPortalTabs({
                   qrUrl={qrCodeUrl}
                 />
               </div>
-              <button
-                onClick={downloadTicket}
-                className="mt-6 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-bold text-white transition-all shadow-[0_0_20px_rgba(59,130,246,0.2)] flex items-center gap-2"
-              >
-                <i className="fas fa-download"></i> Download Ticket
-              </button>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
+                <button
+                  onClick={downloadTicket}
+                  className="flex-1 py-3 px-6 bg-[#0078d4] hover:bg-[#0063b1] rounded-xl font-bold text-white transition-all shadow-[0_0_20px_rgba(0,120,212,0.3)] flex items-center justify-center gap-2 text-sm"
+                >
+                  <Download className="w-4 h-4" /> Download Ticket
+                </button>
+                <button
+                  onClick={() => setShowTicketModal(false)}
+                  className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
+                >
+                  <X className="w-4 h-4" /> Close Ticket
+                </button>
+              </div>
             </div>
           </div>,
           document.body,
@@ -1443,7 +1424,7 @@ export default function EventPortalTabs({
               <h3 className="text-2xl font-bold text-yellow-400 mb-3">
                 You&apos;re on the Waitlist!
               </h3>
-              <p className="text-white/50 text-sm mb-8">
+              <p className="text-slate-400 text-sm mb-8">
                 The event is currently full. You&apos;ve been added to the
                 waitlist and will be notified if a spot opens up.
               </p>

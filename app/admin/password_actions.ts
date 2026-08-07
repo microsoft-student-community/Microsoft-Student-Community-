@@ -1,95 +1,82 @@
-"use server";
+'use server'
 
-import { createAdminClient } from "@/utils/supabase/admin";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from '@/utils/supabase/server'
+import { decrypt } from '@/utils/security'
 
-export async function acceptPasswordRequest(
-  reqId: string,
-  userEmail: string,
-  newPassword: string,
-) {
-  try {
-    const supabase = await createClient();
-    const { data: authData, error: authError } = await supabase.auth.getUser();
+export async function acceptPasswordRequest(requestId: string, email: string, newPassword: string) {
+  const supabase = await createClient()
 
-    if (authError || !authData.user) {
-      return { error: "Unauthorized" };
-    }
+  // 1. Verify caller is Admin
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
-    const { data: profile } = await supabase
-      .from("member_profiles")
-      .select("role")
-      .eq("id", authData.user.id)
-      .single();
+  const { data: profile } = await supabase
+    .from('member_profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single()
 
-    if (!profile || profile.role !== "admin") {
-      return { error: "Forbidden: Insufficient privileges" };
-    }
+  if (profile?.role !== 'admin') return { error: 'Access Denied: Only Admins can accept password resets.' }
 
-    const supabaseAdmin = createAdminClient();
+  // 2. Lookup the user ID by email
+  const { data: targetUser, error: lookupError } = await supabase
+    .from('member_profiles')
+    .select('id')
+    .eq('email', email)
+    .single()
 
-    const { data: userData, error: listError } =
-      await supabaseAdmin.auth.admin.listUsers();
-
-    if (listError) throw listError;
-
-    const targetUser = userData.users.find((u: any) => u.email === userEmail);
-    if (!targetUser) {
-      throw new Error(`User with email ${userEmail} not found in Auth.`);
-    }
-
-    const { error: updateError } =
-      await supabaseAdmin.auth.admin.updateUserById(targetUser.id, {
-        password: newPassword,
-      });
-
-    if (updateError) throw updateError;
-
-    const { error: reqError } = await supabaseAdmin
-      .from("password_reset_requests")
-      .update({ status: "approved" })
-      .eq("id", reqId);
-
-    if (reqError) throw reqError;
-
-    return { success: true };
-  } catch (err: any) {
-    console.error("acceptPasswordRequest error:", err);
-    return { error: err.message || "Failed to accept request" };
+  if (lookupError || !targetUser) {
+    return { error: 'User not found for this email address.' }
   }
+
+  // Decrypt the stored password securely
+  const decryptedPassword = decrypt(newPassword)
+
+  // 3. Call the secure RPC to change the password
+  const { error: rpcError } = await supabase.rpc('admin_change_password', {
+    target_user_id: targetUser.id,
+    new_password: decryptedPassword
+  })
+
+  if (rpcError) {
+    return { error: `Failed to change password: ${rpcError.message}` }
+  }
+
+  // 4. Update the request status to approved
+  const { error: updateError } = await supabase
+    .from('password_reset_requests')
+    .update({ status: 'approved' })
+    .eq('id', requestId)
+
+  if (updateError) {
+    return { error: 'Password was changed, but failed to update request status.' }
+  }
+
+  return { success: true }
 }
 
-export async function rejectPasswordRequest(reqId: string) {
-  try {
-    const supabase = await createClient();
-    const { data: authData, error: authError } = await supabase.auth.getUser();
+export async function rejectPasswordRequest(requestId: string) {
+  const supabase = await createClient()
 
-    if (authError || !authData.user) {
-      return { error: "Unauthorized" };
-    }
+  // Verify caller is Admin
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
-    const { data: profile } = await supabase
-      .from("member_profiles")
-      .select("role")
-      .eq("id", authData.user.id)
-      .single();
+  const { data: profile } = await supabase
+    .from('member_profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single()
 
-    if (!profile || profile.role !== "admin") {
-      return { error: "Forbidden: Insufficient privileges" };
-    }
+  if (profile?.role !== 'admin') return { error: 'Access Denied.' }
 
-    const supabaseAdmin = createAdminClient();
+  // Update status
+  const { error } = await supabase
+    .from('password_reset_requests')
+    .update({ status: 'rejected' })
+    .eq('id', requestId)
 
-    const { error } = await supabaseAdmin
-      .from("password_reset_requests")
-      .update({ status: "rejected" })
-      .eq("id", reqId);
+  if (error) return { error: error.message }
 
-    if (error) throw error;
-
-    return { success: true };
-  } catch (err: any) {
-    console.error("rejectPasswordRequest error:", err);
-    return { error: err.message || "Failed to reject request" };
-  }
+  return { success: true }
 }

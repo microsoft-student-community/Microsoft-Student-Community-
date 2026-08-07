@@ -297,7 +297,7 @@ export default function TeamClientWrapper({
           type="video/mp4"
         />
       </video>
-      <div className="background-overlay"></div>
+      <div className="background-overlay" suppressHydrationWarning></div>
 
       <div
         className="ghost-name-container"

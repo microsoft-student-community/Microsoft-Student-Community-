@@ -250,7 +250,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
           type="video/mp4"
         />
       </video>
-      <div className="background-overlay"></div>
+      <div className="background-overlay" suppressHydrationWarning></div>
 
       <section className="gallery-hero">
         <div className="container">

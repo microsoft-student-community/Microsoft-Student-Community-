@@ -1,15 +1,16 @@
 import { Metadata } from "next";
+import "./event-premium.css";
 
 export const metadata: Metadata = {
-  title: "Event Portal — Microsoft Student Community · SRM University AP",
-  description:
-    "Register for events, check your team details, download e-certificates and more at the MSC SRMAP Event Portal.",
+ title: "Event Portal — Microsoft Student Community · SRM University AP",
+ description:
+ "Register for events, check your team details, download e-certificates and more at the MSC SRMAP Event Portal.",
 };
 
 export default function EventPortalLayout({
-  children,
+ children,
 }: {
-  children: React.ReactNode;
+ children: React.ReactNode;
 }) {
-  return <>{children}</>;
+ return <>{children}</>;
 }

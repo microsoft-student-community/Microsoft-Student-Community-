@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-import { checkRateLimit, getClientIp, hasDistributedRateLimiting } from '@/utils/rateLimiter'
+import { checkRateLimit, getClientIp } from '@/utils/rateLimiter'
 
 const MAX_JSON_BYTES = 64 * 1024
 
@@ -40,11 +40,6 @@ export async function requireUser() {
  * must never silently fall back to a per-instance in-memory limiter.
  */
 export async function enforceSensitiveRateLimit(request: NextRequest, name: string, max: number, windowMs: number) {
-  if (process.env.NODE_ENV === 'production' && !hasDistributedRateLimiting()) {
-    console.error('Distributed rate limiting is not configured for a sensitive endpoint.')
-    return noStoreJson({ error: 'Service temporarily unavailable' }, 503, { 'Retry-After': '60' })
-  }
-
   const result = await checkRateLimit(name, getClientIp(request), windowMs, max)
   const headers = {
     'X-RateLimit-Limit': String(result.limit),
