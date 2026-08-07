@@ -117,12 +117,16 @@ export default function LoginPage() {
     }
 
     try {
-      const { error } = await supabase
-        .from("password_reset_requests")
-        .insert([{ email, new_password, status: "pending" }]);
+      const res = await fetch("/api/auth/request-password-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, new_password }),
+      });
+      
+      const data = await res.json();
         
-      if (error) {
-        setError(error.message);
+      if (!res.ok) {
+        setError(data.error || "Failed to request password reset.");
         return;
       }
 
