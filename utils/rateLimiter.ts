@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { Redis } from "@upstash/redis/cloudflare";
+import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
 export interface RateLimitResult {
