@@ -79,7 +79,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
           setTimeout(() => {
             if (loadingScreen) loadingScreen.classList.add("fade-out");
             document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch((e) => function () {});
+            if (bgVideo) bgVideo.play().catch((e) => function () { });
           }, 400);
         }
         if (loaderRingFill) {
@@ -92,7 +92,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
 
     if (document.documentElement.classList.contains("skip-loader")) {
       if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch((e) => function () {});
+      if (bgVideo) bgVideo.play().catch((e) => function () { });
     } else {
       startLoader();
     }
@@ -118,19 +118,21 @@ export default function EventsClientWrapper({ events: initialEvents }) {
     });
 
     const eventCards = document.querySelectorAll(".event-cassette");
-    eventCards.forEach((card, idx) => {
-      card.style.opacity = "0";
-      card.style.transform = "translateY(18px)";
-      card.style.transition =
-        "opacity 0.55s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease";
-      setTimeout(
-        () => {
-          card.style.opacity = "1";
-          card.style.transform = "translateY(0)";
-        },
-        idx * 90 + 200,
-      );
-    });
+    eventCards.forEach((card) => card.classList.add("animatable"));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    eventCards.forEach((card) => observer.observe(card));
 
     const hero = document.querySelector(".featured-event-hero");
     if (hero) {
@@ -149,6 +151,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
         const listener = mouseMoveListeners.get(card);
         if (listener) card.removeEventListener("mousemove", listener);
       });
+      observer.disconnect();
     };
   }, [filter]);
 
@@ -335,9 +338,8 @@ export default function EventsClientWrapper({ events: initialEvents }) {
               filteredEvents.map((evt) => (
                 <div
                   key={evt.id}
-                  className={`event-cassette glow-card ${
-                    expandedCard === evt.id ? "expanded" : ""
-                  }`}
+                  className={`event-cassette glow-card ${expandedCard === evt.id ? "expanded" : ""
+                    }`}
                   onClick={(e) => {
                     if (
                       e.target.closest(".event-summary-drawer") ||
@@ -351,9 +353,8 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                     <div className="event-date-col">
                       <span className="event-month-lbl">{evt.month}</span>
                       <span
-                        className={`event-day-lbl ${
-                          evt.day.includes("-") ? "range" : ""
-                        }`}
+                        className={`event-day-lbl ${evt.day.includes("-") ? "range" : ""
+                          }`}
                       >
                         {evt.day}
                       </span>

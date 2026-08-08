@@ -433,12 +433,33 @@ export default function EventPortalTabs({
 
   async function downloadTicket() {
     if (!ticketRef.current) return;
+
+    // Temporarily remove offending cross-origin stylesheets (e.g., from browser extensions)
+    // that cause html-to-image to throw a SecurityError.
+    const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
+    document.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+      try {
+        // @ts-ignore
+        const rules = (node as any).sheet?.cssRules;
+      } catch (e: any) {
+        if (e.name === 'SecurityError' && node.parentNode) {
+          problematicNodes.push({
+            node,
+            parent: node.parentNode,
+            nextSibling: node.nextSibling
+          });
+          node.parentNode.removeChild(node);
+        }
+      }
+    });
+
     try {
       const htmlToImage = await import("html-to-image");
       const dataUrl = await htmlToImage.toPng(ticketRef.current, {
         backgroundColor: "#F3F5F8",
         pixelRatio: 2,
         style: { transform: "scale(1)", transformOrigin: "top left" },
+        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" // 1x1 transparent png
       });
       const link = document.createElement("a");
       link.download = `Event-Ticket-${currentHash?.substring(0, 8)}.png`;
@@ -446,12 +467,36 @@ export default function EventPortalTabs({
       link.click();
     } catch (err) {
       console.error("Failed to generate ticket image:", err);
+    } finally {
+      // Restore the removed nodes
+      problematicNodes.forEach(({ node, parent, nextSibling }) => {
+        if (nextSibling) {
+          parent.insertBefore(node, nextSibling);
+        } else {
+          parent.appendChild(node);
+        }
+      });
     }
   }
 
   async function downloadCertificate(memberId: string, memberName: string) {
     const certEl = document.getElementById(`certificate-node-${memberId}`);
     if (!certEl) return;
+
+    // Temporarily remove offending cross-origin stylesheets
+    const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
+    document.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+      try {
+        // @ts-ignore
+        const rules = (node as any).sheet?.cssRules;
+      } catch (e: any) {
+        if (e.name === 'SecurityError' && node.parentNode) {
+          problematicNodes.push({ node, parent: node.parentNode, nextSibling: node.nextSibling });
+          node.parentNode.removeChild(node);
+        }
+      }
+    });
+
     try {
       const htmlToImage = await import("html-to-image");
 
@@ -466,13 +511,23 @@ export default function EventPortalTabs({
       const dataUrl = await htmlToImage.toPng(targetNode, {
         backgroundColor: "#0a0a0b",
         pixelRatio: 2,
+        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
       });
       const link = document.createElement("a");
       link.download = `${memberName.replace(/[^a-zA-Z0-9]/g, "_")}-Certificate.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
-      console.error("Failed to generate certificate:", err);
+      console.error("Failed to generate certificate image:", err);
+    } finally {
+      // Restore the removed nodes
+      problematicNodes.forEach(({ node, parent, nextSibling }) => {
+        if (nextSibling) {
+          parent.insertBefore(node, nextSibling);
+        } else {
+          parent.appendChild(node);
+        }
+      });
     }
   }
 
@@ -556,15 +611,14 @@ export default function EventPortalTabs({
             </button>
           )}
 
-          
+
 
           <button
             onClick={() => setActiveTab("check")}
-            className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-              activeTab === "check"
+            className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "check"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
                 : "text-slate-500 hover:text-white hover:bg-white/5"
-            }`}
+              }`}
           >
             <i className="fas fa-search"></i> Check Team Details
           </button>
@@ -572,11 +626,10 @@ export default function EventPortalTabs({
           {provideCertificates && (
             <button
               onClick={() => setActiveTab("certificate")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-                activeTab === "certificate"
+              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "certificate"
                   ? "bg-green-500/10 text-green-400 border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
                   : "text-slate-500 hover:text-white hover:bg-white/5"
-              }`}
+                }`}
             >
               <i className="fas fa-certificate"></i> E-Certificate
             </button>
@@ -1056,7 +1109,7 @@ export default function EventPortalTabs({
                                 </div>
                               ))}
 
-                            
+
                           </div>
                         )}
                       </div>
@@ -1366,11 +1419,11 @@ export default function EventPortalTabs({
         currentHash &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] flex items-start justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto"
             onClick={() => setShowTicketModal(false)}
           >
             <div
-              className="relative max-w-lg w-full flex flex-col items-center pt-8"
+              className="relative max-w-lg w-full flex flex-col items-center pt-12 pb-12 m-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <button

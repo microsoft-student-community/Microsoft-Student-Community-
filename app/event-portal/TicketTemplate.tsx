@@ -150,7 +150,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
             <span style={{ marginRight: '8px', fontSize: '16px', color: '#5E5E5E' }}>✉</span>
             <h4 style={{ margin: 0, color: '#5E5E5E', fontSize: '14px', fontWeight: 500 }}>Contact Support</h4>
           </div>
-          <p style={{ margin: 0, color: '#0078D4', fontWeight: 600, fontSize: '16px' }}>{email}</p>
+          <p style={{ margin: 0, color: '#0078D4', fontWeight: 600, fontSize: '16px' }}>msc.community@srmap.edu.in</p>
         </div>
 
         {/* Divider */}
