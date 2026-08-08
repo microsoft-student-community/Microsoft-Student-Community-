@@ -8,7 +8,6 @@ The official web platform for the Microsoft Student Community at SRM University 
 - **Framework:** Next.js (App Router, TypeScript)
 - **Database & Auth:** Supabase (PostgreSQL, Row Level Security)
 - **Payments:** Razorpay
-- **Emails:** Resend
 - **Rate Limiting:** Upstash Redis
 - **Deploy & Cron:** Vercel
 
