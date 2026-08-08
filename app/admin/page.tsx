@@ -759,6 +759,34 @@ export default function AdminPage() {
                         </label>
                         <input type="url" name="github_url" placeholder="https://github.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
                       </div>
+                      <div className="flex flex-col gap-2.5 md:col-span-1">
+                        <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
+                          <span>Twitter/X URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
+                          <i className="fab fa-x-twitter text-black"></i>
+                        </label>
+                        <input type="url" name="twitter_url" placeholder="https://x.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
+                      </div>
+                      <div className="flex flex-col gap-2.5 md:col-span-1">
+                        <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
+                          <span>Instagram URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
+                          <i className="fab fa-instagram text-[#E1306C]"></i>
+                        </label>
+                        <input type="url" name="instagram_url" placeholder="https://instagram.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
+                      </div>
+                      <div className="flex flex-col gap-2.5 md:col-span-1">
+                        <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
+                          <span>Email <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
+                          <i className="fa fa-envelope text-black"></i>
+                        </label>
+                        <input type="email" name="email" placeholder="email@srmap.edu.in" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
+                      </div>
+                      <div className="flex flex-col gap-2.5 md:col-span-1">
+                        <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
+                          <span>Portfolio URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
+                          <i className="fas fa-globe text-black"></i>
+                        </label>
+                        <input type="url" name="portfolio_url" placeholder="https://yourwebsite.com" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
+                      </div>
                     </div>
 
                     <div className="pt-2">
