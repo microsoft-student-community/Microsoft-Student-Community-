@@ -126,7 +126,7 @@ export default function PasswordRequestsTab() {
           </div>
         )}
 
-        <div className="bg-black/40 rounded-3xl overflow-hidden border border-white/[0.02]">
+        <div className="bg-slate-950 rounded-md overflow-hidden border border-slate-800">
           {loading ? (
             <div className="p-8 space-y-4">
               {[...Array(3)].map((_, i) => (
@@ -144,10 +144,10 @@ export default function PasswordRequestsTab() {
           ) : (
             <div className="p-4 md:p-6 space-y-4">
               {requests.map((req) => (
-                <div key={req.id} className="bg-white border border-white/[0.02] rounded-none p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:bg-slate-200/50 hover:border-white/[0.05] transition-all duration-300">
+                <div key={req.id} className="bg-white border border-white/[0.02] rounded-none p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:bg-slate-900 hover:border-white/[0.05] transition-all duration-300">
                   <div>
                     <h3 className="text-base font-bold text-black mb-1.5">{req.email}</h3>
-                    <div className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <div className="text-xs font-bold text-gray-800 font-bold uppercase tracking-widest flex items-center gap-2">
                       <i className="fas fa-clock text-black"></i> {new Date(req.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })}
                     </div>
                   </div>

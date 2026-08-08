@@ -212,27 +212,27 @@ export default function SettingsTab() {
 
   if (loading) {
     return (
-      <div className="bg-slate-900  border border-slate-800 rounded-md overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] animate-pulse">
-        <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-[#FFEB3B]">
+      <div className="bg-slate-900  border border-slate-800 rounded-md overflow-hidden shadow-sm animate-pulse">
+        <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-blue-600">
           <div className="h-6 bg-slate-800 rounded w-48"></div>
         </div>
         <div className="p-8 flex flex-col md:flex-row gap-10">
           <div className="flex flex-col items-center md:items-start md:w-1/3 space-y-4">
-            <div className="w-40 h-40 rounded-full bg-slate-800/50 border-4 border-slate-800"></div>
+            <div className="w-40 h-40 rounded-full bg-slate-900 border-4 border-slate-800"></div>
             <div className="h-5 bg-slate-800 rounded w-2/3"></div>
-            <div className="h-4 bg-slate-800/50 rounded w-1/3"></div>
+            <div className="h-4 bg-slate-900 rounded w-1/3"></div>
           </div>
           <div className="flex-1 space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
-              <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
+              <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
+              <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
-              <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
+              <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
+              <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
             </div>
-            <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
-            <div className="space-y-2"><div className="h-3 bg-slate-800/50 rounded w-1/4"></div><div className="h-28 bg-slate-800 rounded-md"></div></div>
+            <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-10 bg-slate-800 rounded-md"></div></div>
+            <div className="space-y-2"><div className="h-3 bg-slate-900 rounded w-1/4"></div><div className="h-28 bg-slate-800 rounded-md"></div></div>
           </div>
         </div>
       </div>
@@ -242,8 +242,8 @@ export default function SettingsTab() {
   if (!profile) return <div className="text-slate-300">Profile not found.</div>
 
   return (
-    <div className="bg-slate-900  border border-slate-800 rounded-md overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-[#FFEB3B]">
+    <div className="bg-slate-900  border border-slate-800 rounded-md overflow-hidden shadow-sm">
+      <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-blue-600">
         <h2 className="text-xl font-sans font-bold text-slate-100 flex items-center gap-3">
           <i className="fas fa-cog text-blue-400"></i>
           Account Settings
@@ -262,11 +262,11 @@ export default function SettingsTab() {
           {/* Left Column: Avatar & Basic Info */}
           <div className="flex flex-col items-center md:items-start md:w-1/3">
             <div className="relative group mb-6">
-              <div className="w-40 h-40 rounded-full border-4 border-slate-800 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-slate-800/50 overflow-hidden transition-all duration-300 group-hover:border-black/30">
+              <div className="w-40 h-40 rounded-full border-4 border-slate-800 shadow-sm bg-slate-900 overflow-hidden transition-all duration-300 group-hover:border-blue-500/30">
                 {profile.profile_picture_url ? (
                   <img src={profile.profile_picture_url} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-800 font-bold">
+                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-500">
                     <i className="fas fa-user text-4xl mb-2"></i>
                   </div>
                 )}
@@ -275,7 +275,7 @@ export default function SettingsTab() {
               <button 
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
-                className="absolute bottom-2 right-2 w-10 h-10 bg-blue-500 hover:bg-[#FFEB3B] rounded-full text-slate-100 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-colors disabled:opacity-50 cursor-pointer"
+                className="absolute bottom-2 right-2 w-10 h-10 bg-blue-500 hover:bg-blue-600 rounded-full text-slate-100 flex items-center justify-center shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {uploadingAvatar ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-camera"></i>}
               </button>
@@ -292,7 +292,7 @@ export default function SettingsTab() {
               <h3 className="text-2xl font-sans font-bold text-slate-100 mb-1 leading-tight">{profile.full_name || 'No Name'}</h3>
               <p className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-4">{profile.role.replace('_', ' ')}</p>
               
-              <div className="bg-slate-800/50 border border-slate-800 rounded-md p-4 text-xs font-semibold text-slate-300 w-full mb-2 flex items-center gap-2">
+              <div className="bg-slate-900 border border-slate-800 rounded-md p-4 text-xs font-semibold text-slate-300 w-full mb-2 flex items-center gap-2">
                 <i className="fas fa-envelope text-blue-400/80 w-4 text-center"></i> {profile.email}
               </div>
             </div>
@@ -304,19 +304,19 @@ export default function SettingsTab() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] font-bold text-black uppercase tracking-wider">Full Name</label>
-                  <input name="full_name" defaultValue={profile.full_name} className="w-full bg-slate-900 border border-slate-800 focus:border-black focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
+                  <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
+                  <input name="full_name" defaultValue={profile.full_name} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] font-bold text-black uppercase tracking-wider">Registration Number</label>
-                  <input name="registration_number" defaultValue={profile.registration_number} className="w-full bg-slate-900 border border-slate-800 focus:border-black focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
+                  <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Registration Number</label>
+                  <input name="registration_number" defaultValue={profile.registration_number} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] font-bold text-black uppercase tracking-wider">Department / Branch</label>
-                  <select name="department" defaultValue={profile.department || ""} className="w-full bg-slate-900 border border-slate-800 focus:border-black rounded-md px-4 py-3 outline-none text-slate-100 transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2%2320stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
+                  <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Department / Branch</label>
+                  <select name="department" defaultValue={profile.department || ""} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 rounded-md px-4 py-3 outline-none text-slate-100 transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2%2320stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
                     <option value="" disabled>Select Department / Branch</option>
                     <option value="CSE">CSE</option>
                     <option value="ECE">ECE</option>
@@ -330,8 +330,8 @@ export default function SettingsTab() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[11px] font-bold text-black uppercase tracking-wider">Year of Study</label>
-                  <select name="year_of_study" defaultValue={profile.year_of_study || ""} className="w-full bg-slate-900 border border-slate-800 focus:border-black rounded-md px-4 py-3 outline-none text-slate-100 transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2%2320stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
+                  <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Year of Study</label>
+                  <select name="year_of_study" defaultValue={profile.year_of_study || ""} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 rounded-md px-4 py-3 outline-none text-slate-100 transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2%2320stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
                     <option value="" disabled>Select Year</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -342,20 +342,20 @@ export default function SettingsTab() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold text-black uppercase tracking-wider">Phone Number</label>
-                <input name="phone_number" defaultValue={profile.phone_number} className="w-full bg-slate-900 border border-slate-800 focus:border-black focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
+                <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Phone Number</label>
+                <input name="phone_number" defaultValue={profile.phone_number} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md px-4 py-3 outline-none text-slate-100 transition-all" />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold text-black uppercase tracking-wider">Bio / Description</label>
-                <textarea name="bio" defaultValue={profile.bio} rows={4} className="w-full bg-slate-900 border border-slate-800 focus:border-black focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-md px-4 py-3 outline-none text-slate-100 transition-all resize-none placeholder-white/20" placeholder="Tell us about your role in MSC..."></textarea>
+                <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider">Bio / Description</label>
+                <textarea name="bio" defaultValue={profile.bio} rows={4} className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md px-4 py-3 outline-none text-slate-100 transition-all resize-none placeholder-white/20" placeholder="Tell us about your role in MSC..."></textarea>
               </div>
 
               <div className="pt-4 flex justify-end">
                 <button 
                   type="submit" 
                   disabled={saving}
-                  className="px-6 py-3 bg-[#FFEB3B] hover:from-blue-600 hover:to-purple-600 text-slate-100 font-bold rounded-md transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                  className="px-6 py-3 bg-blue-600 hover:from-blue-600 hover:to-purple-600 text-slate-100 font-bold rounded-md transition-all shadow-sm disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                 >
                   {saving ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-save"></i>}
                   {saving ? 'Saving...' : 'Save Profile'}

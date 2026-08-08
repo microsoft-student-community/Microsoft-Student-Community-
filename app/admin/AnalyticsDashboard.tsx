@@ -29,6 +29,7 @@ export default function AnalyticsDashboard() {
 
     const channel = supabase.channel('analytics_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'registrations' }, () => {
+        // Re-fetch stats when registrations change (e.g. check-ins, new signups)
         fetchAnalytics()
       })
       .subscribe()
@@ -42,6 +43,7 @@ export default function AnalyticsDashboard() {
     setLoading(true)
 
     try {
+      // Parallel fetch for speed
       const [
         { count: usersCount },
         { count: eventsCount },
@@ -60,6 +62,7 @@ export default function AnalyticsDashboard() {
 
       if (regs) {
         regs.forEach(reg => {
+          // 1. Calculate actual participant count (handling teams correctly)
           const isTeam = reg.team_data && typeof reg.team_data === 'object' && Array.isArray((reg.team_data as any).members)
           const teamMembers = isTeam ? ((reg.team_data as any).members as any[]) : []
           const attendeeCount = 1 + teamMembers.length
@@ -69,6 +72,7 @@ export default function AnalyticsDashboard() {
             checkedInCount += attendeeCount
           }
 
+          // Per-event aggregation
           const eventTitle = (reg.events as any)?.title || 'Unknown Event'
           if (!eventMap[eventTitle]) {
             eventMap[eventTitle] = {
@@ -121,118 +125,122 @@ export default function AnalyticsDashboard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0a84ff]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     )
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
-      <div className="mb-10 pl-2">
-        <h2 className="text-4xl font-sans font-black text-black tracking-tight">Platform Analytics</h2>
-        <p className="text-gray-800 font-bold text-base mt-2 font-medium max-w-2xl">Real-time statistics, registration timeline, and demographic breakdowns.</p>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+      <div className="mb-6">
+        <h2 className="text-3xl font-sans font-extrabold text-slate-100 tracking-tight">Platform Analytics</h2>
+        <p className="text-slate-400 text-sm mt-1">Real-time statistics, registration timeline, and branch demographic breakdowns.</p>
       </div>
       
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        <div className="bg-white rounded-[32px] p-6 relative overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black hover:border-[#0a84ff]/30 transition-all duration-300 group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-700 group-hover:scale-110"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-800 font-bold text-[10px] font-bold uppercase tracking-widest z-10 relative">Total Participants</span>
-            <div className="w-10 h-10 rounded-full bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 flex items-center justify-center text-black z-10 relative group-hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all group-hover:text-black transition-all">
-              <i className="fas fa-user-friends text-sm"></i>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Participants Card */}
+        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-blue-500/30 hover:shadow-sm transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Total Participants</span>
+            <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+              <i className="fas fa-user-friends text-xs"></i>
             </div>
           </div>
-          <p className="text-4xl font-sans font-black text-black tracking-tight relative z-10">{stats.totalParticipants}</p>
+          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalParticipants}</p>
         </div>
 
-        <div className="bg-white rounded-[32px] p-6 relative overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black hover:border-pink-500/30 transition-all duration-300 group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-pink-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-700 group-hover:scale-110"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-800 font-bold text-[10px] font-bold uppercase tracking-widest z-10 relative">Submissions</span>
-            <div className="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400 z-10 relative group-hover:bg-pink-500 group-hover:text-black transition-all">
-              <i className="fas fa-ticket-alt text-sm"></i>
+        {/* Submissions Card */}
+        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-pink-500/30 hover:shadow-sm transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-pink-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Submissions</span>
+            <div className="w-7 h-7 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
+              <i className="fas fa-ticket-alt text-xs"></i>
             </div>
           </div>
-          <p className="text-4xl font-sans font-black text-black tracking-tight relative z-10">{stats.totalRegistrations}</p>
+          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalRegistrations}</p>
         </div>
         
-        <div className="bg-white rounded-[32px] p-6 relative overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black hover:border-purple-500/30 transition-all duration-300 group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-700 group-hover:scale-110"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-800 font-bold text-[10px] font-bold uppercase tracking-widest z-10 relative">Events Hosted</span>
-            <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 z-10 relative group-hover:bg-purple-500 group-hover:text-black transition-all">
-              <i className="fas fa-calendar-alt text-sm"></i>
+        {/* Events Card */}
+        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-purple-500/30 hover:shadow-sm transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Events Hosted</span>
+            <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+              <i className="fas fa-calendar-alt text-xs"></i>
             </div>
           </div>
-          <p className="text-4xl font-sans font-black text-black tracking-tight relative z-10">{stats.totalEvents}</p>
+          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalEvents}</p>
         </div>
 
-        <div className="bg-white rounded-[32px] p-6 relative overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black hover:border-green-500/30 transition-all duration-300 group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-700 group-hover:scale-110"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-800 font-bold text-[10px] font-bold uppercase tracking-widest z-10 relative">Check-in Rate</span>
-            <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 z-10 relative group-hover:bg-green-500 group-hover:text-black transition-all">
-              <i className="fas fa-user-check text-sm"></i>
+        {/* Check-in Rate Card */}
+        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-green-500/30 hover:shadow-sm transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Check-in Rate</span>
+            <div className="w-7 h-7 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400">
+              <i className="fas fa-user-check text-xs"></i>
             </div>
           </div>
-          <p className="text-4xl font-sans font-black text-black tracking-tight relative z-10">{stats.checkInRate}%</p>
+          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.checkInRate}%</p>
         </div>
 
-        <div className="bg-white rounded-[32px] p-6 relative overflow-hidden shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black hover:border-yellow-500/30 transition-all duration-300 group">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform duration-700 group-hover:scale-110"></div>
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-gray-800 font-bold text-[10px] font-bold uppercase tracking-widest z-10 relative">Core Members</span>
-            <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-500 z-10 relative group-hover:bg-yellow-500 group-hover:text-black transition-all">
-              <i className="fas fa-users text-sm"></i>
+        {/* Core Members Card */}
+        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-yellow-500/30 hover:shadow-sm transition-all duration-300">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Core Members</span>
+            <div className="w-7 h-7 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400">
+              <i className="fas fa-users text-xs"></i>
             </div>
           </div>
-          <p className="text-4xl font-sans font-black text-black tracking-tight relative z-10">{stats.totalUsers}</p>
+          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalUsers}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black">
-        <h3 className="text-xl font-bold text-black mb-6 flex items-center gap-3 pl-2">
-          <div className="w-10 h-10 rounded-full bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 flex items-center justify-center">
-            <i className="fas fa-list-alt text-black text-sm"></i>
-          </div>
-          Event Conversion Analytics
-        </h3>
-        
-        <div className="bg-black/40 rounded-3xl overflow-hidden border border-white/[0.02]">
+      {/* Event Analytics Table */}
+      <div className="bg-slate-900  border border-slate-800 rounded-lg overflow-hidden shadow-sm mt-8">
+        <div className="p-6 border-b border-slate-800">
+          <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i className="fas fa-list-alt text-blue-400"></i> Event Analytics
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.05]">
-                <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5">Event</th>
-                <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5 text-center">Individuals</th>
-                <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5 text-center">Teams</th>
-                <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5 text-center">Total Members</th>
-                <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5">Check-in Rate</th>
+              <tr className="bg-slate-900 text-[#aaaaaa] text-sm uppercase tracking-wider">
+                <th className="p-4 font-semibold">Event</th>
+                <th className="p-4 font-semibold text-center">Individuals</th>
+                <th className="p-4 font-semibold text-center">Teams</th>
+                <th className="p-4 font-semibold text-center">Total Members</th>
+                <th className="p-4 font-semibold">Check-in Rate</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.02]">
+            <tbody className="text-slate-100 text-sm divide-y divide-white/10">
               {eventStats.map((stat, idx) => (
-                <tr key={idx} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="px-8 py-6 font-bold text-black group-hover:text-black transition-colors">{stat.title}</td>
-                  <td className="px-8 py-6 text-center text-black font-medium">{stat.individualsRegistered}</td>
-                  <td className="px-8 py-6 text-center text-black font-medium">{stat.teamsRegistered}</td>
-                  <td className="px-8 py-6 text-center text-black font-bold">{stat.totalMembers}</td>
-                  <td className="px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                <tr key={idx} className="hover:bg-slate-900 transition-colors">
+                  <td className="p-4 font-medium">{stat.title}</td>
+                  <td className="p-4 text-center">{stat.individualsRegistered}</td>
+                  <td className="p-4 text-center">{stat.teamsRegistered}</td>
+                  <td className="p-4 text-center">{stat.totalMembers}</td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full ${stat.checkinRate > 50 ? 'bg-green-500' : stat.checkinRate > 20 ? 'bg-yellow-500' : 'bg-red-500'}`} 
                           style={{ width: `${stat.checkinRate}%` }}
                         ></div>
                       </div>
-                      <span className="text-xs font-bold w-9 text-right text-black">{stat.checkinRate}%</span>
+                      <span className="text-xs font-bold w-9 text-right">{stat.checkinRate}%</span>
                     </div>
                   </td>
                 </tr>
               ))}
               {eventStats.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-8 py-16 text-center text-gray-800 font-bold font-medium">No event data available yet.</td>
+                  <td colSpan={5} className="p-8 text-center text-[#aaaaaa]">No event data available</td>
                 </tr>
               )}
             </tbody>

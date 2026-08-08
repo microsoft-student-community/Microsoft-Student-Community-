@@ -21,13 +21,13 @@ export default function AboutTab() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-slate-800/30 border border-slate-800 rounded-md p-5 hover:border-blue-500/30 hover:bg-slate-800/30 transition-all duration-300">
+          <div className="bg-slate-900 border border-slate-800 rounded-md p-5 hover:border-blue-500/30 hover:bg-slate-900 transition-all duration-300">
             <h4 className="text-blue-400 font-sans font-semibold mb-2 flex items-center gap-2"><i className="fas fa-shield-alt"></i> Security & Roles</h4>
             <p className="text-xs text-slate-100/55 leading-relaxed">
               Strict Role-Based Access Control (RBAC) ensures Core Members can manage events and team members, while Admins have exclusive access to User Roles.
             </p>
           </div>
-          <div className="bg-slate-800/30 border border-slate-800 rounded-md p-5 hover:border-green-500/30 hover:bg-slate-800/30 transition-all duration-300">
+          <div className="bg-slate-900 border border-slate-800 rounded-md p-5 hover:border-green-500/30 hover:bg-slate-900 transition-all duration-300">
             <h4 className="text-green-400 font-sans font-semibold mb-2 flex items-center gap-2"><i className="fas fa-bolt"></i> Performance</h4>
             <p className="text-xs text-slate-100/55 leading-relaxed">
               Powered by Next.js 15 App Router and Supabase, the system leverages aggressive caching and Edge computing for sub-100ms response times globally.
@@ -40,7 +40,7 @@ export default function AboutTab() {
             Version 2.0.0 &bull; Built for MSC SRM AP
           </div>
           <div className="flex gap-4">
-            <a href="https://github.com/mscsrmap/mscsrmap" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-800 hover:border-slate-800 hover:bg-white/15 flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all">
+            <a href="https://github.com/mscsrmap/mscsrmap" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-800 hover:bg-white flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all">
               <i className="fab fa-github text-sm"></i>
             </a>
           </div>

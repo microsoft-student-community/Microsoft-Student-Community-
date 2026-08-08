@@ -4,27 +4,22 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import Link from 'next/link'
-import { UserCog, Key, Calendar, Users, PieChart, Settings, ShieldCheck, LogOut, UserPlus, Trash2, CalendarPlus, ListTodo, IndianRupee, Gift, CreditCard, Clock, MapPin, ExternalLink, Edit2, UserPen, X, AlertTriangle, Menu, LayoutDashboard } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import SidebarLayout from '../../components/admin/SidebarLayout'
-import EventsManagement from '../../components/admin/EventsManagement'
-import NavMenu from '../../components/ui/menu-hover-effects'
 
 const AnalyticsDashboard = dynamic(() => import('./AnalyticsDashboard'), {
   ssr: false,
   loading: () => (
     <div className="animate-pulse space-y-8">
-      <div className="h-10 bg-slate-200 rounded-none w-1/4 mb-4"></div>
+      <div className="h-10 bg-slate-800 rounded-lg w-1/4 mb-4"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="bg-white border border-black rounded-none p-5 h-28"></div>
+          <div key={i} className="bg-slate-900 border border-slate-800 rounded-lg p-5 h-28"></div>
         ))}
       </div>
-      <div className="bg-white border border-black rounded-none h-80"></div>
+      <div className="bg-slate-900 border border-slate-800 rounded-md h-80"></div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border border-black rounded-none h-80"></div>
-        <div className="bg-white border border-black rounded-none h-80"></div>
+        <div className="bg-slate-900 border border-slate-800 rounded-md h-80"></div>
+        <div className="bg-slate-900 border border-slate-800 rounded-md h-80"></div>
       </div>
     </div>
   )
@@ -56,7 +51,7 @@ const triggerHaptic = (type: 'light' | 'medium' | 'heavy' | 'success' | 'warning
           window.navigator.vibrate([80, 45, 80])
           break
       }
-    } catch (_) { }
+    } catch (_) {}
   }
 }
 
@@ -76,9 +71,7 @@ export default function AdminPage() {
   const [allowTeamsToggle, setAllowTeamsToggle] = useState(false)
   const [eventPricingType, setEventPricingType] = useState<'free' | 'paid'>('free')
   const [chargeType, setChargeType] = useState<'per_person' | 'per_team'>('per_person')
-  const [isCreatingEvent, setIsCreatingEvent] = useState(false)
-  const [isCreatingTeam, setIsCreatingTeam] = useState(false)
-
+  
   const [statusMsg, setStatusMsg] = useState<{ id: string, msg: string, type: 'error' | 'success' | 'info' } | null>(null)
 
   // Custom Modal States
@@ -96,7 +89,6 @@ export default function AdminPage() {
   }, [activeTab])
 
   async function checkUserRole() {
-
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) return
     const { data } = await supabase.from('member_profiles').select('role').eq('id', session.user.id).single()
@@ -168,10 +160,10 @@ export default function AdminPage() {
   async function uploadImage(file: File, pathPrefix: string) {
     const compressed = await compressAndConvertImage(file)
     const fileName = `${pathPrefix}-${Math.random().toString(36).substring(2)}-${Date.now()}.webp`
-
+    
     const { data, error } = await supabase.storage.from('images').upload(fileName, compressed)
     if (error) throw error
-
+    
     const { data: publicData } = supabase.storage.from('images').getPublicUrl(fileName)
     return publicData.publicUrl
   }
@@ -209,11 +201,11 @@ export default function AdminPage() {
 
     setIsResettingPassword(true)
     setResetModalError(null)
-
+    
     showStatus(`user_${resettingUser.id}`, 'Updating password...', 'info')
     const { data: { session } } = await supabase.auth.getSession()
     let err = null
-
+    
     if (session?.user.id === resettingUser.id) {
       const { error } = await supabase.auth.updateUser({ password: newPasswordValue })
       err = error
@@ -246,9 +238,9 @@ export default function AdminPage() {
 
     setDeletingUser(null)
     showStatus(`user_${userId}`, 'Deleting...', 'info')
-
+    
     const { error } = await supabase.rpc('admin_delete_user', { target_user_id: userId })
-
+    
     if (error) {
       showStatus(`user_${userId}`, `Failed: ${error.message}`, 'error')
       triggerHaptic('error')
@@ -301,7 +293,7 @@ export default function AdminPage() {
     }
 
     showStatus('create_user', 'Account Created Successfully!', 'success')
-      ; (e.target as HTMLFormElement).reset()
+    ;(e.target as HTMLFormElement).reset()
     fetchUsers()
   }
 
@@ -314,7 +306,6 @@ export default function AdminPage() {
 
   async function handleCreateEvent(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setIsCreatingEvent(true)
     const formData = new FormData(e.currentTarget)
     const title = formData.get('title') as string
     const dateStartRaw = formData.get('date_start') as string
@@ -323,48 +314,33 @@ export default function AdminPage() {
     const type = formData.get('type') as string
     const imageFile = formData.get('image') as File
     const certificateHtml = formData.get('certificate_html') as string
-
+    
     const baseSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
     const randomSuffix = Math.random().toString(36).substring(2, 6)
     const slug = `${baseSlug}-${randomSuffix}`
 
-
-    const agendaJson = formData.get('agenda_json') as string
-    const speakersJson = formData.get('speakers_json') as string
-
-    let agenda = []
-    let speakers = []
-    try { if (agendaJson) agenda = JSON.parse(agendaJson) } catch (e) { }
-    try { if (speakersJson) speakers = JSON.parse(speakersJson) } catch (e) { }
-
     const form_requirements: Record<string, any> = {
-
       req_reg_num: formData.get('req_reg_num') === 'on',
       req_branch: formData.get('req_branch') === 'on',
       req_spec: formData.get('req_spec') === 'on',
       allow_teams: formData.get('allow_teams') === 'on',
       allow_external_students: formData.get('allow_external_students') === 'on',
-      min_team_size: formData.get('allow_teams') === 'on' ? parseInt(formData.get('min_team_size') as string) || 2 : 1,
       max_team_size: formData.get('allow_teams') === 'on' ? parseInt(formData.get('max_team_size') as string) || 1 : 1,
       provide_certificates: formData.get('provide_certificates') === 'on',
       certificate_html: certificateHtml || null,
       event_pricing: eventPricingType,
       charge_type: eventPricingType === 'paid' ? chargeType : null,
       registration_fee: eventPricingType === 'paid' ? parseInt(formData.get('registration_fee') as string) || 0 : 0,
-      agenda,
-      speakers,
-
     }
 
     showStatus('create_event', 'Uploading and saving...', 'info')
-
+    
     let image_url = ''
     if (imageFile && imageFile.size > 0) {
       try {
         image_url = await uploadImage(imageFile, 'event')
       } catch (err: any) {
         showStatus('create_event', `Poster Upload Failed: ${err.message}`, 'error')
-        setIsCreatingEvent(false)
         return
       }
     }
@@ -372,18 +348,17 @@ export default function AdminPage() {
     const maxCapStr = formData.get('max_capacity') as string
     const max_capacity = maxCapStr ? parseInt(maxCapStr) : null
 
-    const { error } = await supabase.from('events').insert([{
-      title, slug, date_start, status, type, location: formData.get('location'), description: formData.get('description'), image_url, registration_open: formData.get('registration_open') === 'on', form_requirements, certificate_html: certificateHtml, max_capacity
+    const { error } = await supabase.from('events').insert([{ 
+      title, slug, date_start, status, type, location: formData.get('location'), description: formData.get('description'), image_url, registration_open: formData.get('registration_open') === 'on', form_requirements, certificate_html: certificateHtml, max_capacity 
     }])
-
+    
     if (error) {
       showStatus('create_event', `Failed: ${error.message}`, 'error')
     } else {
       showStatus('create_event', 'Event Created Successfully!', 'success')
-        ; (e.target as HTMLFormElement).reset()
+      ;(e.target as HTMLFormElement).reset()
       fetchEvents()
     }
-    setIsCreatingEvent(false)
   }
 
   async function deleteEvent(id: string, title: string) {
@@ -435,7 +410,6 @@ export default function AdminPage() {
 
   async function handleCreateTeam(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setIsCreatingTeam(true)
     const formData = new FormData(e.currentTarget)
     const name = formData.get('name') as string
     const role = formData.get('role') as string
@@ -448,14 +422,13 @@ export default function AdminPage() {
     const imageFile = formData.get('image') as File
 
     showStatus('create_team', 'Uploading and saving...', 'info')
-
+    
     let image_url = ''
     if (imageFile && imageFile.size > 0) {
       try {
         image_url = await uploadImage(imageFile, 'team')
       } catch (err: any) {
         showStatus('create_team', `Upload Failed: ${err.message}`, 'error')
-        setIsCreatingTeam(false)
         return
       }
     }
@@ -467,10 +440,9 @@ export default function AdminPage() {
       showStatus('create_team', `Failed: ${error.message}`, 'error')
     } else {
       showStatus('create_team', 'Team Member Created Successfully!', 'success')
-        ; (e.target as HTMLFormElement).reset()
+      ;(e.target as HTMLFormElement).reset()
       fetchTeam()
     }
-    setIsCreatingTeam(false)
   }
 
   async function handleUpdateTeam(e: React.FormEvent<HTMLFormElement>) {
@@ -489,7 +461,7 @@ export default function AdminPage() {
     const imageFile = formData.get('image') as File
 
     showStatus('update_team', 'Uploading and updating...', 'info')
-
+    
     let image_url = editingTeamMember.image_url || ''
     if (imageFile && imageFile.size > 0) {
       try {
@@ -533,378 +505,833 @@ export default function AdminPage() {
 
   if (userRole === null) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] bg-black text-[#f4f4f5] font-sans relative overflow-hidden">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-[#f4f4f5] font-sans relative overflow-hidden">
         {/* Glowing Backgrounds */}
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 hidden"></div>
         <div className="absolute bottom-[-10%] left-[10%] w-[600px] h-[600px] rounded-full bg-purple-500/8 hidden"></div>
-
+        
         {/* Brand Preloader Content */}
         <div className="flex flex-col items-center gap-6 animate-pulse z-10">
           <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png" alt="MSC Logo" className="w-16 h-16 object-contain animate-bounce" style={{ animationDuration: '2s' }} />
           <div className="flex flex-col items-center gap-1">
-            <h1 className="font-sans font-black tracking-widest text-xl bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all bg-clip-text text-transparent">
+            <h1 className="font-sans font-black tracking-widest text-xl bg-blue-600 bg-clip-text text-transparent">
               MSC PORTAL
             </h1>
-            <p className="text-[10px] text-gray-800 font-bold uppercase tracking-widest font-semibold">Establishing Secure Handshake...</p>
+            <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Establishing Secure Handshake...</p>
           </div>
-          <div className="w-8 h-8 rounded-full border-2 border-black/20 border-t-blue-500 animate-spin"></div>
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500/20 border-t-blue-500 animate-spin"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-[80vh] bg-[#050505] text-black font-sans overflow-y-auto relative">
+    <div className="flex flex-col md:flex-row h-[100dvh] bg-slate-950 text-[#f4f4f5] font-sans overflow-hidden">
       {/* Background glowing gradients */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 hidden animate-pulse" style={{ animationDuration: '8s' }}></div>
         <div className="absolute bottom-[-10%] left-[10%] w-[600px] h-[600px] rounded-full bg-purple-500/8 hidden animate-pulse" style={{ animationDuration: '12s' }}></div>
       </div>
 
+      {/* Mobile Top Header */}
+      <div className="md:hidden relative flex items-center justify-between p-4 bg-slate-950  border-b border-slate-800 z-50 shadow-sm">
+        <div className="flex items-center gap-3">
+          <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png" alt="MSC Logo" className="w-6 h-6 object-contain" />
+          <span className="font-sans font-black tracking-widest text-lg bg-blue-600 bg-clip-text text-transparent">
+            {userRole === 'admin' ? 'MSC ADMIN' : 'MSC CORE'}
+          </span>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-200 hover:text-slate-100 p-2 rounded-lg bg-slate-800 border border-slate-800 transition-all">
+          <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-lg`}></i>
+        </button>
+      </div>
 
-      <SidebarLayout
-        items={userRole === 'admin' ? [
-          { id: 'users', label: 'Users', icon: Users },
-          { id: 'password_reqs', label: 'Passwords', icon: Key },
-          { id: 'events', label: 'Events', icon: Calendar },
-          { id: 'team', label: 'Team', icon: UserCog },
-          { id: 'analytics', label: 'Analytics', icon: PieChart },
-          { id: 'settings', label: 'Settings', icon: Settings }
-        ] : [
-          { id: 'events', label: 'Events', icon: Calendar },
-          { id: 'team', label: 'Team', icon: UserCog },
-          { id: 'analytics', label: 'Analytics', icon: PieChart },
-          { id: 'settings', label: 'Settings', icon: Settings }
-        ]}
-        activeItem={activeTab}
-        onSelect={(id: any) => { triggerHaptic('light'); setActiveTab(id); }}
-        logoText={userRole === 'admin' ? 'MSC ADMIN' : 'MSC CORE'}
-        onLogout={async () => { await supabase.auth.signOut(); window.location.href = '/login'; }}
-      >
-        <div className="w-full">
+      {/* Sidebar */}
+      <aside className={`fixed top-[61px] md:top-0 left-0 md:relative w-full md:w-[300px] bg-slate-950 md:bg-slate-950  md:border-r border-slate-800 flex flex-col p-7 z-40 h-[calc(100dvh-61px)] md:h-auto transition-all duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} overflow-y-auto justify-between`}>
+        <div className="flex flex-col">
+          {/* Logo Brand Header */}
+          <div className="hidden md:flex items-center gap-3 mb-10 mt-2 px-2">
+            <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png" alt="MSC Logo" className="w-9 h-9 object-contain shrink-0" />
+            <span className="font-sans font-black tracking-widest text-xl bg-blue-600 bg-clip-text text-transparent uppercase">
+              {userRole === 'admin' ? 'MSC Admin' : 'Core Workspace'}
+            </span>
+          </div>
 
-          <div className="max-w-[1400px] mx-auto">
-            {/* USER TAB */}
-            {activeTab === 'users' && userRole === 'admin' && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="mb-10 pl-2">
-                  <h2 className="text-4xl font-sans font-black text-black tracking-tight">User Access Provisioning</h2>
-                  <p className="text-gray-800 font-bold text-base mt-2 font-medium max-w-2xl">Manage accounts and platform authorizations for MSC Core Members. Changes to roles or passwords take effect immediately.</p>
-                </div>
-
-                <div className="bg-white rounded-[32px] p-6 md:p-10 mb-8 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black">
-                  <h3 className="text-xl font-bold text-black mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 flex items-center justify-center">
-                      <UserPlus className="text-black w-5 h-5" strokeWidth={2} />
-                    </div>
-                    Provision Core Account
-                  </h3>
-
-                  <form onSubmit={handleCreateUser} className="bg-black/40 rounded-3xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-4 gap-6 items-end border border-white/[0.02]">
-                    <div className="flex flex-col gap-2.5">
-                      <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Email Address</label>
-                      <input type="email" name="email" required placeholder="new@member.com" autoComplete="off" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-black focus:ring-4 focus:ring-blue-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                    </div>
-                    <div className="flex flex-col gap-2.5">
-                      <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Password</label>
-                      <input type="password" name="password" required placeholder="••••••••" autoComplete="new-password" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-black focus:ring-4 focus:ring-blue-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                    </div>
-                    <div className="flex flex-col gap-2.5">
-                      <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Assign Role</label>
-                      <select name="role" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-black focus:ring-4 focus:ring-blue-500/20 rounded-none text-black text-sm font-medium outline-none transition-all appearance-none cursor-pointer bg-no-repeat bg-[right_16px_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')]">
-                        <option value="core_member">Core Member</option>
-                      </select>
-                    </div>
-                    <div>
-                      <button type="submit" className="w-full py-4 px-6 bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]  active:scale-95">Create Account</button>
-                    </div>
-                  </form>
-                  {statusMsg?.id === 'create_user' && <div className={`mt-6 text-sm font-semibold pl-2 ${statusMsg.type === 'error' ? 'text-red-400' : statusMsg.type === 'success' ? 'text-green-400' : 'text-black'}`}>{statusMsg.msg}</div>}
-                </div>
-
-                <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black">
-                  <h3 className="text-xl font-bold text-black mb-6 flex items-center gap-3 pl-2">
-                    <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
-                      <Users className="text-purple-400 w-5 h-5" strokeWidth={2} />
-                    </div>
-                    System Directory
-                  </h3>
-
-                  <div className="bg-black/40 rounded-3xl overflow-hidden border border-white/[0.02]">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-white/[0.02] border-b border-white/[0.05]">
-                          <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5">Email Address</th>
-                          <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5">Role</th>
-                          <th className="text-gray-800 font-bold font-bold text-[10px] uppercase tracking-widest px-8 py-5 text-right">Quick Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/[0.02]">
-                        {loadingUsers ? (
-                          [...Array(4)].map((_, idx) => (
-                            <tr key={idx} className="animate-pulse">
-                              <td className="px-8 py-6"><div className="h-4 bg-slate-200 rounded-full w-48"></div></td>
-                              <td className="px-8 py-6"><div className="h-10 bg-white rounded-none w-32"></div></td>
-                              <td className="px-8 py-6 text-right flex justify-end gap-3">
-                                <div className="h-10 bg-white rounded-full w-24"></div>
-                                <div className="h-10 bg-red-500/5 rounded-full w-24"></div>
-                              </td>
-                            </tr>
-                          ))
-                        ) : users.length === 0 ? (
-                          <tr><td colSpan={3} className="text-center py-16 text-gray-800 font-bold font-medium">No users found in directory.</td></tr>
-                        ) : (
-                          users.map(u => (
-                            <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
-                              <td className="px-8 py-6 font-medium text-black">{u.email}</td>
-                              <td className="px-8 py-6">
-                                <select
-                                  defaultValue={u.role}
-                                  onChange={(e) => { triggerHaptic('medium'); updateUserRole(u.id, e.target.value); }}
-                                  disabled={u.role === 'admin'}
-                                  className="px-4 py-2.5 rounded-none bg-white text-black text-xs font-bold border border-black focus:border-black focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 appearance-none pr-8 cursor-pointer bg-no-repeat bg-[right_10px_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%2386868b%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')]"
-                                >
-                                  <option value="core_member">Core Member</option>
-                                  {u.role === 'admin' && <option value="admin">Admin</option>}
-                                </select>
-                              </td>
-                              <td className="px-8 py-6 text-right flex items-center justify-end gap-3">
-                                <span className={`text-xs font-semibold ${statusMsg?.id === `user_${u.id}` ? (statusMsg.type === 'error' ? 'text-red-400' : statusMsg.type === 'success' ? 'text-green-400' : 'text-gray-800 font-bold') : 'hidden'}`}>{statusMsg?.id === `user_${u.id}` ? statusMsg.msg : ''}</span>
-                                <button onClick={() => { triggerHaptic('light'); openPasswordResetModal(u.id, u.email); }} disabled={u.role === 'admin'} className="px-4 py-2 bg-white group-hover:bg-slate-200 rounded-full text-xs font-bold text-black transition-all disabled:opacity-30 flex items-center gap-2 border border-black active:scale-95"><Key className="w-3.5 h-3.5 text-gray-800 font-bold" strokeWidth={2} /> Reset</button>
-                                <button onClick={() => { triggerHaptic('heavy'); openDeleteUserModal(u.id, u.email); }} disabled={u.role === 'admin'} className="px-4 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-black rounded-full text-xs font-bold transition-all disabled:opacity-30 flex items-center gap-2 active:scale-95"><Trash2 className="w-3.5 h-3.5" strokeWidth={2} /> Delete</button>
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+          {/* Navigation Links */}
+          <div className="flex flex-col gap-6">
+            {userRole === 'admin' && (
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest px-4 mb-2">Security & Control</span>
+                <button 
+                  onClick={() => { triggerHaptic('light'); setActiveTab('users'); setIsMobileMenuOpen(false); }} 
+                  className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                    activeTab === 'users' 
+                      ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-blue-500 before:rounded-full' 
+                      : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                  }`}
+                >
+                  <i className="fas fa-users-cog w-4 text-blue-400/85"></i> User Access
+                </button>
+                <button 
+                  onClick={() => { triggerHaptic('light'); setActiveTab('password_reqs'); setIsMobileMenuOpen(false); }} 
+                  className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                    activeTab === 'password_reqs' 
+                      ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-yellow-500 before:rounded-full' 
+                      : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                  }`}
+                >
+                  <i className="fas fa-key w-4 text-yellow-400/85"></i> Passwords
+                </button>
               </div>
             )}
-
-            {/* EVENTS TAB */}
-            {activeTab === 'events' && (
-              <EventsManagement
-                events={events}
-                loadingEvents={loadingEvents}
-                userRole={userRole}
-                isCreatingEvent={isCreatingEvent}
-                statusMsg={statusMsg}
-                handleCreateEvent={handleCreateEvent}
-                deleteEvent={deleteEvent}
-                toggleEventStatus={toggleEventStatus}
-                toggleRegistration={toggleRegistration}
-                allowTeamsToggle={allowTeamsToggle}
-                setAllowTeamsToggle={setAllowTeamsToggle}
-                eventPricingType={eventPricingType}
-                setEventPricingType={setEventPricingType}
-                chargeType={chargeType}
-                setChargeType={setChargeType}
-                triggerHaptic={triggerHaptic}
-              />
-            )}
-
-            {/* TEAM TAB */}
-            {activeTab === 'team' && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="mb-10 pl-2">
-                  <h2 className="text-4xl font-sans font-black text-black tracking-tight">Team Directory</h2>
-                  <p className="text-gray-800 font-bold text-base mt-2 font-medium max-w-2xl">Manage public profile cards, roles, and social links for Microsoft Student Community core members.</p>
-                </div>
-
-                {['admin', 'coremember', 'core_member'].includes(userRole) && (
-                  <div className="bg-white rounded-[32px] p-6 md:p-10 mb-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black">
-                    <h3 className="text-xl font-bold text-black mb-6 flex items-center gap-3 pl-2">
-                      <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
-                        <UserPlus className="text-purple-400 w-5 h-5" strokeWidth={2} />
-                      </div>
-                      Add Team Member
-                    </h3>
-                    <form onSubmit={handleCreateTeam} className="flex flex-col gap-6">
-                      <div className="bg-black/40 rounded-3xl p-6 md:p-8 border border-white/[0.02] grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Full Name</label>
-                          <input type="text" name="name" required placeholder="e.g. John Doe" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Role</label>
-                          <input type="text" name="role" required placeholder="e.g. Technical Lead" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Category</label>
-                          <select name="category" required className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all appearance-none cursor-pointer bg-no-repeat bg-[right_16px_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%2386868b%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')]">
-                            <option value="Lead">Lead</option>
-                            <option value="Co-Lead">Co-Lead</option>
-                            <option value="Core Team">Core Team</option>
-                          </select>
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1">Profile Image <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></label>
-                          <input type="file" name="image" accept="image/*" className="w-full bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none px-5 py-3.5 text-black text-sm font-medium outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-400 hover:file:bg-purple-500/20 file:transition-all cursor-pointer" />
-                        </div>
-
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>LinkedIn URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fab fa-linkedin text-[#0a66c2]"></i>
-                          </label>
-                          <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>GitHub URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fab fa-github text-black"></i>
-                          </label>
-                          <input type="url" name="github_url" placeholder="https://github.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>Twitter/X URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fab fa-x-twitter text-black"></i>
-                          </label>
-                          <input type="url" name="twitter_url" placeholder="https://x.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>Instagram URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fab fa-instagram text-[#E1306C]"></i>
-                          </label>
-                          <input type="url" name="instagram_url" placeholder="https://instagram.com/username" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>Email <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fa fa-envelope text-black"></i>
-                          </label>
-                          <input type="email" name="email" placeholder="email@srmap.edu.in" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                        <div className="flex flex-col gap-2.5 md:col-span-1">
-                          <label className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest pl-1 flex items-center justify-between">
-                            <span>Portfolio URL <span className="lowercase font-normal text-gray-800 font-bold/70">(optional)</span></span>
-                            <i className="fas fa-globe text-black"></i>
-                          </label>
-                          <input type="url" name="portfolio_url" placeholder="https://yourwebsite.com" className="px-5 py-4 bg-black border border-[#2c2c2e] focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 rounded-none text-black text-sm font-medium outline-none transition-all placeholder:text-[#3c3c3e]" />
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
-                        <button type="submit" disabled={isCreatingTeam} className="w-full md:w-auto px-10 py-4 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-600/50 disabled:cursor-not-allowed rounded-full font-bold text-sm transition-all text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] shadow-purple-500/20 active:scale-95 flex items-center justify-center gap-2">
-                          {isCreatingTeam ? <><span className="animate-spin rounded-full h-4 w-4 border-2 border-slate-300 border-t-white"></span> Adding Member...</> : 'Add to Directory'}
-                        </button>
-                      </div>
-                    </form>
-                    {statusMsg?.id === 'create_team' && <div className={`mt-6 text-sm font-semibold pl-2 ${statusMsg.type === 'error' ? 'text-red-400' : statusMsg.type === 'success' ? 'text-green-400' : 'text-purple-400'}`}>{statusMsg.msg}</div>}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {loadingTeam ? (
-                    [...Array(3)].map((_, idx) => (
-                      <div key={idx} className="bg-white rounded-[32px] overflow-hidden border border-2 md:border-4 border-black animate-pulse h-64"></div>
-                    ))
-                  ) : team.length === 0 ? (
-                    <div className="col-span-full bg-white rounded-[32px] p-16 text-center border border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                      <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                      <p className="text-gray-800 font-bold font-medium text-lg">No team members added yet.</p>
-                    </div>
-                  ) : (
-                    team.map(member => (
-                      <div key={member.id} className="bg-white rounded-[32px] p-6 flex flex-col items-center text-center border border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] group hover:-translate-y-1.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-purple-500/10 transition-all duration-400 relative overflow-hidden">
-                        {['admin', 'coremember', 'core_member'].includes(userRole) && (
-                          <button onClick={() => { triggerHaptic('heavy'); deleteTeam(member.id); }} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-red-500/10 hover:bg-red-500 flex items-center justify-center text-red-500 hover:text-black transition-all opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 z-10">
-                            <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
-                          </button>
-                        )}
-
-                        <div className="w-24 h-24 rounded-full mb-5 overflow-hidden border-2 border-[#2c2c2e] group-hover:border-purple-500/50 transition-colors bg-black/60 flex items-center justify-center relative">
-                          {member.image_url ? (
-                            <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <span className="text-2xl font-bold text-gray-800 font-bold">{member.name.charAt(0)}</span>
-                          )}
-                        </div>
-
-                        <h3 className="text-lg font-bold text-black mb-1 group-hover:text-purple-400 transition-colors">{member.name}</h3>
-                        <p className="text-gray-800 font-bold text-sm font-medium mb-1.5">{member.role}</p>
-                        <span className="px-3 py-1 bg-black rounded-full text-[10px] font-bold text-black uppercase tracking-widest border border-[#2c2c2e] mb-5">
-                          {member.category}
-                        </span>
-
-                        <div className="flex gap-3 mt-auto">
-                          {member.linkedin_url && (
-                            <a href={member.linkedin_url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-black hover:bg-[#0a66c2]/20 border border-[#2c2c2e] hover:border-[#0a66c2]/30 flex items-center justify-center text-gray-800 font-bold hover:text-[#0a66c2] transition-colors">
-                              <i className="fab fa-linkedin-in text-[15px]"></i>
-                            </a>
-                          )}
-                          {member.github_url && (
-                            <a href={member.github_url} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-black hover:bg-[#E0E0E0] border border-[#2c2c2e] hover:border-slate-300 flex items-center justify-center text-gray-800 font-bold hover:text-black transition-colors">
-                              <i className="fab fa-github text-[15px]"></i>
-                            </a>
-                          )}
-                          {!member.linkedin_url && !member.github_url && (
-                            <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-2">No Links Provided</span>
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* ANALYTICS TAB */}
-            {activeTab === 'analytics' && <AnalyticsDashboard />}
-
-
-            {/* PASSWORD REQUESTS TAB */}
-            {activeTab === 'password_reqs' && userRole === 'admin' && <PasswordRequestsTab />}
-
-            {/* SETTINGS TAB */}
-            {activeTab === 'settings' && <SettingsTab />}
-
-            {/* ABOUT TAB */}
+            
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest px-4 mb-2">Operations</span>
+              <button 
+                onClick={() => { triggerHaptic('light'); setActiveTab('events'); setIsMobileMenuOpen(false); }} 
+                className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                  activeTab === 'events' 
+                    ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-blue-500 before:rounded-full' 
+                    : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                }`}
+              >
+                <i className="fas fa-calendar-alt w-4 text-blue-400/85"></i> Events
+              </button>
+              <button 
+                onClick={() => { triggerHaptic('light'); setActiveTab('team'); setIsMobileMenuOpen(false); }} 
+                className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                  activeTab === 'team' 
+                    ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-purple-500 before:rounded-full' 
+                    : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                }`}
+              >
+                <i className="fas fa-users w-4 text-purple-400/85"></i> Team Members
+              </button>
+              <button 
+                onClick={() => { triggerHaptic('light'); setActiveTab('analytics'); setIsMobileMenuOpen(false); }} 
+                className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                  activeTab === 'analytics' 
+                    ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-pink-500 before:rounded-full' 
+                    : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                }`}
+              >
+                <i className="fas fa-chart-pie w-4 text-pink-400/85"></i> Analytics
+              </button>
+            </div>
+            
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest px-4 mb-2">Workspace</span>
+              <button 
+                onClick={() => { triggerHaptic('light'); setActiveTab('settings'); setIsMobileMenuOpen(false); }} 
+                className={`px-4 py-2.5 rounded-md font-semibold text-sm transition-all text-left flex items-center gap-3 relative border ${
+                  activeTab === 'settings' 
+                    ? 'bg-slate-800 border-slate-800 text-slate-100 shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-blue-500 before:rounded-full' 
+                    : 'text-[#a1a1aa] hover:text-slate-100 border-transparent hover:bg-slate-800'
+                }`}
+              >
+                <i className="fas fa-cog w-4 text-blue-400/85"></i> Settings
+              </button>
+            </div>
           </div>
         </div>
-      </SidebarLayout>
+
+        {/* Profile Card at bottom of sidebar */}
+        <div className="mt-8 pt-4 border-t border-slate-800 flex flex-col gap-3">
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-11 h-11 rounded-full bg-blue-600 flex items-center justify-center text-slate-100 font-bold text-base shadow-md border border-slate-800">
+              <i className="fas fa-user-shield"></i>
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-semibold text-slate-400 uppercase tracking-widest leading-none mb-1">Active User</span>
+              <span className="text-sm font-bold text-slate-100 truncate max-w-[160px]">
+                {userRole === 'admin' ? 'Administrator' : 'Core Member'}
+              </span>
+            </div>
+          </div>
+          <button 
+            onClick={async () => {
+              await supabase.auth.signOut();
+              window.location.href = '/login';
+            }} 
+            className="w-full py-3 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-slate-100 border border-red-500/20 hover:border-transparent rounded-md text-sm font-bold transition-all flex items-center justify-center gap-2"
+          >
+            <i className="fas fa-sign-out-alt"></i> Log Out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Area */}
+      <main className="flex-1 overflow-y-auto p-6 pb-24 md:p-10 md:pb-10 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          {/* USER TAB */}
+          {activeTab === 'users' && userRole === 'admin' && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="mb-8">
+                <h2 className="text-3xl font-sans font-extrabold text-slate-100 tracking-tight">User Access Provisioning</h2>
+                <p className="text-slate-400 text-base mt-1.5">Manage accounts and platform authorizations for MSC Core Members.</p>
+              </div>
+              
+              <div className="bg-slate-900  border border-slate-800 rounded-md p-6 md:p-8 mb-8 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-100 mb-5 flex items-center gap-2">
+                  <i className="fas fa-user-plus text-blue-400"></i> Provision Core Account
+                </h3>
+                <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Email Address</label>
+                    <input type="email" name="email" required placeholder="new@member.com" autoComplete="off" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Password</label>
+                    <input type="password" name="password" required placeholder="••••••••" autoComplete="new-password" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 focus:shadow-sm rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Assign Role</label>
+                    <select name="role" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
+                      <option value="core_member">Core Member</option>
+                    </select>
+                  </div>
+                  <div>
+                    <button type="submit" className="w-full py-3 px-6 bg-blue-600 hover:from-blue-600 hover:to-purple-600 rounded-md font-bold transition-all shadow-sm text-slate-100">Create Account</button>
+                  </div>
+                </form>
+                {statusMsg?.id === 'create_user' && <div className={`mt-4 text-xs font-semibold text-sm ${statusMsg.type === 'error' ? 'text-red-400' : statusMsg.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>{statusMsg.msg}</div>}
+              </div>
+
+              <div className="bg-slate-900  border border-slate-800 rounded-md overflow-hidden shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 bg-slate-800">
+                      <th className="text-[#a1a1aa] font-bold text-xs uppercase tracking-wider p-4">Email Address</th>
+                      <th className="text-[#a1a1aa] font-bold text-xs uppercase tracking-wider p-4">Role</th>
+                      <th className="text-[#a1a1aa] font-bold text-xs uppercase tracking-wider p-4 text-right">Quick Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loadingUsers ? (
+                      [...Array(4)].map((_, idx) => (
+                        <tr key={idx} className="border-b border-slate-800 animate-pulse">
+                          <td className="p-4">
+                            <div className="h-4 bg-slate-800 rounded w-48"></div>
+                          </td>
+                          <td className="p-4">
+                            <div className="h-8 bg-slate-800 border border-slate-800 rounded-md w-24"></div>
+                          </td>
+                          <td className="p-4 text-right flex justify-end gap-2">
+                            <div className="h-8 bg-slate-800 rounded-md w-20"></div>
+                            <div className="h-8 bg-red-500/5 rounded-md w-20"></div>
+                          </td>
+                        </tr>
+                      ))
+                    ) : users.length === 0 ? (
+                      <tr><td colSpan={3} className="text-center p-10 text-[#a1a1aa]">No users found.</td></tr>
+                    ) : (
+                      users.map(u => (
+                        <tr key={u.id} className="hover:bg-slate-800 border-b border-slate-800 transition-colors">
+                          <td className="p-4 font-semibold text-slate-200">{u.email}</td>
+                          <td className="p-4">
+                            <select
+                              defaultValue={u.role}
+                              onChange={(e) => { triggerHaptic('medium'); updateUserRole(u.id, e.target.value); }}
+                              disabled={u.role === 'admin'}
+                              className="p-2 rounded-md bg-slate-950 text-slate-100/85 text-xs font-semibold border border-slate-800 focus:outline-none focus:border-blue-500 disabled:opacity-50 appearance-none pr-6 bg-no-repeat bg-[right_8px_center] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')]"
+                            >
+                              <option value="core_member">Core Member</option>
+                              {u.role === 'admin' && <option value="admin">Admin</option>}
+                            </select>
+                          </td>
+                          <td className="p-4 text-right flex items-center justify-end gap-2">
+                            <span className={`text-xs mr-2 font-medium ${statusMsg?.id === `user_${u.id}` ? (statusMsg.type === 'error' ? 'text-red-400' : statusMsg.type === 'success' ? 'text-green-400' : 'text-zinc-400') : 'hidden'}`}>{statusMsg?.id === `user_${u.id}` ? statusMsg.msg : ''}</span>
+                            <button onClick={() => { triggerHaptic('light'); openPasswordResetModal(u.id, u.email); }} disabled={u.role === 'admin'} className="px-3.5 py-2 bg-slate-800 hover:bg-slate-800 border border-slate-800 hover:border-slate-800 rounded-md text-xs font-bold text-slate-100 transition-colors disabled:opacity-30 flex items-center gap-1.5 cursor-pointer"><i className="fas fa-key text-xs"></i> Reset</button>
+                            <button onClick={() => { triggerHaptic('heavy'); openDeleteUserModal(u.id, u.email); }} disabled={u.role === 'admin'} className="px-3.5 py-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-slate-100 border border-red-500/20 hover:border-transparent rounded-md text-xs font-bold transition-colors disabled:opacity-30 flex items-center gap-1.5 cursor-pointer"><i className="fas fa-trash-alt text-xs"></i> Delete</button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* EVENTS TAB */}
+          {activeTab === 'events' && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-3xl font-sans font-extrabold text-slate-100 tracking-tight">Events Management</h2>
+                  <p className="text-slate-400 text-base mt-1.5">Configure event listings, registrations criteria, and certificate templates.</p>
+                </div>
+              </div>
+              
+              {userRole === 'admin' && (
+                <div className="bg-slate-900  border border-slate-800 rounded-md p-6 md:p-8 mb-8 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-100 mb-5 flex items-center gap-2">
+                    <i className="fas fa-calendar-plus text-blue-400"></i> Create New Event
+                  </h3>
+                  <form onSubmit={handleCreateEvent} className="flex flex-col gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Event Title</label>
+                        <input type="text" name="title" required placeholder="e.g. Hackathon 2.0" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Date</label>
+                        <input type="date" name="date_start" required className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Status</label>
+                        <select name="status" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
+                          <option value="upcoming">Upcoming</option>
+                          <option value="completed">Completed</option>
+                        </select>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Event Type</label>
+                        <select name="type" required className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all appearance-none bg-no-repeat bg-right bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%23a1a1aa%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] pr-10">
+                          <option value="hackathon">Hackathon</option>
+                          <option value="workshop">Workshop</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Venue / Location</label>
+                        <input type="text" name="location" placeholder="e.g. Mini Auditorium, SR-Block" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Maximum Capacity (Optional)</label>
+                        <input type="number" name="max_capacity" min="1" placeholder="e.g. 150 (Leave empty for unlimited)" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Event Description</label>
+                      <textarea name="description" rows={3} required placeholder="Provide a compelling description of the event..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500 resize-none"></textarea>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-800 border border-slate-800 p-5 rounded-md">
+                      <div>
+                        <label className="block text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-2">Event Poster Image <span className="text-slate-500 lowercase font-normal">(optional)</span></label>
+                        <input type="file" name="image" accept="image/*" className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md px-4 py-2.5 text-slate-100 outline-none transition-all text-sm file:mr-4 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 file:transition-all cursor-pointer" />
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <label className="flex items-center gap-3 cursor-pointer select-none">
+                          <input type="checkbox" name="registration_open" className="w-5 h-5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                          <div>
+                            <span className="text-sm font-bold text-slate-100 block">Open Registrations Instantly</span>
+                            <span className="text-xs text-slate-400 block mt-0.5">Let participants register as soon as the event is created.</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-1 flex items-center justify-between">
+                        <span>Certificate HTML Template <span className="text-slate-500 lowercase font-normal">(optional)</span></span>
+                        <span className="text-xs text-yellow-500/80 normal-case font-normal">Placeholders: {`{{NAME}}, {{EVENT_TITLE}}, {{EVENT_DATE}}, {{COLLEGE_NAME}}`}</span>
+                      </label>
+                      <textarea 
+                        name="certificate_html" 
+                        rows={4}
+                        placeholder={`<div style="font-family: sans-serif; text-slate-400lign: center; padding: 40px; background: white; color: black;">\n  <h1>Certificate of Participation</h1>\n  <p>Presented to {{NAME}} for participating in {{EVENT_TITLE}} on {{EVENT_DATE}}.</p>\n</div>`}
+                        className="w-full bg-slate-950 border border-slate-800 focus:border-yellow-500/50 rounded-md p-3.5 text-slate-100 font-mono text-xs outline-none transition-all resize-none"
+                      ></textarea>
+                    </div>
+
+                    <div className="p-5 bg-slate-950 border border-slate-800 rounded-md">
+                      <h4 className="text-xs font-bold text-slate-100 mb-4 uppercase tracking-wider flex items-center gap-2">
+                        <i className="fas fa-tasks text-blue-400"></i> Public Registration Form Setup
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-3">
+                          <label className="flex items-center gap-3 cursor-not-allowed opacity-60">
+                            <input type="checkbox" defaultChecked disabled className="w-4.5 h-4.5 accent-blue-500 rounded bg-slate-950" />
+                            <span className="text-sm text-slate-200">Require Student Email (Mandatory)</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="req_reg_num" defaultChecked className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm text-slate-200">Require Registration Number</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="req_branch" className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm text-slate-200">Require Branch</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="req_spec" className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm text-slate-200">Require Specialization</span>
+                          </label>
+                        </div>
+                        
+                        <div className="flex flex-col gap-3 border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6">
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="allow_external_students" className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm font-semibold text-blue-300">Allow Students from Other Colleges</span>
+                          </label>
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="provide_certificates" defaultChecked className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm font-semibold text-slate-200">Provide E-Certificates</span>
+                          </label>
+                          <div className="h-px bg-slate-800 my-1"></div>
+                          <label className="flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" name="allow_teams" checked={allowTeamsToggle} onChange={(e) => { setAllowTeamsToggle(e.target.checked); if (!e.target.checked) setChargeType('per_person'); }} className="w-4.5 h-4.5 accent-blue-500 rounded border-slate-800 bg-slate-950 cursor-pointer" />
+                            <span className="text-sm font-semibold text-purple-400">Allow Team Registrations</span>
+                          </label>
+                          {allowTeamsToggle && (
+                            <div className="flex items-center gap-3 pl-7 animate-in fade-in slide-in-from-left-2 duration-200">
+                              <span className="text-xs text-slate-300">Max Team Size:</span>
+                              <input type="number" name="max_team_size" defaultValue={3} min={2} max={10} className="w-16 p-1.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-md text-slate-100 text-center text-xs outline-none" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Registration Fee Section */}
+                    <div className="p-5 bg-slate-950 border border-slate-800 rounded-md mt-4">
+                      <h4 className="text-xs font-bold text-slate-100 mb-4 uppercase tracking-wider flex items-center gap-2">
+                        <i className="fas fa-rupee-sign text-green-400"></i> Registration Fee
+                      </h4>
+                      <div className="flex gap-3 mb-4">
+                        <button type="button"
+                          onClick={() => setEventPricingType('free')}
+                          className={`px-5 py-2.5 rounded-md text-sm font-bold transition-all border ${
+                            eventPricingType === 'free'
+                              ? 'bg-green-500/15 text-green-400 border-green-500/30 shadow-sm'
+                              : 'bg-slate-800 text-slate-400 border-slate-800 hover:bg-slate-800'
+                          }`}>
+                          <i className="fas fa-gift mr-2"></i>Free
+                        </button>
+                        <button type="button"
+                          onClick={() => setEventPricingType('paid')}
+                          className={`px-5 py-2.5 rounded-md text-sm font-bold transition-all border ${
+                            eventPricingType === 'paid'
+                              ? 'bg-amber-500/15 text-slate-400mber-400 border-amber-500/30 shadow-sm'
+                              : 'bg-slate-800 text-slate-400 border-slate-800 hover:bg-slate-800'
+                          }`}>
+                          <i className="fas fa-credit-card mr-2"></i>Paid
+                        </button>
+                      </div>
+
+                      {eventPricingType === 'paid' && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-200 space-y-4">
+                          {/* Charge Type */}
+                          <div>
+                            <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-2 block">
+                              Charge Type
+                            </label>
+                            <div className="flex gap-3">
+                              <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-200">
+                                <input type="radio" name="charge_type" value="per_person"
+                                  checked={chargeType === 'per_person'}
+                                  onChange={() => setChargeType('per_person')}
+                                  className="accent-blue-500" />
+                                Per Person
+                              </label>
+                              {allowTeamsToggle && (
+                                <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-200">
+                                  <input type="radio" name="charge_type" value="per_team"
+                                    checked={chargeType === 'per_team'}
+                                    onChange={() => setChargeType('per_team')}
+                                    className="accent-blue-500" />
+                                  Per Team
+                                </label>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Fee Amount */}
+                          <div className="flex flex-col gap-2">
+                            <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">
+                              Registration Fee (₹)
+                            </label>
+                            <input type="number" name="registration_fee" min="1" step="1" required={eventPricingType === 'paid'}
+                              placeholder="e.g. 200"
+                              className="p-3.5 bg-slate-950 border border-slate-800 rounded-md text-slate-100 focus:outline-none focus:border-blue-500" />
+                            <span className="text-xs text-slate-400">
+                              {chargeType === 'per_person'
+                                ? 'Each participant pays this amount individually.'
+                                : 'This is charged once for the entire team.'}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex justify-between items-center mt-2">
+                      <div className={`text-xs font-semibold text-sm ${statusMsg?.type === 'error' ? 'text-red-400' : statusMsg?.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
+                        {statusMsg?.id === 'create_event' && statusMsg.msg}
+                      </div>
+                      <button type="submit" className="px-8 py-3 bg-blue-600 hover:from-blue-600 hover:to-purple-600 rounded-md font-bold transition-all shadow-sm text-slate-100">Save Event</button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* Event Cards Grid */}
+              {loadingEvents ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden h-[340px] animate-pulse flex flex-col justify-between p-6">
+                      <div className="space-y-4">
+                        <div className="h-32 bg-slate-800 rounded-md w-full"></div>
+                        <div className="h-5 bg-slate-800 rounded w-2/3"></div>
+                        <div className="h-3 bg-slate-800 rounded w-1/3"></div>
+                        <div className="h-3 bg-slate-800 rounded w-full"></div>
+                      </div>
+                      <div className="flex justify-between items-center mt-6">
+                        <div className="h-8 bg-slate-800 rounded-md w-24"></div>
+                        <div className="h-8 bg-slate-800 rounded-md w-16"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : events.length === 0 ? (
+                <p className="text-slate-400 text-center py-8">No events found.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {events.map(evt => (
+                    <div key={evt.id} className="bg-slate-900  border border-slate-800 rounded-lg overflow-hidden flex flex-col relative group hover:border-blue-500/30 transition-all duration-300 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+                      {/* Poster image Header */}
+                      <div className="h-44 bg-zinc-950/80 relative flex items-center justify-center overflow-hidden border-b border-slate-800">
+                        {evt.image_url ? (
+                          <img src={evt.image_url} alt={evt.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                        ) : (
+                          <div className="absolute inset-0 bg-blue-600 flex items-center justify-center">
+                            <i className="fas fa-calendar-alt text-4xl text-slate-100/5"></i>
+                          </div>
+                        )}
+                        <div className="absolute top-4 right-4 flex gap-2 flex-wrap justify-end">
+                          {evt.form_requirements?.event_pricing === 'paid' && (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border bg-amber-500/20 text-slate-400mber-400 border-amber-500/30">
+                              ₹{evt.form_requirements.registration_fee} {evt.form_requirements.charge_type === 'per_team' ? '/ Team' : '/ Person'}
+                            </span>
+                          )}
+                          {evt.type && (
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${evt.type === 'hackathon' ? 'bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-sm' : evt.type === 'workshop' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30 shadow-sm' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}>
+                              {evt.type}
+                            </span>
+                          )}
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${evt.status === 'upcoming' ? 'bg-green-500/20 text-green-400 border-green-500/30 shadow-sm' : 'bg-zinc-800 text-zinc-400 border-zinc-700'}`}>
+                            {evt.status}
+                          </span>
+                          {evt.registration_open ? (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border bg-blue-500/20 text-blue-400 border-blue-500/30 shadow-sm">
+                              Open
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border bg-red-500/20 text-red-400 border-red-500/30">
+                              Closed
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="p-6 flex-1 flex flex-col">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-slate-100 mb-2 group-hover:text-blue-400 transition-colors line-clamp-1">{evt.title}</h3>
+                          <p className="text-xs text-[#a1a1aa] mb-4 flex items-center flex-wrap gap-2">
+                            <span className="flex items-center gap-1.5"><i className="fas fa-clock text-blue-400"></i> {new Date(evt.date_start).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium' })}</span>
+                            {evt.location && (
+                              <>
+                                <span className="text-slate-500">•</span>
+                                <span className="flex items-center gap-1.5"><i className="fas fa-map-marker-alt text-purple-400"></i> {evt.location}</span>
+                              </>
+                            )}
+                          </p>
+                          <p className="text-xs text-slate-400 mb-6 line-clamp-2 leading-relaxed">{evt.description}</p>
+                        </div>
+                        
+                        <div className="border-t border-slate-800 pt-4 flex flex-wrap gap-2 justify-between items-center">
+                          <Link href={`/admin/events/${evt.slug || evt.id}`} onClick={() => triggerHaptic('light')} className="px-4 py-2 rounded-md text-xs font-bold bg-blue-500 hover:bg-blue-600 text-slate-100 transition-all shadow-md flex items-center gap-1.5">
+                            <i className="fas fa-external-link-alt"></i> Registrations
+                          </Link>
+                          
+                          {userRole === 'admin' && (
+                            <div className="flex gap-1.5">
+                              <Link href={`/admin/events/${evt.slug || evt.id}/edit`} onClick={() => triggerHaptic('light')} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-800 hover:border-blue-500/30 hover:bg-blue-500/10 flex items-center justify-center text-slate-300 hover:text-blue-400 transition-all" title="Edit Event">
+                                <i className="fas fa-edit text-xs"></i>
+                              </Link>
+                              <button onClick={() => { triggerHaptic('medium'); toggleEventStatus(evt.id, evt.status); }} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-800 hover:border-green-500/30 hover:bg-green-500/10 flex items-center justify-center text-slate-300 hover:text-green-400 transition-all cursor-pointer" title={evt.status === 'completed' ? 'Mark Upcoming' : 'Mark Completed'}>
+                                <i className={`fas ${evt.status === 'completed' ? 'fa-calendar-plus' : 'fa-calendar-check'} text-xs`}></i>
+                              </button>
+                              <button onClick={() => { triggerHaptic('medium'); toggleRegistration(evt.id, !!evt.registration_open); }} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-800 hover:border-orange-500/30 hover:bg-orange-500/10 flex items-center justify-center text-slate-300 hover:text-orange-400 transition-all cursor-pointer" title={evt.registration_open ? 'Close Registration' : 'Open Registration'}>
+                                <i className={`fas ${evt.registration_open ? 'fa-lock' : 'fa-lock-open'} text-xs`}></i>
+                              </button>
+                              <button onClick={() => { triggerHaptic('heavy'); deleteEvent(evt.id, evt.title); }} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-800 hover:border-red-500/30 hover:bg-red-500/10 flex items-center justify-center text-slate-300 hover:text-red-400 transition-all cursor-pointer" title="Delete Event">
+                                <i className="fas fa-trash-alt text-xs"></i>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TEAM TAB */}
+          {activeTab === 'team' && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="mb-8">
+                <h2 className="text-3xl font-sans font-extrabold text-slate-100 tracking-tight">Team Directory</h2>
+                <p className="text-slate-400 text-base mt-1.5">Configure profile listings shown in the public team section.</p>
+              </div>
+              
+              {userRole === 'admin' && (
+                <div className="bg-slate-900  border border-slate-800 rounded-md p-6 md:p-8 mb-8 shadow-sm">
+                  <h3 className="text-xl font-bold text-slate-100 mb-5 flex items-center gap-2">
+                    <i className="fas fa-user-plus text-purple-400"></i> Add Team Member
+                  </h3>
+                  <form onSubmit={handleCreateTeam} className="flex flex-col gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Full Name</label>
+                        <input type="text" name="name" required placeholder="e.g. John Doe" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Role</label>
+                        <input type="text" name="role" required placeholder="e.g. Technical Lead" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">LinkedIn URL</label>
+                        <input type="url" name="linkedin_url" placeholder="https://www.linkedin.com/in/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">GitHub URL</label>
+                        <input type="url" name="github_url" placeholder="https://github.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Twitter/X URL</label>
+                        <input type="url" name="twitter_url" placeholder="https://x.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Instagram URL</label>
+                        <input type="url" name="instagram_url" placeholder="https://instagram.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Email Address</label>
+                        <input type="email" name="email" placeholder="email@example.com" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Portfolio URL</label>
+                        <input type="url" name="portfolio_url" placeholder="https://yourwebsite.com" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 bg-slate-800 border border-slate-800 p-4 rounded-md">
+                      <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Profile Picture (Upload)</label>
+                      <input type="file" name="image" accept="image/*" className="w-full text-sm text-slate-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-100 hover:file:bg-white transition-all cursor-pointer" />
+                    </div>
+
+                    <div className="flex justify-between items-center mt-2">
+                      <div className={`text-xs font-semibold text-sm ${statusMsg?.type === 'error' ? 'text-red-400' : statusMsg?.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
+                        {statusMsg?.id === 'create_team' && statusMsg.msg}
+                      </div>
+                      <button type="submit" className="px-8 py-3 bg-blue-600 hover:from-blue-600 hover:to-purple-600 rounded-md font-bold transition-all shadow-sm text-slate-100">Save Member</button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* Team Members Cards */}
+              {loadingTeam ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="bg-slate-900 border border-slate-800 rounded-md p-6 flex flex-col items-center text-center animate-pulse">
+                      <div className="w-20 h-20 rounded-full bg-slate-800 mb-4"></div>
+                      <div className="h-4 bg-slate-800 rounded w-2/3 mb-2"></div>
+                      <div className="h-3 bg-slate-800 rounded w-1/2 mb-4"></div>
+                      <div className="flex gap-3 mb-4">
+                        <div className="w-8 h-8 rounded-full bg-slate-800"></div>
+                        <div className="w-8 h-8 rounded-full bg-slate-800"></div>
+                      </div>
+                      <div className="w-full h-8 rounded-md bg-slate-800"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : team.length === 0 ? (
+                <p className="text-slate-400 text-center py-8">No team members found.</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {team.map(member => (
+                    <div key={member.id} className="bg-slate-900  border border-slate-800 rounded-md p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-blue-500/30 transition-all duration-300 shadow-sm">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                      <div className="w-20 h-20 rounded-full bg-blue-600 border border-slate-800 flex items-center justify-center overflow-hidden mb-4 shadow-md group-hover:border-blue-500/40 transition-all">
+                        {member.image_url ? (
+                          <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-2xl font-bold text-slate-200">{member.name.charAt(0)}</span>
+                        )}
+                      </div>
+                      <h3 className="text-base font-bold text-slate-100 group-hover:text-blue-400 transition-colors line-clamp-1">{member.name}</h3>
+                      <p className="text-xs text-slate-400 mb-4 font-medium line-clamp-1">{member.role}</p>
+                      
+                      <div className="flex gap-3 mb-4">
+                        {member.linkedin_url && (
+                          <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-8 h-8 rounded-full bg-slate-800 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all" title="LinkedIn">
+                            <i className="fab fa-linkedin-in text-xs"></i>
+                          </a>
+                        )}
+                        {member.github_url && (
+                          <a href={member.github_url} target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-8 h-8 rounded-full bg-slate-800 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-100 hover:border-slate-800 hover:bg-slate-800 transition-all" title="GitHub">
+                            <i className="fab fa-github text-xs"></i>
+                          </a>
+                        )}
+                      </div>
+                      
+                      {userRole === 'admin' && (
+                        <div className="flex gap-2 w-full mt-2">
+                          <button onClick={() => { triggerHaptic('light'); setEditingTeamMember(member); }} className="flex-1 py-2 bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-slate-100 border border-blue-500/20 hover:border-transparent rounded-md text-xs font-black uppercase tracking-widest transition-all cursor-pointer">
+                            Edit
+                          </button>
+                          <button onClick={() => { triggerHaptic('heavy'); deleteTeam(member.id); }} className="flex-1 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-slate-100 border border-red-500/20 hover:border-transparent rounded-md text-xs font-black uppercase tracking-widest transition-all cursor-pointer">
+                            Remove
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Edit Team Member Modal */}
+              {editingTeamMember && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950  animate-in fade-in">
+                  <div className="bg-slate-900 border border-slate-800 rounded-md p-6 w-full max-w-3xl shadow-sm overflow-y-auto max-h-[90vh]">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+                        <i className="fas fa-user-edit text-blue-400"></i> Edit Team Member
+                      </h3>
+                      <button onClick={() => setEditingTeamMember(null)} className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-100 transition-all cursor-pointer">
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </div>
+                    
+                    <form key={editingTeamMember.id} onSubmit={handleUpdateTeam} className="flex flex-col gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Full Name</label>
+                          <input type="text" name="name" required defaultValue={editingTeamMember.name} placeholder="e.g. John Doe" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Role</label>
+                          <input type="text" name="role" required defaultValue={editingTeamMember.role} placeholder="e.g. Technical Lead" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">LinkedIn URL</label>
+                          <input type="url" name="linkedin_url" defaultValue={editingTeamMember.linkedin_url} placeholder="https://www.linkedin.com/in/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">GitHub URL</label>
+                          <input type="url" name="github_url" defaultValue={editingTeamMember.github_url} placeholder="https://github.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Twitter/X URL</label>
+                          <input type="url" name="twitter_url" defaultValue={editingTeamMember.twitter_url} placeholder="https://x.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Instagram URL</label>
+                          <input type="url" name="instagram_url" defaultValue={editingTeamMember.instagram_url} placeholder="https://instagram.com/..." className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Email Address</label>
+                          <input type="email" name="email" defaultValue={editingTeamMember.email} placeholder="email@example.com" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Portfolio URL</label>
+                          <input type="url" name="portfolio_url" defaultValue={editingTeamMember.portfolio_url} placeholder="https://yourwebsite.com" className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500/50 rounded-md text-slate-100 outline-none transition-all placeholder:text-slate-500" />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 bg-slate-800 border border-slate-800 p-4 rounded-md">
+                        <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">Profile Picture (Upload)</label>
+                        <p className="text-xs text-slate-400 mb-2">Leave blank to keep current picture</p>
+                        <input type="file" name="image" accept="image/*" className="w-full text-sm text-slate-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-100 hover:file:bg-white transition-all cursor-pointer" />
+                      </div>
+
+                      <div className="flex justify-between items-center mt-6">
+                        <div className={`text-xs font-semibold text-sm ${statusMsg?.type === 'error' ? 'text-red-400' : statusMsg?.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
+                          {statusMsg?.id === 'update_team' && statusMsg.msg}
+                        </div>
+                        <div className="flex gap-4">
+                          <button type="button" onClick={() => setEditingTeamMember(null)} className="px-6 py-3 bg-slate-800 hover:bg-slate-800 rounded-md font-bold transition-all text-slate-100/70">Cancel</button>
+                          <button type="submit" className="px-8 py-3 bg-blue-600 hover:from-blue-600 hover:to-purple-600 rounded-md font-bold transition-all shadow-sm text-slate-100">Save Changes</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ANALYTICS TAB */}
+          {activeTab === 'analytics' && <AnalyticsDashboard />}
+
+
+          {/* PASSWORD REQUESTS TAB */}
+          {activeTab === 'password_reqs' && userRole === 'admin' && <PasswordRequestsTab />}
+
+          {/* SETTINGS TAB */}
+          {activeTab === 'settings' && <SettingsTab />}
+
+          {/* ABOUT TAB */}
+        </div>
+      </main>
 
       {/* Password Reset Modal Overlay */}
       {resettingUser && (
-        <div className="fixed inset-0 bg-black/80  z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white border border-black rounded-none max-w-md w-full overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] shadow-black/40 p-6 animate-in zoom-in-95 duration-200">
-            <h3 className="text-lg font-bold text-black mb-2 flex items-center gap-2">
-              <Key className="text-black" strokeWidth={1.5} /> Reset Password
+        <div className="fixed inset-0 bg-slate-950  z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-md max-w-md w-full overflow-hidden shadow-sm p-6 animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-bold text-slate-100 mb-2 flex items-center gap-2">
+              <i className="fas fa-key text-blue-400"></i> Reset Password
             </h3>
-            <p className="text-xs text-gray-800 font-bold mb-5">Change password for <strong className="text-black">{resettingUser.email}</strong>.</p>
-
+            <p className="text-xs text-slate-400 mb-5">Change password for <strong className="text-slate-200">{resettingUser.email}</strong>.</p>
+            
             <form onSubmit={handlePasswordResetSubmit} className="space-y-4">
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-bold text-black uppercase tracking-wider">New Password</label>
-                <input
-                  type="password"
+                <label className="text-xs font-bold text-[#a1a1aa] uppercase tracking-wider text-xs">New Password</label>
+                <input 
+                  type="password" 
                   value={newPasswordValue}
                   onChange={(e) => setNewPasswordValue(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="••••••••" 
                   required
-                  className="p-3 bg-black border border-black focus:border-black rounded-none text-black outline-none text-sm transition-all"
+                  className="p-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-md text-slate-100 outline-none text-sm transition-all"
                 />
               </div>
 
               {resetModalError && <p className="text-xs font-semibold text-red-400">{resetModalError}</p>}
 
               <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
+                <button 
+                  type="button" 
                   onClick={() => { triggerHaptic('light'); setResettingUser(null); }}
-                  className="px-4 py-2.5 bg-white hover:bg-slate-200 border border-black rounded-none text-xs font-bold text-black transition-colors cursor-pointer"
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-800 border border-slate-800 rounded-md text-xs font-bold text-slate-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
+                <button 
+                  type="submit" 
                   disabled={isResettingPassword}
-                  className="px-5 py-2.5 bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all rounded-full text-xs font-bold text-black transition-colors cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 hover:opacity-90"
+                  className="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 rounded-md text-xs font-bold text-slate-100 transition-colors cursor-pointer shadow-md disabled:opacity-50"
                 >
                   {isResettingPassword ? 'Updating...' : 'Update Password'}
                 </button>
@@ -916,27 +1343,27 @@ export default function AdminPage() {
 
       {/* Delete User Confirmation Modal */}
       {deletingUser && (
-        <div className="fixed inset-0 bg-black/80  z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white border border-red-500/20 rounded-none max-w-md w-full overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] shadow-black/40 p-6 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-slate-950  z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-red-500/20 rounded-md max-w-md w-full overflow-hidden shadow-sm p-6 animate-in zoom-in-95 duration-200">
             <h3 className="text-lg font-bold text-red-400 mb-2 flex items-center gap-2">
-              <AlertTriangle strokeWidth={1.5} /> Delete Account
+              <i className="fas fa-exclamation-triangle"></i> Delete Account
             </h3>
-            <p className="text-sm text-black/70 leading-relaxed mb-6">
-              Are you absolutely sure you want to delete <strong className="text-black font-bold">{deletingUser.email}</strong>? This action is permanent and cannot be undone.
+            <p className="text-sm text-slate-100/70 leading-relaxed mb-6">
+              Are you absolutely sure you want to delete <strong className="text-slate-100 font-bold">{deletingUser.email}</strong>? This action is permanent and cannot be undone.
             </p>
 
             <div className="flex justify-end gap-2">
-              <button
-                type="button"
+              <button 
+                type="button" 
                 onClick={() => { triggerHaptic('light'); setDeletingUser(null); }}
-                className="px-4 py-2.5 bg-white hover:bg-slate-200 border border-black rounded-none text-xs font-bold text-black transition-colors cursor-pointer"
+                className="px-4 py-2.5 bg-slate-800 hover:bg-slate-800 border border-slate-800 rounded-md text-xs font-bold text-slate-100 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
-              <button
-                type="button"
+              <button 
+                type="button" 
                 onClick={confirmDeleteUser}
-                className="px-5 py-2.5 bg-red-500 hover:bg-red-600 rounded-full text-xs font-bold text-black transition-colors cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                className="px-5 py-2.5 bg-red-500 hover:bg-red-600 rounded-md text-xs font-bold text-slate-100 transition-colors cursor-pointer shadow-md"
               >
                 Delete Account
               </button>

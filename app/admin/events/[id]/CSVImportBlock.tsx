@@ -23,17 +23,16 @@ export default function CSVImportBlock({ eventId }: { eventId: string }) {
     if (!file) return;
 
     setIsProcessing(true);
-    setProgress(10); // Start parsing
+    setProgress(10);
 
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        setProgress(30); // Parsed
+        setProgress(30);
 
         if (results.data && results.data.length > 0) {
           try {
-            // We process all at once for simplicity, but could chunk if the file is massive
             const res = await importExternalRegistrations(eventId, results.data)
             setProgress(100);
             
@@ -66,14 +65,14 @@ export default function CSVImportBlock({ eventId }: { eventId: string }) {
   }
 
   return (
-    <div className="bg-[#fdfaf6]/20 border border-4 border-black rounded-none p-6 md:p-8 mb-8 backdrop-blur-md">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 rounded-none bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center text-green-400">
-          <i className="fas fa-file-csv text-xl"></i>
+    <div className="bg-slate-900 border border-slate-800 rounded-md p-6 mb-6">
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-10 h-10 rounded-md bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400">
+          <i className="fas fa-file-csv"></i>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-black tracking-wide">External Registration Sync</h2>
-          <p className="text-black/40 text-sm mt-1">Import registrations from Unstop or Google Forms via CSV</p>
+          <h2 className="text-base font-bold text-slate-100">External Registration Sync</h2>
+          <p className="text-slate-400 text-xs mt-0.5">Import registrations from Unstop or Google Forms via CSV</p>
         </div>
       </div>
 
@@ -83,39 +82,39 @@ export default function CSVImportBlock({ eventId }: { eventId: string }) {
           accept=".csv"
           onChange={handleFileChange}
           ref={fileInputRef}
-          className="block w-full text-sm text-black/60 file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-bold file:bg-green-500/10 file:text-green-400 hover:file:bg-green-500/20 transition-all cursor-pointer bg-[#fdfaf6]/40 border border-2 border-black rounded-none p-2"
+          className="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-green-500/10 file:text-green-400 hover:file:bg-green-500/20 transition-all cursor-pointer bg-slate-950 border border-slate-800 rounded-md p-2"
         />
         <button 
           onClick={handleProcess}
           disabled={!file || isProcessing}
-          className="w-full md:w-auto shrink-0 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 rounded-none text-black font-bold transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] disabled:cursor-not-allowed"
+          className="w-full md:w-auto shrink-0 px-5 py-2.5 bg-green-500/10 hover:bg-green-500 text-green-400 hover:text-white border border-green-500/20 hover:border-transparent disabled:opacity-50 rounded-md font-bold transition-all disabled:cursor-not-allowed text-sm flex items-center gap-2"
         >
           {isProcessing ? (
-            <><i className="fas fa-circle-notch fa-spin mr-2"></i> Processing...</>
+            <><i className="fas fa-circle-notch fa-spin"></i> Processing...</>
           ) : (
-            <><i className="fas fa-sync mr-2"></i> Process and Sync Data</>
+            <><i className="fas fa-sync"></i> Process and Sync</>
           )}
         </button>
       </div>
 
       {isProcessing && (
-        <div className="w-full bg-[#E0E0E0] rounded-none h-2 mt-6 overflow-hidden">
+        <div className="w-full bg-slate-800 rounded-full h-1.5 mt-5 overflow-hidden">
           <div 
-            className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-none transition-all duration-500 ease-out" 
+            className="bg-green-500 h-1.5 rounded-full transition-all duration-500 ease-out" 
             style={{ width: `${progress}%` }}
           ></div>
         </div>
       )}
 
       {result && (
-        <div className={`mt-6 p-4 rounded-none border ${result.errors.length > 0 && result.successCount === 0 ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
+        <div className={`mt-5 p-4 rounded-md border text-sm ${result.errors.length > 0 && result.successCount === 0 ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-green-500/10 border-green-500/20 text-green-400'}`}>
           <h3 className="font-bold mb-2 flex items-center gap-2">
             <i className={`fas fa-${result.errors.length > 0 && result.successCount === 0 ? 'exclamation-circle' : 'check-circle'}`}></i>
             Sync Completed
           </h3>
           <div className="flex gap-6 text-sm mb-2">
-            <span><strong className="text-black">{result.successCount}</strong> Imported</span>
-            <span><strong className="text-black">{result.skipCount}</strong> Skipped / Existed</span>
+            <span><strong className="text-slate-100">{result.successCount}</strong> Imported</span>
+            <span><strong className="text-slate-100">{result.skipCount}</strong> Skipped / Existed</span>
           </div>
           {result.errors.length > 0 && (
             <div className="mt-3 pt-3 border-t border-current/20">
