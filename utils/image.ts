@@ -3,6 +3,9 @@ export async function compressAndConvertImage(
   maxWidth = 900,
   maxHeight = 900
 ): Promise<File> {
+  if (typeof window === "undefined") {
+    return Promise.reject(new Error("Image compression is only available in the browser"));
+  }
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);

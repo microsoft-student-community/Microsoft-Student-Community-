@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/utils/supabase/admin";
+import crypto from "crypto";
 
 /**
  * Submit a public (unauthenticated) registration for an event.

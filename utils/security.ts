@@ -1,14 +1,25 @@
 import crypto from 'crypto';
 
 // Encryption config for storing sensitive data (like pending passwords) securely
-const ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY || 'default-fallback-key-32-chars-long!'; // Must be 32 bytes
+const ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY;
+
+function getEncryptionKey(): Buffer {
+  if (!ENCRYPTION_KEY) {
+    throw new Error('DB_ENCRYPTION_KEY is not set');
+  }
+  const key = Buffer.from(ENCRYPTION_KEY);
+  if (key.length !== 32) {
+    throw new Error('DB_ENCRYPTION_KEY must be exactly 32 bytes long');
+  }
+  return key;
+}
 
 /**
  * Encrypts cleartext using AES-256-GCM.
  */
 export function encrypt(text: string): string {
   const iv = crypto.randomBytes(16);
-  const key = Buffer.from(ENCRYPTION_KEY.padEnd(32).slice(0, 32));
+  const key = getEncryptionKey();
   const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
   
   let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -19,21 +30,19 @@ export function encrypt(text: string): string {
 }
 
 /**
- * Decrypts cyphertext using AES-256-GCM.
- * Falls back to returning the text as-is if it's not encrypted (for backward compatibility).
+ * Decrypts ciphertext using AES-256-GCM.
  */
 export function decrypt(encryptedText: string): string {
   const parts = encryptedText.split(':');
   if (parts.length !== 3) {
-    // Return text as-is if it's not encrypted (e.g. legacy plain text)
-    return encryptedText;
+    throw new Error('Password reset data is invalid.');
   }
   
   try {
     const [ivHex, authTagHex, encryptedHex] = parts;
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(authTagHex, 'hex');
-    const key = Buffer.from(ENCRYPTION_KEY.padEnd(32).slice(0, 32));
+    const key = getEncryptionKey();
     
     const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
     decipher.setAuthTag(authTag);
@@ -42,8 +51,7 @@ export function decrypt(encryptedText: string): string {
     decrypted += decipher.final('utf8');
     return decrypted;
   } catch (err) {
-    console.error('Failed to decrypt database payload, returning raw input:', err);
-    return encryptedText;
+    throw new Error('Failed to decrypt database payload.');
   }
 }
 

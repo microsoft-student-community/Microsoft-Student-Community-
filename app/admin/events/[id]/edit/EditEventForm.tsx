@@ -26,10 +26,10 @@ export default function EditEventForm({ event }: { event: any }) {
   async function uploadImage(file: File, pathPrefix: string) {
     const fileExt = file.name.split('.').pop()
     const fileName = `${pathPrefix}-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
-    
+
     const { data, error } = await supabase.storage.from('images').upload(fileName, file)
     if (error) throw error
-    
+
     const { data: publicData } = supabase.storage.from('images').getPublicUrl(fileName)
     return publicData.publicUrl
   }
@@ -64,7 +64,7 @@ export default function EditEventForm({ event }: { event: any }) {
     }
 
     showStatus('edit_event', 'Saving changes...', 'info')
-    
+
     let image_url = event.image_url // Keep existing by default
     if (imageFile && imageFile.size > 0) {
       try {
@@ -94,11 +94,11 @@ export default function EditEventForm({ event }: { event: any }) {
     const finalGallery = [...existingGallery, ...newGalleryUrls]
 
     const updateData = {
-      title, date_start, status, type, location, description, image_url, registration_open, form_requirements, certificate_html: certificateHtml, max_capacity, gallery_urls: finalGallery 
+      title, date_start, status, type, location, description, image_url, registration_open, form_requirements, certificate_html: certificateHtml, max_capacity, gallery_urls: finalGallery
     }
 
     const res = await updateEventDetails(event.id, updateData)
-    
+
     if (res.error) {
       showStatus('edit_event', `Failed: ${res.error}`, 'error')
     } else {
@@ -143,7 +143,7 @@ export default function EditEventForm({ event }: { event: any }) {
             </select>
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-2">
           <label className="text-[13px] font-semibold text-black uppercase tracking-wider">Venue / Location</label>
           <input type="text" name="location" defaultValue={event.location || ''} className="p-3 bg-[#fdfaf6]/40 border border-4 border-black rounded-none text-black focus:outline-none focus:border-blue-500" />
@@ -166,7 +166,7 @@ export default function EditEventForm({ event }: { event: any }) {
             <input type="file" name="image" accept="image/*" className="w-full bg-[#fdfaf6]/40 border border-4 border-black rounded-none px-4 py-3 text-black focus:outline-none focus:border-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:bg-blue-500/20 file:text-blue-400 hover:file:bg-blue-500/30 transition-all cursor-pointer" />
             {event.image_url && <img src={event.image_url} alt="Current poster" className="mt-2 h-20 rounded-none opacity-50" />}
           </div>
-          
+
           <div className="flex flex-col gap-2 justify-center">
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" name="registration_open" defaultChecked={event.registration_open} className="w-5 h-5 accent-blue-500 cursor-pointer" />
@@ -180,8 +180,8 @@ export default function EditEventForm({ event }: { event: any }) {
             <span>Certificate HTML Template</span>
             <span className="text-[10px] text-yellow-500/80 normal-case font-normal">Optional. Supports Placeholders: {`{{NAME}}, {{EVENT_TITLE}}, {{EVENT_DATE}}, {{COLLEGE_NAME}}`}</span>
           </label>
-          <textarea 
-            name="certificate_html" 
+          <textarea
+            name="certificate_html"
             rows={6}
             defaultValue={event.certificate_html || ''}
             className="w-full bg-[#fdfaf6]/40 border border-4 border-black rounded-none p-4 text-black font-mono text-xs focus:outline-none focus:border-yellow-500"
@@ -194,14 +194,14 @@ export default function EditEventForm({ event }: { event: any }) {
             <label className="text-[13px] font-bold text-black uppercase tracking-wider">Event Photo Gallery</label>
             <span className="text-[10px] text-black/40 normal-case font-normal">Upload photos from the event (especially useful after completion).</span>
           </div>
-          
+
           {existingGallery.length > 0 && (
             <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-2">
               {existingGallery.map((url, i) => (
                 <div key={i} className="relative group rounded-none overflow-hidden aspect-square">
                   <img src={url} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => setExistingGallery(prev => prev.filter((_, index) => index !== i))}
                     className="absolute inset-0 bg-red-500/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-black text-xs font-bold"
                   >
@@ -212,18 +212,18 @@ export default function EditEventForm({ event }: { event: any }) {
             </div>
           )}
 
-          <input 
-            type="file" 
-            accept="image/*" 
-            multiple 
+          <input
+            type="file"
+            accept="image/*"
+            multiple
             onChange={(e) => {
               if (e.target.files) {
                 setNewGalleryFiles(prev => [...prev, ...Array.from(e.target.files!)])
               }
             }}
-            className="w-full bg-[#fdfaf6]/40 border border-4 border-black rounded-none px-4 py-3 text-black focus:outline-none focus:border-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:bg-blue-500/20 file:text-blue-400 hover:file:bg-blue-500/30 transition-all cursor-pointer" 
+            className="w-full bg-[#fdfaf6]/40 border border-4 border-black rounded-none px-4 py-3 text-black focus:outline-none focus:border-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:bg-blue-500/20 file:text-blue-400 hover:file:bg-blue-500/30 transition-all cursor-pointer"
           />
-          
+
           {newGalleryFiles.length > 0 && (
             <div className="mt-3">
               <span className="text-xs text-blue-400 font-bold">{newGalleryFiles.length} new photos selected</span>
@@ -262,7 +262,7 @@ export default function EditEventForm({ event }: { event: any }) {
                 <span className="text-sm font-semibold text-black/80">Provide E-Certificates</span>
               </label>
             </div>
-            
+
             <div className="flex flex-col gap-3 border-t md:border-t-0 md:border-l border-4 border-black pt-4 md:pt-0 md:pl-4">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" name="allow_teams" checked={allowTeamsToggle} onChange={(e) => { setAllowTeamsToggle(e.target.checked); if (!e.target.checked) setChargeType('per_person'); }} className="w-4 h-4 accent-blue-500 cursor-pointer" />
@@ -286,20 +286,18 @@ export default function EditEventForm({ event }: { event: any }) {
           <div className="flex gap-3 mb-4">
             <button type="button"
               onClick={() => setEventPricingType('free')}
-              className={`px-5 py-2.5 rounded-none text-sm font-bold transition-all border ${
-                eventPricingType === 'free'
+              className={`px-5 py-2.5 rounded-none text-sm font-bold transition-all border ${eventPricingType === 'free'
                   ? 'bg-green-500/15 text-green-400 border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]'
                   : 'bg-[#E0E0E0] text-black/50 border-4 border-black hover:bg-white/10'
-              }`}>
+                }`}>
               <i className="fas fa-gift mr-2"></i>Free
             </button>
             <button type="button"
               onClick={() => setEventPricingType('paid')}
-              className={`px-5 py-2.5 rounded-none text-sm font-bold transition-all border ${
-                eventPricingType === 'paid'
+              className={`px-5 py-2.5 rounded-none text-sm font-bold transition-all border ${eventPricingType === 'paid'
                   ? 'bg-amber-500/15 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]'
                   : 'bg-[#E0E0E0] text-black/50 border-4 border-black hover:bg-white/10'
-              }`}>
+                }`}>
               <i className="fas fa-credit-card mr-2"></i>Paid
             </button>
           </div>

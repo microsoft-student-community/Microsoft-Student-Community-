@@ -56,8 +56,8 @@ function reqToPromise<T>(req: IDBRequest<T>): Promise<T> {
 
 export async function saveRegistrations(regs: any[]): Promise<void> {
   const store = await getStore('registrations', 'readwrite');
-  store.clear();
-  regs.forEach((reg) => store.put(reg));
+  await reqToPromise(store.clear());
+  await Promise.all(regs.map((reg) => reqToPromise(store.put(reg))));
 }
 
 export async function saveSingleRegistration(reg: any): Promise<void> {
@@ -67,8 +67,22 @@ export async function saveSingleRegistration(reg: any): Promise<void> {
 
 export async function getRegistrationByHash(hash: string): Promise<any | null> {
   const store = await getStore('registrations', 'readonly');
-  const all = await reqToPromise(store.getAll());
-  return all.find((reg: any) => reg.hash_payload === hash) || null;
+  return new Promise((resolve, reject) => {
+    const request = store.openCursor();
+    request.onsuccess = (event: any) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        if (cursor.value.hash_payload === hash) {
+          resolve(cursor.value);
+        } else {
+          cursor.continue();
+        }
+      } else {
+        resolve(null);
+      }
+    };
+    request.onerror = () => reject(request.error);
+  });
 }
 
 export async function updateLocalRegistrationCheckin(
@@ -108,7 +122,7 @@ export async function getSyncQueue(): Promise<OfflineCheckin[]> {
 
 export async function removeFromSyncQueue(ids: number[]): Promise<void> {
   const store = await getStore('sync_queue', 'readwrite');
-  ids.forEach((id) => store.delete(id));
+  await Promise.all(ids.map((id) => reqToPromise(store.delete(id))));
 }
 
 export async function getRegistrationCount(): Promise<number> {

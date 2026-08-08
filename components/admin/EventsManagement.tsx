@@ -54,9 +54,9 @@ export default function EventsManagement({
   setEventPricingType,
   chargeType,
   setChargeType,
-  triggerHaptic = () => {}
+  triggerHaptic = () => { }
 }: EventsManagementProps) {
-  
+
 
 
 
@@ -86,7 +86,7 @@ export default function EventsManagement({
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold tracking-tight text-black tracking-tight">Events Management</h2>
       </div>
-      
+
 
       {userRole === 'admin' && (
         <div className="bg-white rounded-none border border-2 md:border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-12 overflow-hidden">
@@ -99,9 +99,9 @@ export default function EventsManagement({
             </h3>
             <p className="text-gray-800 font-bold text-[13px] mt-1 ml-[52px]">Fill out the details below to launch a new event.</p>
           </div>
-          
+
           <form onSubmit={handleCreateEvent} className="p-8 flex flex-col gap-[32px]">
-            
+
             {/* Section 1: Event Information */}
             <div className="flex flex-col gap-6">
               <h4 className="text-[14px] font-bold text-black uppercase tracking-wider border-b border-2 md:border-4 border-black pb-2">1. Event Information</h4>
@@ -160,7 +160,7 @@ export default function EventsManagement({
             <div className="flex flex-col gap-6">
               <h4 className="text-[14px] font-bold text-black uppercase tracking-wider border-b border-2 md:border-4 border-black pb-2">4. Assets & Templates</h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
+
                 <div className="flex flex-col gap-2">
                   <label className="text-[14px] font-medium text-black">Event Poster <span className="text-[12px] text-gray-800 font-bold ml-1">(Optional)</span></label>
                   <div className="relative w-full h-[220px] bg-[#f4f4f0] border-2 border-dashed border-2 md:border-4 border-black rounded-none hover:border-black transition-colors flex flex-col items-center justify-center overflow-hidden group">
@@ -198,9 +198,9 @@ export default function EventsManagement({
                       </div>
                     </div>
                     <div className="flex flex-1 overflow-hidden">
-                      <textarea 
-                        name="certificate_html" 
-                        placeholder="<div style='...'>...</div>" 
+                      <textarea
+                        name="certificate_html"
+                        placeholder="<div style='...'>...</div>"
                         className="flex-1 bg-transparent text-black text-[13px] font-mono p-4 outline-none resize-none placeholder:text-gray-800 font-bold"
                         spellCheck={false}
                       ></textarea>
@@ -218,31 +218,31 @@ export default function EventsManagement({
               </div>
             </div>
 
-            
+
             {/* Section 5: Public Registration Form Rules */}
             <div className="flex flex-col gap-6">
               <h4 className="text-[14px] font-bold text-black uppercase tracking-wider border-b border-2 md:border-4 border-black pb-2">5. Public Registration Form Rules</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
+
                 {/* Mandatory Fields */}
                 <div className="bg-[#f4f4f0] border border-2 md:border-4 border-black p-6 rounded-none flex flex-col gap-4">
                   <h5 className="text-[15px] font-bold text-black uppercase tracking-wider mb-2">Mandatory Fields</h5>
-                  
+
                   <div className="flex items-center justify-between">
                     <span className="text-[14px] font-medium text-black">Student Email</span>
                     <span className="text-[10px] bg-[#E0E0E0] text-black px-2 py-0.5 rounded border border-black uppercase font-bold tracking-widest">Locked</span>
                   </div>
-                  
+
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-[14px] font-medium text-black group-hover:text-blue-600 transition-colors">Require Registration Number</span>
                     <input type="checkbox" name="req_reg_num" className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
                   </label>
-                  
+
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-[14px] font-medium text-black group-hover:text-blue-600 transition-colors">Require Branch</span>
                     <input type="checkbox" name="req_branch" className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
                   </label>
-                  
+
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-[14px] font-medium text-black group-hover:text-blue-600 transition-colors">Require Specialization</span>
                     <input type="checkbox" name="req_spec" className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
@@ -252,12 +252,12 @@ export default function EventsManagement({
                 {/* Eligibility & Teams */}
                 <div className="bg-[#f4f4f0] border border-2 md:border-4 border-black p-6 rounded-none flex flex-col gap-4">
                   <h5 className="text-[15px] font-bold text-black uppercase tracking-wider mb-2">Participant Eligibility</h5>
-                  
+
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-[14px] font-medium text-black group-hover:text-blue-600 transition-colors">Allow Students from Other Colleges</span>
                     <input type="checkbox" name="allow_external_students" defaultChecked className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
                   </label>
-                  
+
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-[14px] font-medium text-black group-hover:text-blue-600 transition-colors">Provide E-Certificates</span>
                     <input type="checkbox" name="provide_certificates" defaultChecked className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
@@ -284,7 +284,7 @@ export default function EventsManagement({
                     </div>
                   )}
                 </div>
-                
+
               </div>
             </div>
 
@@ -293,7 +293,7 @@ export default function EventsManagement({
               <h4 className="text-[14px] font-bold text-black uppercase tracking-wider border-b border-2 md:border-4 border-black pb-2">6. Pricing & Fee Setup</h4>
               <div className="bg-[#f4f4f0] border border-2 md:border-4 border-black p-6 rounded-none">
                 <div className="flex flex-col md:flex-row gap-8">
-                  
+
                   <div className="flex-1 flex flex-col gap-4">
                     <label className="text-[14px] font-medium text-black">Event Pricing Mode</label>
                     <div className="flex gap-4">
@@ -317,7 +317,7 @@ export default function EventsManagement({
                           </label>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-col gap-2 mt-2">
                         <label className="text-[14px] font-medium text-black">Registration Fee (₹)</label>
                         <div className="relative">
@@ -361,18 +361,18 @@ export default function EventsManagement({
                 )}
               </button>
             </div>
-            
+
             {statusMsg?.id === 'create_event' && (
               <div className={`mt-2 p-4 rounded-none text-[14px] font-medium flex items-center gap-2 ${statusMsg.type === 'error' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : statusMsg.type === 'success' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-blue-500/10 text-blue-400 border border-black/20'}`}>
                 {statusMsg.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                 {statusMsg.msg}
               </div>
             )}
-            
+
           </form>
         </div>
       )}
-      
+
       {/* Event Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 pb-20">
         {loadingEvents ? (
@@ -407,7 +407,7 @@ export default function EventsManagement({
                   )}
                 </div>
               </div>
-              
+
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex-1">
                   <h3 className="text-[18px] font-bold text-black mb-4 line-clamp-1 group-hover:text-black transition-colors">{evt.title}</h3>
@@ -424,13 +424,13 @@ export default function EventsManagement({
                     )}
                   </div>
                 </div>
-                
+
                 {/* Unified Action Bar */}
                 <div className="pt-5 border-t border-2 md:border-4 border-black flex gap-2 justify-between">
                   <Link href={`/admin/events/${evt.slug || evt.id}`} onClick={() => triggerHaptic('light')} className="flex-1 bg-[#E0E0E0] hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 text-black hover:text-black border border-black hover:border-[#0a84ff]/20 rounded-[8px] py-2 text-[13px] font-medium transition-all flex items-center justify-center gap-2">
                     Manage <ChevronRight className="w-4 h-4" />
                   </Link>
-                  
+
                   {userRole === 'admin' && (
                     <div className="flex gap-2">
                       <Link href={`/admin/events/${evt.slug || evt.id}/edit`} onClick={() => triggerHaptic('light')} className="w-[36px] h-[36px] rounded-[8px] bg-[#E0E0E0] hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 flex items-center justify-center text-black hover:text-black transition-all" title="Edit Event">

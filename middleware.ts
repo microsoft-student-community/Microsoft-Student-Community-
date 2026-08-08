@@ -4,14 +4,15 @@ import { checkRateLimit, getClientIp } from "./utils/rateLimiter";
 
 // CORS configuration: Load allowed origins from environment or default to local/production values
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
   : [
-      'https://mscsrmap.edu.in',
-      'https://msc-srmap.web.app',
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      process.env.NEXT_PUBLIC_APP_URL || ''
-    ].filter(Boolean);
+    'https://mscsrmap.edu.in',
+    'https://msc-srmap.web.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://msc-srmap.vercel.app',
+    process.env.NEXT_PUBLIC_APP_URL || ''
+  ].filter(Boolean);
 
 export async function middleware(request: NextRequest) {
   try {
@@ -34,7 +35,7 @@ export async function middleware(request: NextRequest) {
           headers: { 'Content-Type': 'application/json', 'Vary': 'Origin' }
         });
       }
-      
+
       return new NextResponse(null, {
         status: 204,
         headers: {
@@ -130,19 +131,19 @@ export async function middleware(request: NextRequest) {
       }
 
       // Protection & Auth Guards
-      const isProtected = currentPath.startsWith('/admin') || 
-                          currentPath.startsWith('/dashboard') || 
-                          currentPath.startsWith('/onboarding') || 
-                          currentPath.startsWith('/core-dashboard');
+      const isProtected = currentPath.startsWith('/admin') ||
+        currentPath.startsWith('/dashboard') ||
+        currentPath.startsWith('/onboarding') ||
+        currentPath.startsWith('/core-dashboard');
 
-      const isApiOrAction = request.headers.get('accept')?.includes('application/json') || 
-                            request.headers.get('x-action') !== null ||
-                            request.headers.get('next-action') !== null ||
-                            currentPath.startsWith('/api/');
+      const isApiOrAction = request.headers.get('accept')?.includes('application/json') ||
+        request.headers.get('x-action') !== null ||
+        request.headers.get('next-action') !== null ||
+        currentPath.startsWith('/api/');
 
       if (isProtected) {
 
-        
+
         if (!session) {
           if (isApiOrAction) {
             return new NextResponse(JSON.stringify({ error: 'Unauthorized: Missing session' }), {
@@ -209,22 +210,22 @@ export async function middleware(request: NextRequest) {
     if (request.nextUrl.protocol === 'https:') {
       supabaseResponse.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
     }
-    
+
     return supabaseResponse;
   } catch (err) {
     console.error("Middleware caught error:", err);
-    
+
     // Safely fallback by redirecting to login if trying to access protected routes during an error state
     const currentPath = request.nextUrl.pathname;
-    const isProtected = currentPath.startsWith('/admin') || 
-                        currentPath.startsWith('/dashboard') || 
-                        currentPath.startsWith('/onboarding') || 
-                        currentPath.startsWith('/core-dashboard');
-    
+    const isProtected = currentPath.startsWith('/admin') ||
+      currentPath.startsWith('/dashboard') ||
+      currentPath.startsWith('/onboarding') ||
+      currentPath.startsWith('/core-dashboard');
+
     if (isProtected) {
       return NextResponse.redirect(new URL('/login?error=system_error', request.url));
     }
-    
+
     // Allow public routes to proceed even if Supabase session checks fail
     return NextResponse.next();
   }

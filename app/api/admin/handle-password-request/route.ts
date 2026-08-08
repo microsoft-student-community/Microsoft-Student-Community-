@@ -31,15 +31,17 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
       }
 
-      const { data: userData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-      if (listError) throw listError;
+      const { data: targetProfile, error: profileError } = await supabaseAdmin
+        .from("member_profiles")
+        .select("id")
+        .eq("email", userEmail)
+        .single();
 
-      const targetUser = userData.users.find((u: any) => u.email === userEmail);
-      if (!targetUser) {
-        throw new Error(`User with email ${userEmail} not found in Auth.`);
+      if (profileError || !targetProfile) {
+        throw new Error(`User with email ${userEmail} not found in profiles.`);
       }
 
-      const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(targetUser.id, {
+      const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(targetProfile.id, {
         password: newPassword,
       });
 

@@ -29,14 +29,14 @@ export default function TicketClient({ ticket }: { ticket: any }) {
  const formData = ticket.form_data || {};
  const teamData = ticket.team_data;
  const isTeam = !!teamData;
- const isConfirmed = ticket.registration_status === "confirmed";
+ const isConfirmed = ticket.status === "confirmed";
  const isCheckedIn = ticket.checked_in;
  
  const attendeeName = formData.fullName || formData.name || formData.full_name || "Attendee";
  const attendeeEmail = formData.email || "";
 
  // The URL encoded in the QR code for scanners
- const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/ticket/${ticket.id}`;
+ const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/ticket/${ticket.hash_payload}`;
  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(scanUrl)}&margin=10`;
 
  return (

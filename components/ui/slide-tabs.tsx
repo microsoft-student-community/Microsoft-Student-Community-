@@ -78,12 +78,11 @@ const Tab = React.forwardRef<HTMLLIElement, { children: React.ReactNode, setPosi
       ref={ref}
       onClick={onClick}
       onMouseEnter={(e) => {
-        if (!ref || typeof ref === 'function' || !ref.current) return;
-
-        const { width } = ref.current.getBoundingClientRect();
+        const el = e.currentTarget;
+        const { width } = el.getBoundingClientRect();
 
         setPosition({
-          left: ref.current.offsetLeft,
+          left: el.offsetLeft,
           width,
           opacity: 1,
         });
