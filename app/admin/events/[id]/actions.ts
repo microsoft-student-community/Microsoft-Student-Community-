@@ -2,7 +2,6 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { sendRegistrationEmail } from '@/utils/resend'
 
 export async function assignCertificates(eventId: string, registrationIds: string[], type: string) {
   const supabase = await createClient()
@@ -314,7 +313,7 @@ export async function updateEventDetails(eventId: string, updateData: any) {
 }
 
 export async function syncOfflineCheckins(eventId: string, checkins: Array<{
-  id?: string;
+  id?: number;
   hash: string;
   type: 'PRIMARY' | 'MEMBER';
   memberIndex?: number;
@@ -343,7 +342,7 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   );
 
   let successCount = 0;
-  const successIds: string[] = [];
+  const successIds: number[] = [];
   const errors: string[] = [];
 
   for (const checkin of checkins) {
