@@ -1,3 +1,4 @@
+import "./marketing.css";
 import AppChrome from "@/components/AppChrome";
 
 export default function MainLayout({

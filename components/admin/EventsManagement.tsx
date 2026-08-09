@@ -386,20 +386,56 @@ export default function EventsManagement({
                 </div>
 
                 {/* Unified Action Bar */}
-                <div className="pt-5 border-t border-2 md:border-4 border-black flex gap-2 justify-between">
-                  <Link href={`/admin/events/${evt.slug || evt.id}`} onClick={() => triggerHaptic('light')} className="flex-1 bg-[#E0E0E0] hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 text-black hover:text-black border border-black hover:border-[#0a84ff]/20 rounded-[8px] py-2 text-[13px] font-medium transition-all flex items-center justify-center gap-2">
-                    Manage <ChevronRight className="w-4 h-4" />
+                <div className="pt-4 border-t border-zinc-700/50 flex gap-2 justify-end">
+                  {/* Manage */}
+                  <Link
+                    href={`/admin/events/${evt.slug || evt.id}`}
+                    onClick={() => triggerHaptic('light')}
+                    style={{ width: 36, height: 36, borderRadius: 10, background: '#27272a', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a1a1aa' }}
+                    title="Manage Event"
+                  >
+                    <CalendarPlus style={{ width: 16, height: 16 }} />
                   </Link>
 
                   {userRole === 'admin' && (
-                    <div className="flex gap-2">
-                      <Link href={`/admin/events/${evt.slug || evt.id}/edit`} onClick={() => triggerHaptic('light')} className="w-[36px] h-[36px] rounded-[8px] bg-[#E0E0E0] hover:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all/10 flex items-center justify-center text-black hover:text-black transition-all" title="Edit Event">
-                        <Edit2 className="w-4 h-4" />
+                    <>
+                      {/* Edit */}
+                      <Link
+                        href={`/admin/events/${evt.slug || evt.id}/edit`}
+                        onClick={() => triggerHaptic('light')}
+                        style={{ width: 36, height: 36, borderRadius: 10, background: '#27272a', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a1a1aa' }}
+                        title="Edit Event"
+                      >
+                        <Edit2 style={{ width: 16, height: 16 }} />
                       </Link>
-                      <button onClick={() => { triggerHaptic('heavy'); deleteEvent(evt.id, evt.title); }} className="w-[36px] h-[36px] rounded-[8px] bg-red-500/5 hover:bg-red-500/10 flex items-center justify-center text-black hover:text-red-400 transition-all cursor-pointer" title="Delete Event">
-                        <Trash2 className="w-4 h-4" />
+
+                      {/* Toggle Registration */}
+                      <button
+                        onClick={() => { triggerHaptic('medium'); toggleRegistration(evt.id, !!evt.registration_open); }}
+                        style={{
+                          width: 36, height: 36, borderRadius: 10, cursor: 'pointer',
+                          background: evt.registration_open ? 'rgba(16,185,129,0.12)' : '#27272a',
+                          border: evt.registration_open ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(255,255,255,0.1)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          color: evt.registration_open ? '#34d399' : '#a1a1aa'
+                        }}
+                        title={evt.registration_open ? 'Close Registration' : 'Open Registration'}
+                      >
+                        {evt.registration_open
+                          ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+                          : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        }
                       </button>
-                    </div>
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => { triggerHaptic('heavy'); deleteEvent(evt.id, evt.title); }}
+                        style={{ width: 36, height: 36, borderRadius: 10, cursor: 'pointer', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#f87171' }}
+                        title="Delete Event"
+                      >
+                        <Trash2 style={{ width: 16, height: 16 }} />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
