@@ -133,14 +133,14 @@ export default function AnalyticsDashboard() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
       <div className="mb-6">
-        <h2 className="text-3xl font-sans font-extrabold text-slate-100 tracking-tight">Platform Analytics</h2>
-        <p className="text-slate-400 text-sm mt-1">Real-time statistics, registration timeline, and branch demographic breakdowns.</p>
+        <h2 className="text-3xl font-syne font-extrabold text-white tracking-tight">Platform Analytics</h2>
+        <p className="text-white/40 text-sm mt-1">Real-time statistics, registration timeline, and branch demographic breakdowns.</p>
       </div>
       
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Participants Card */}
-        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-blue-500/30 hover:shadow-sm transition-all duration-300">
+        <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] p-5 relative overflow-hidden group hover:border-blue-500/30 hover:shadow-[0_0_20px_rgba(59,130,246,0.05)] transition-all duration-300">
           <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Total Participants</span>
@@ -148,11 +148,11 @@ export default function AnalyticsDashboard() {
               <i className="fas fa-user-friends text-xs"></i>
             </div>
           </div>
-          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalParticipants}</p>
+          <p className="text-3xl font-syne font-black text-white tracking-tight">{stats.totalParticipants}</p>
         </div>
 
         {/* Submissions Card */}
-        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-pink-500/30 hover:shadow-sm transition-all duration-300">
+        <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] p-5 relative overflow-hidden group hover:border-pink-500/30 hover:shadow-[0_0_20px_rgba(236,72,153,0.05)] transition-all duration-300">
           <div className="absolute top-0 right-0 w-16 h-16 bg-pink-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Submissions</span>
@@ -160,11 +160,11 @@ export default function AnalyticsDashboard() {
               <i className="fas fa-ticket-alt text-xs"></i>
             </div>
           </div>
-          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalRegistrations}</p>
+          <p className="text-3xl font-syne font-black text-white tracking-tight">{stats.totalRegistrations}</p>
         </div>
         
         {/* Events Card */}
-        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-purple-500/30 hover:shadow-sm transition-all duration-300">
+        <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] p-5 relative overflow-hidden group hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.05)] transition-all duration-300">
           <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Events Hosted</span>
@@ -172,11 +172,11 @@ export default function AnalyticsDashboard() {
               <i className="fas fa-calendar-alt text-xs"></i>
             </div>
           </div>
-          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalEvents}</p>
+          <p className="text-3xl font-syne font-black text-white tracking-tight">{stats.totalEvents}</p>
         </div>
 
         {/* Check-in Rate Card */}
-        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-green-500/30 hover:shadow-sm transition-all duration-300">
+        <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] p-5 relative overflow-hidden group hover:border-green-500/30 hover:shadow-[0_0_20px_rgba(34,197,94,0.05)] transition-all duration-300">
           <div className="absolute top-0 right-0 w-16 h-16 bg-green-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Check-in Rate</span>
@@ -184,11 +184,11 @@ export default function AnalyticsDashboard() {
               <i className="fas fa-user-check text-xs"></i>
             </div>
           </div>
-          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.checkInRate}%</p>
+          <p className="text-3xl font-syne font-black text-white tracking-tight">{stats.checkInRate}%</p>
         </div>
 
         {/* Core Members Card */}
-        <div className="bg-slate-900  border border-slate-800 rounded-lg p-5 relative overflow-hidden group hover:border-yellow-500/30 hover:shadow-sm transition-all duration-300">
+        <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] p-5 relative overflow-hidden group hover:border-yellow-500/30 hover:shadow-[0_0_20px_rgba(234,179,8,0.05)] transition-all duration-300">
           <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-110"></div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-[#a1a1aa] text-xs font-bold uppercase tracking-wider">Core Members</span>
@@ -196,21 +196,21 @@ export default function AnalyticsDashboard() {
               <i className="fas fa-users text-xs"></i>
             </div>
           </div>
-          <p className="text-3xl font-sans font-black text-slate-100 tracking-tight">{stats.totalUsers}</p>
+          <p className="text-3xl font-syne font-black text-white tracking-tight">{stats.totalUsers}</p>
         </div>
       </div>
 
       {/* Event Analytics Table */}
-      <div className="bg-slate-900  border border-slate-800 rounded-lg overflow-hidden shadow-sm mt-8">
-        <div className="p-6 border-b border-slate-800">
-          <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
+      <div className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-[22px] overflow-hidden shadow-lg mt-8">
+        <div className="p-6 border-b border-white/10">
+          <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <i className="fas fa-list-alt text-blue-400"></i> Event Analytics
           </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-900 text-[#aaaaaa] text-sm uppercase tracking-wider">
+              <tr className="bg-white/5 text-[#aaaaaa] text-sm uppercase tracking-wider">
                 <th className="p-4 font-semibold">Event</th>
                 <th className="p-4 font-semibold text-center">Individuals</th>
                 <th className="p-4 font-semibold text-center">Teams</th>
@@ -218,16 +218,16 @@ export default function AnalyticsDashboard() {
                 <th className="p-4 font-semibold">Check-in Rate</th>
               </tr>
             </thead>
-            <tbody className="text-slate-100 text-sm divide-y divide-white/10">
+            <tbody className="text-white text-sm divide-y divide-white/10">
               {eventStats.map((stat, idx) => (
-                <tr key={idx} className="hover:bg-slate-900 transition-colors">
+                <tr key={idx} className="hover:bg-white/5 transition-colors">
                   <td className="p-4 font-medium">{stat.title}</td>
                   <td className="p-4 text-center">{stat.individualsRegistered}</td>
                   <td className="p-4 text-center">{stat.teamsRegistered}</td>
                   <td className="p-4 text-center">{stat.totalMembers}</td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div 
                           className={`h-full rounded-full ${stat.checkinRate > 50 ? 'bg-green-500' : stat.checkinRate > 20 ? 'bg-yellow-500' : 'bg-red-500'}`} 
                           style={{ width: `${stat.checkinRate}%` }}
