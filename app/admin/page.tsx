@@ -151,10 +151,22 @@ export default function AdminPage() {
 
   async function updateUserRole(userId: string, newRole: string) {
     showStatus(`user_${userId}`, 'Updating...', 'info')
-    const { error } = await supabase.rpc('set_user_roles', { target_user_id: userId, new_role: newRole })
-    if (error) showStatus(`user_${userId}`, `Failed: ${error.message}`, 'error')
-    else {
-      showStatus(`user_${userId}`, 'Updated!', 'success')
+    
+    try {
+      const res = await fetch('/api/admin/elevate-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetUserId: userId, newRole: newRole })
+      })
+      const data = await res.json()
+      
+      if (!res.ok || data.error) {
+        showStatus(`user_${userId}`, `Failed: ${data.error || 'Unknown error'}`, 'error')
+      } else {
+        showStatus(`user_${userId}`, 'Updated!', 'success')
+      }
+    } catch (err: any) {
+      showStatus(`user_${userId}`, `Failed: ${err.message}`, 'error')
     }
   }
 
@@ -178,21 +190,30 @@ export default function AdminPage() {
     
     showStatus(`user_${resettingUser.id}`, 'Updating password...', 'info')
     const { data: { session } } = await supabase.auth.getSession()
-    let err = null
+    let errorMessage = null
     
     if (session?.user.id === resettingUser.id) {
       const { error } = await supabase.auth.updateUser({ password: newPasswordValue })
-      err = error
+      if (error) errorMessage = error.message
     } else {
-      const { error } = await supabase.rpc('admin_change_password', { target_user_id: resettingUser.id, new_password: newPasswordValue })
-      err = error
+      try {
+        const res = await fetch('/api/admin/reset-user-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetUserId: resettingUser.id, newPassword: newPasswordValue })
+        })
+        const data = await res.json()
+        if (!res.ok || data.error) errorMessage = data.error || 'Unknown error'
+      } catch (err: any) {
+        errorMessage = err.message
+      }
     }
 
     setIsResettingPassword(false)
 
-    if (err) {
-      setResetModalError(err.message)
-      showStatus(`user_${resettingUser.id}`, `Failed: ${err.message}`, 'error')
+    if (errorMessage) {
+      setResetModalError(errorMessage)
+      showStatus(`user_${resettingUser.id}`, `Failed: ${errorMessage}`, 'error')
       triggerHaptic('error')
     } else {
       showStatus(`user_${resettingUser.id}`, 'Password Updated!', 'success')
@@ -208,20 +229,29 @@ export default function AdminPage() {
   const confirmDeleteUser = async () => {
     if (!deletingUser) return
     const userId = deletingUser.id
-    const email = deletingUser.email
 
     setDeletingUser(null)
     showStatus(`user_${userId}`, 'Deleting...', 'info')
     
-    const { error } = await supabase.rpc('admin_delete_user', { target_user_id: userId })
-    
-    if (error) {
-      showStatus(`user_${userId}`, `Failed: ${error.message}`, 'error')
+    try {
+      const res = await fetch('/api/admin/delete-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetUserId: userId })
+      })
+      const data = await res.json()
+      
+      if (!res.ok || data.error) {
+        showStatus(`user_${userId}`, `Failed: ${data.error || 'Unknown error'}`, 'error')
+        triggerHaptic('error')
+      } else {
+        showStatus(`user_${userId}`, 'User Deleted', 'success')
+        fetchUsers()
+        triggerHaptic('success')
+      }
+    } catch (err: any) {
+      showStatus(`user_${userId}`, `Failed: ${err.message}`, 'error')
       triggerHaptic('error')
-    } else {
-      showStatus(`user_${userId}`, 'User Deleted', 'success')
-      fetchUsers()
-      triggerHaptic('success')
     }
   }
 
@@ -234,41 +264,25 @@ export default function AdminPage() {
 
     showStatus('create_user', 'Creating account...', 'info')
 
-    const tempClient = createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-      { auth: { persistSession: false } }
-    )
+    try {
+      const res = await fetch('/api/admin/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      })
+      const data = await res.json()
 
-    const { data, error } = await tempClient.auth.signUp({ email, password })
-
-    if (error) {
-      showStatus('create_user', `Failed: ${error.message}`, 'error')
-      return
-    }
-
-    if (!data.user) {
-      showStatus('create_user', 'Failed: Unknown error, no user returned.', 'error')
-      return
-    }
-
-    if (data.user.identities && data.user.identities.length === 0) {
-      showStatus('create_user', 'Failed: This email already exists!', 'error')
-      return
-    }
-
-    if (role !== 'user') {
-      const { error: elevateError } = await supabase.rpc('set_user_roles', { target_user_id: data.user.id, new_role: role })
-      if (elevateError) {
-        showStatus('create_user', `Created, but elevation failed: ${elevateError.message}`, 'error')
-        fetchUsers()
+      if (!res.ok || data.error) {
+        showStatus('create_user', `Failed: ${data.error || 'Unknown error'}`, 'error')
         return
       }
-    }
 
-    showStatus('create_user', 'Account Created Successfully!', 'success')
-    ;(e.target as HTMLFormElement).reset()
-    fetchUsers()
+      showStatus('create_user', 'Account Created Successfully!', 'success')
+      ;(e.target as HTMLFormElement).reset()
+      fetchUsers()
+    } catch (err: any) {
+      showStatus('create_user', `Failed: ${err.message}`, 'error')
+    }
   }
 
   async function fetchEvents() {

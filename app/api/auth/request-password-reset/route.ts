@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { validateEmail, encrypt } from "@/utils/security";
 
 export async function POST(req: Request) {
@@ -30,10 +30,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const supabase = await createClient();
+    const supabaseAdmin = createAdminClient();
 
     // Check if the user exists in member_profiles
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("member_profiles")
       .select("email")
       .eq("email", email)
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     // Insert the pending request
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("password_reset_requests")
       .insert([{ email, new_password: encryptedPassword, status: "pending" }]);
 
