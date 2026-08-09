@@ -51,7 +51,7 @@ export default function PasswordRequestsTab() {
       .select('*')
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
-
+    
     if (data) setRequests(data)
     setLoading(false)
   }
@@ -92,97 +92,87 @@ export default function PasswordRequestsTab() {
     setActionLoading(null)
   }
 
-  if (loading) {
-    return (
-      <div className="bg-[#18181b]/30 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-xl animate-pulse">
-        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-yellow-500/5 to-transparent">
-          <div className="h-6 bg-white/10 rounded w-48"></div>
-          <div className="h-8 bg-white/5 rounded-xl w-24"></div>
-        </div>
-        <div className="p-8 space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white/[0.01] border border-white/5 rounded-xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="space-y-2 w-full md:w-1/3">
-                <div className="h-4 bg-white/10 rounded w-2/3"></div>
-                <div className="h-3 bg-white/5 rounded w-1/2"></div>
-              </div>
-              <div className="flex gap-3 w-full md:w-auto">
-                <div className="h-8 bg-white/5 border border-white/10 rounded-lg w-28"></div>
-                <div className="h-8 bg-white/5 border border-white/10 rounded-lg w-16"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="bg-[#18181b]/30 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-      <div className="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-yellow-500/5 to-transparent">
-        <h2 className="text-xl font-syne font-bold text-white flex items-center gap-3">
-          <i className="fas fa-key text-yellow-400"></i>
-          Password Reset Requests
-        </h2>
-        <button
-          onClick={() => { triggerHaptic('light'); fetchRequests(); }}
-          className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl text-xs font-bold text-white transition-colors flex items-center gap-2 cursor-pointer"
-        >
-          <i className="fas fa-sync-alt"></i> Refresh
-        </button>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="mb-10 pl-2">
+        <h2 className="text-4xl font-sans font-black text-black tracking-tight">Security & Access</h2>
+        <p className="text-gray-800 font-bold text-base mt-2 font-medium max-w-2xl">Review and authorize password reset requests initiated by Core Members.</p>
       </div>
+      
+      <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border border-2 md:border-4 border-black">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pl-2">
+          <h3 className="text-xl font-bold text-black flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
+              <i className="fas fa-key text-yellow-400 text-sm"></i>
+            </div>
+            Pending Reset Requests
+          </h3>
+          <button 
+            onClick={() => { triggerHaptic('light'); fetchRequests(); }} 
+            className="px-5 py-2.5 bg-slate-200 hover:bg-[#3c3c3e] rounded-full text-xs font-bold text-black transition-all flex items-center justify-center gap-2 active:scale-95 w-full sm:w-auto"
+          >
+            <i className="fas fa-sync-alt"></i> Refresh Log
+          </button>
+        </div>
 
-      <div className="p-8">
         {errorMsg && (
-          <div className="mb-6 p-4 rounded-xl text-sm font-semibold border bg-red-500/10 text-red-400 border-red-500/20">
+          <div className="mb-8 p-4 rounded-none text-sm font-semibold border bg-red-500/10 text-red-400 border-red-500/20">
             {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="mb-6 p-4 rounded-xl text-sm font-semibold border bg-green-500/10 text-green-400 border-green-500/20">
+          <div className="mb-8 p-4 rounded-none text-sm font-semibold border bg-green-500/10 text-green-400 border-green-500/20">
             {successMsg}
           </div>
         )}
 
-        {requests.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
-            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 text-white/20">
-              <i className="fas fa-check-circle text-2xl text-yellow-400/80"></i>
+        <div className="bg-black/40 rounded-3xl overflow-hidden border border-white/[0.02]">
+          {loading ? (
+            <div className="p-8 space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white rounded-none p-6 flex justify-between animate-pulse h-24"></div>
+              ))}
             </div>
-            <h3 className="text-lg font-syne font-bold text-white mb-2">No pending requests</h3>
-            <p className="text-white/40 text-xs">All password reset requests have been successfully handled.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {requests.map((req) => (
-              <div key={req.id} className="bg-white/[0.02] border border-white/5 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-white/10 hover:bg-white/[0.03] transition-all">
-                <div>
-                  <h3 className="text-base font-bold text-white mb-1">{req.email}</h3>
-                  <div className="text-[10px] font-semibold text-white/40 flex items-center gap-2">
-                    <i className="fas fa-clock"></i> {new Date(req.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+          ) : requests.length === 0 ? (
+            <div className="text-center py-20 px-4">
+              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-5 border border-green-500/20">
+                <i className="fas fa-check-circle text-2xl text-green-400"></i>
+              </div>
+              <h3 className="text-lg font-bold text-black mb-2">No pending requests</h3>
+              <p className="text-gray-800 font-bold text-sm font-medium">All security verifications are complete.</p>
+            </div>
+          ) : (
+            <div className="p-4 md:p-6 space-y-4">
+              {requests.map((req) => (
+                <div key={req.id} className="bg-white border border-white/[0.02] rounded-none p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 hover:bg-slate-200/50 hover:border-white/[0.05] transition-all duration-300">
+                  <div>
+                    <h3 className="text-base font-bold text-black mb-1.5">{req.email}</h3>
+                    <div className="text-[10px] font-bold text-gray-800 font-bold uppercase tracking-widest flex items-center gap-2">
+                      <i className="fas fa-clock text-black"></i> {new Date(req.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })}
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3 w-full md:w-auto pt-2 md:pt-0">
+                    <button 
+                      onClick={() => handleAccept(req.id, req.email, req.new_password)}
+                      disabled={actionLoading === req.id}
+                      className="flex-1 md:flex-none px-5 py-3 bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-black rounded-full text-xs font-bold transition-all disabled:opacity-50 active:scale-95"
+                    >
+                      {actionLoading === req.id ? 'Processing...' : 'Authorize'}
+                    </button>
+                    <button 
+                      onClick={() => handleReject(req.id, req.email)}
+                      disabled={actionLoading === req.id}
+                      className="flex-1 md:flex-none px-5 py-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-black rounded-full text-xs font-bold transition-all disabled:opacity-50 active:scale-95"
+                    >
+                      Reject
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex gap-3 w-full md:w-auto">
-                  <button
-                    onClick={() => handleAccept(req.id, req.email, req.new_password)}
-                    disabled={actionLoading === req.id}
-                    className="flex-1 md:flex-none px-4 py-2 bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500 hover:text-white rounded-lg text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
-                  >
-                    {actionLoading === req.id ? 'Processing...' : 'Accept & Change'}
-                  </button>
-                  <button
-                    onClick={() => handleReject(req.id, req.email)}
-                    disabled={actionLoading === req.id}
-                    className="flex-1 md:flex-none px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-lg text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
-                  >
-                    Reject
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

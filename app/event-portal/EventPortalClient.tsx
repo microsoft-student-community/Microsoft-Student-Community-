@@ -76,7 +76,7 @@ export default function EventPortalClient({
       >
         <Link
           href="/"
-          className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-white/10 text-white hover:bg-[#18181b] transition-all shadow-lg  group"
+          className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-xl group"
         >
           <ChevronLeft className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
           <span className="text-sm font-semibold">Home</span>
@@ -97,7 +97,7 @@ export default function EventPortalClient({
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-center mb-16 mt-4"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#18181b] border border-white/10 mb-6 ">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md">
                 <Sparkles className="w-4 h-4 text-[#0078d4]" />
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-widest">MSC Events</span>
               </div>
@@ -111,7 +111,7 @@ export default function EventPortalClient({
             </motion.div>
 
             {/* Filter Tabs */}
-            <div className="flex p-1.5 bg-[#18181b] border border-white/10  rounded-2xl mb-12 shadow-xl">
+            <div className="flex p-1.5 bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl mb-12 shadow-xl">
               {["all", "upcoming", "completed"].map((f) => (
                 <button
                   key={f}
@@ -119,7 +119,7 @@ export default function EventPortalClient({
                   className={`px-8 py-2.5 rounded-xl text-sm font-semibold capitalize transition-all duration-300 ${
                     filter === f
                       ? "bg-[#0078d4] text-white shadow-lg"
-                      : "text-slate-400 hover:text-white hover:bg-[#18181b]"
+                      : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   {f === "all" ? "All Events" : f}
@@ -129,7 +129,7 @@ export default function EventPortalClient({
 
             {/* Event Cards Grid */}
             {filteredEvents.length === 0 ? (
-              <div className="text-center py-16 w-full bg-[#18181b]  border border-white/5 rounded-3xl">
+              <div className="text-center py-16 w-full bg-[#18181b]/40 backdrop-blur-xl border border-white/5 rounded-3xl">
                 <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-white mb-2">No Events Found</h3>
                 <p className="text-slate-400">Check back later for exciting new events!</p>
@@ -147,7 +147,7 @@ export default function EventPortalClient({
                   return (
                     <motion.div key={evt.id} variants={itemVariants} className="h-full">
                       <Link href={`/event-portal?event=${evt.id}`} scroll={false}>
-                        <div className={`group h-full flex flex-col bg-[#18181b]  rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${isCompleted
+                        <div className={`group h-full flex flex-col bg-[#18181b]/60 backdrop-blur-md rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${isCompleted
                           ? 'border-white/5 opacity-80 grayscale-[20%]'
                           : 'border-white/10 hover:border-[#0078d4]/50'
                           }`}>
@@ -166,8 +166,8 @@ export default function EventPortalClient({
                             )}
                             {/* Status Badge */}
                             <div className="absolute top-3 right-3 flex flex-col gap-2">
-                              <div className={`px-3 py-1 text-[10px] font-bold rounded-full  border ${isCompleted
-                                ? 'bg-[#18181b] text-slate-300 border-slate-500/30'
+                              <div className={`px-3 py-1 text-[10px] font-bold rounded-full backdrop-blur-md border ${isCompleted
+                                ? 'bg-slate-500/20 text-slate-300 border-slate-500/30'
                                 : 'bg-[#0078d4]/20 text-blue-300 border-[#0078d4]/30'
                                 }`}>
                                 {isCompleted ? "COMPLETED" : "UPCOMING"}
@@ -176,11 +176,11 @@ export default function EventPortalClient({
                           </div>
 
                           <div className="flex items-center gap-3 mb-4 text-xs font-semibold text-slate-400">
-                            <span className="flex items-center gap-1.5 bg-[#18181b] px-2.5 py-1 rounded-md border border-white/5">
+                            <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
                               <Calendar className="w-3.5 h-3.5" />
                               {new Date(evt.date_start).toLocaleDateString("en-IN", { month: "short", day: "numeric", timeZone: "Asia/Kolkata" })}
                             </span>
-                            <span className="flex items-center gap-1.5 bg-[#18181b] px-2.5 py-1 rounded-md border border-white/5">
+                            <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
                               <MapPin className="w-3.5 h-3.5" />
                               <span className="truncate max-w-[80px]" title={evt.location}>{evt.location || "TBA"}</span>
                             </span>
@@ -232,7 +232,7 @@ export default function EventPortalClient({
       {/* Registration Modal overlay wrapping EventPortalTabs */}
       <AnimatePresence>
         {showRegistration && activeEvent && (
-          <div key="registration-modal" className="fixed inset-0 z-[110] flex items-center justify-center p-4 py-10 overflow-y-auto bg-black ">
+          <div key="registration-modal" className="fixed inset-0 z-[110] flex items-center justify-center p-4 py-10 overflow-y-auto bg-black/60 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -241,11 +241,11 @@ export default function EventPortalClient({
             >
               <button
                 onClick={() => setShowRegistration(false)}
-                className="absolute -top-12 right-0 md:-right-12 md:top-0 w-10 h-10 rounded-xl bg-[#18181b] hover:bg-[#18181b] text-white flex items-center justify-center transition-colors  z-[120] border border-white/20 cursor-pointer"
+                className="absolute -top-12 right-0 md:-right-12 md:top-0 w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-md z-[120] border border-white/20 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="w-full bg-[#18181b] 2xl border border-white/10 rounded-[24px] shadow-2xl overflow-hidden min-h-[600px]">
+              <div className="w-full bg-[#18181b]/95 backdrop-blur-2xl border border-white/10 rounded-[24px] shadow-2xl overflow-hidden min-h-[600px]">
                 <EventPortalTabs
                   event={activeEvent}
                   openTeams={openTeams}

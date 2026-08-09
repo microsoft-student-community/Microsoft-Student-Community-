@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@theme {
-  --font-syne: "Syne", sans-serif;
-}
-
 /* ===== AUTH, WORKSPACE & RECOVERY SURFACES ===== */
 .auth-shell {
   position: relative;
@@ -6489,99 +6485,5 @@ section {
   }
   .auth-form-meta span {
     display: none;
-  }
-}
-
-/* Larger workspace scale for both Admin and Core Member dashboards. */
-.admin-workspace.admin-spacious .admin-sidebar {
-  width: 320px !important;
-  padding: 28px 22px !important;
-}
-.admin-workspace.admin-spacious .admin-sidebar [class~="gap-6"] {
-  gap: 22px !important;
-}
-.admin-workspace.admin-spacious .admin-sidebar button {
-  min-height: 50px;
-  padding: 0.75rem 1rem !important;
-  font-size: 0.875rem !important;
-}
-.admin-workspace.admin-spacious .admin-sidebar [class*="text-[10px]"] {
-  font-size: 0.72rem !important;
-}
-.admin-workspace.admin-spacious .admin-main {
-  padding: clamp(28px, 4vw, 64px) !important;
-}
-.admin-workspace.admin-spacious .admin-main > div {
-  max-width: 1500px !important;
-}
-.admin-workspace.admin-spacious .admin-main h2 {
-  font-size: clamp(2rem, 2.5vw, 2.75rem) !important;
-  line-height: 1.08;
-}
-.admin-workspace.admin-spacious .admin-main h3 {
-  font-size: clamp(1.2rem, 1.5vw, 1.5rem) !important;
-  line-height: 1.2;
-}
-.admin-workspace.admin-spacious label {
-  font-size: 0.78rem !important;
-  letter-spacing: 0.07em;
-}
-.admin-workspace.admin-spacious :is(input, select, textarea) {
-  min-height: 54px;
-  font-size: 0.95rem !important;
-}
-.admin-workspace.admin-spacious textarea {
-  min-height: 140px;
-}
-.admin-workspace.admin-spacious .admin-main [class~="text-xs"] {
-  font-size: 0.8125rem !important;
-  line-height: 1.45;
-}
-.admin-workspace.admin-spacious .admin-main [class~="text-sm"] {
-  font-size: 0.95rem !important;
-  line-height: 1.5;
-}
-.admin-workspace.admin-spacious .admin-main [class*="text-[10px]"] {
-  font-size: 0.72rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class*="text-[11px]"] {
-  font-size: 0.78rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="p-4"] {
-  padding: 1.25rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="p-5"] {
-  padding: 1.5rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="p-6"] {
-  padding: 2rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="p-8"] {
-  padding: 2.25rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="gap-4"] {
-  gap: 1.25rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="gap-5"] {
-  gap: 1.5rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="gap-6"] {
-  gap: 1.75rem !important;
-}
-.admin-workspace.admin-spacious .admin-main [class~="mb-8"] {
-  margin-bottom: 2.5rem !important;
-}
-.admin-workspace.admin-spacious .admin-main :is(th, td) {
-  padding: 1.15rem !important;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 900px) {
-  .admin-workspace.admin-spacious .admin-sidebar {
-    width: min(90vw, 340px) !important;
-    padding: 24px 18px !important;
-  }
-  .admin-workspace.admin-spacious .admin-main {
-    padding: 24px 18px 104px !important;
   }
 }

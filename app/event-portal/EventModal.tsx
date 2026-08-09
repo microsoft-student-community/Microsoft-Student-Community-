@@ -87,7 +87,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 py-10 overflow-y-auto bg-black "
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 py-10 overflow-y-auto bg-black/60 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <motion.div
@@ -110,7 +110,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
           />
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-xl flex items-center justify-center text-slate-300 hover:text-white transition-colors text-xl leading-none bg-black  z-50 cursor-pointer"
+            className="absolute top-4 right-4 w-9 h-9 rounded-xl flex items-center justify-center text-slate-300 hover:text-white transition-colors text-xl leading-none bg-black/20 backdrop-blur-md z-50 cursor-pointer"
             style={{ border: '1px solid rgba(255,255,255,0.12)' }}
           >
             ×
@@ -120,7 +120,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
               <span className="text-xs font-semibold text-blue-300 bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/25 capitalize">
                 {event.type || 'Event'}
               </span>
-              <span className="text-xs text-slate-300 bg-[#18181b] px-2.5 py-1 rounded-full border border-white/10">
+              <span className="text-xs text-slate-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
                 MSC SRM
               </span>
             </div>
@@ -160,7 +160,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={`px-4 py-2.5 text-sm font-medium transition-all rounded-t-lg whitespace-nowrap ${tab === t ? 'text-white border-b-2 border-[#0078d4] bg-[#18181b]' : 'text-slate-400 hover:text-slate-200 hover:bg-[#18181b]'}`}
+                  className={`px-4 py-2.5 text-sm font-medium transition-all rounded-t-lg whitespace-nowrap ${tab === t ? 'text-white border-b-2 border-[#0078d4] bg-white/5' : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'}`}
                 >
                   {t}
                 </button>
@@ -201,7 +201,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                   ) : (
                     <div className="flex gap-4 overflow-x-auto pb-4 custom-scrollbar">
                       {speakers.map((s: any, idx: number) => (
-                        <div key={idx} className="flex-shrink-0 w-[180px] p-4 rounded-xl bg-[#18181b] border border-white/10 hover:bg-[#18181b] transition-colors">
+                        <div key={idx} className="flex-shrink-0 w-[180px] p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
                           <div
                             className="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-lg font-bold mb-3 mx-auto overflow-hidden bg-slate-800"
                             style={{ boxShadow: `0 0 15px rgba(0,120,212,0.2)` }}
@@ -267,7 +267,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
           </div>
 
           {/* Right sidebar 30% */}
-          <div className="lg:w-80 p-6 lg:border-l border-t lg:border-t-0 bg-[#18181b]" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="lg:w-80 p-6 lg:border-l border-t lg:border-t-0 bg-slate-900/50" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
             {/* Countdown */}
             {event.status !== 'completed' && (
               <div className="mb-6">
@@ -279,7 +279,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                     { v: time.minutes, l: 'Min' },
                     { v: time.seconds, l: 'Sec' },
                   ].map(({ v, l }) => (
-                    <div key={l} className="flex-1 bg-[#18181b] border border-white/10 rounded-xl py-2 flex flex-col items-center justify-center shadow-inner">
+                    <div key={l} className="flex-1 bg-white/5 border border-white/10 rounded-xl py-2 flex flex-col items-center justify-center shadow-inner">
                       <div className="text-lg font-extrabold text-white font-mono">{pad(v)}</div>
                       <div className="text-[10px] text-slate-500 font-medium uppercase mt-0.5">{l}</div>
                     </div>
@@ -295,7 +295,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                   <span className="text-slate-400 font-medium">{registeredCount.toLocaleString()} / {capacity.toLocaleString()} spots</span>
                   <span className={pct >= 85 ? 'text-amber-400 font-semibold' : 'text-slate-400 font-medium'}>{pct}% full</span>
                 </div>
-                <div className="h-1.5 w-full bg-[#18181b] rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                   <div className={`h-full rounded-full ${pct >= 85 ? 'bg-amber-400' : 'bg-[#0078d4]'}`} style={{ width: `${Math.min(100, pct)}%` }} />
                 </div>
                 {pct >= 85 && pct < 100 && (
@@ -320,7 +320,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                     <span className="font-semibold text-sm text-slate-200">
                       {event.form_requirements?.charge_type === 'per_team' ? 'Team Pass' : 'Standard Pass'}
                     </span>
-                    <span className="font-bold text-[15px] text-white bg-[#18181b] px-2 py-0.5 rounded-md">
+                    <span className="font-bold text-[15px] text-white bg-white/10 px-2 py-0.5 rounded-md">
                       {isFree ? 'Free' : `₹${price}`}
                     </span>
                   </div>
@@ -343,7 +343,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
 
             {/* CTA */}
             {event.status === 'completed' ? (
-              <div className="text-center py-4 bg-[#18181b] border border-white/10 rounded-xl">
+              <div className="text-center py-4 bg-white/5 border border-white/10 rounded-xl">
                 <div className="font-semibold text-slate-300 mb-1">Event Completed</div>
                 <div className="text-xs text-slate-500 mb-3">Thank you to everyone who attended!</div>
               </div>

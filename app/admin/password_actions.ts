@@ -30,7 +30,12 @@ export async function acceptPasswordRequest(requestId: string, email: string, ne
   }
 
   // Decrypt the stored password securely
-  const decryptedPassword = decrypt(newPassword)
+  let decryptedPassword = ''
+  try {
+    decryptedPassword = decrypt(newPassword)
+  } catch (err) {
+    return { error: 'Invalid or corrupted password payload.' }
+  }
 
   // 3. Call the secure RPC to change the password
   const { error: rpcError } = await supabase.rpc('admin_change_password', {

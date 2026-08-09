@@ -598,11 +598,11 @@ export default function EventPortalTabs({
     <>
       <div className="w-full">
         {/* Tabs */}
-        <div className="flex flex-col md:flex-row gap-2 mb-8 bg-[#18181b]  p-2 rounded-2xl border border-white/5">
+        <div className="flex flex-col md:flex-row gap-2 mb-8 bg-[#18181b]/40 backdrop-blur-md p-2 rounded-2xl border border-white/5">
           {event.status !== "completed" && (
             <button
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-[#0078d4]/10 text-[#0078d4] border border-[#0078d4]/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-slate-500 hover:text-white hover:bg-[#18181b]"}`}
+              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-[#0078d4]/10 text-[#0078d4] border border-[#0078d4]/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-slate-500 hover:text-white hover:bg-white/5"}`}
             >
               <i
                 className={`fas ${isWaitlistMode ? "fa-clock" : "fa-user-plus"}`}
@@ -617,7 +617,7 @@ export default function EventPortalTabs({
             onClick={() => setActiveTab("check")}
             className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "check"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
-                : "text-slate-500 hover:text-white hover:bg-[#18181b]"
+                : "text-slate-500 hover:text-white hover:bg-white/5"
               }`}
           >
             <i className="fas fa-search"></i> Check Team Details
@@ -628,7 +628,7 @@ export default function EventPortalTabs({
               onClick={() => setActiveTab("certificate")}
               className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "certificate"
                   ? "bg-green-500/10 text-green-400 border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
-                  : "text-slate-500 hover:text-white hover:bg-[#18181b]"
+                  : "text-slate-500 hover:text-white hover:bg-white/5"
                 }`}
             >
               <i className="fas fa-certificate"></i> E-Certificate
@@ -637,7 +637,7 @@ export default function EventPortalTabs({
         </div>
 
         {/* Tab Content */}
-        <div className="bg-[#18181b]  border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl min-h-[400px]">
+        <div className="bg-[#18181b]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 md:p-8 shadow-2xl min-h-[400px]">
           {/* REGISTER TAB */}
           {activeTab === "register" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -714,7 +714,7 @@ export default function EventPortalTabs({
                             window.prompt("Copy this invite link:", inviteUrl);
                           }
                         }}
-                        className="px-6 py-3 bg-[#18181b] hover:bg-[#18181b] border border-white/10 rounded-xl font-bold transition-colors text-white flex items-center gap-2"
+                        className="px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl font-bold transition-colors text-white flex items-center gap-2"
                       >
                         <i className="fas fa-link"></i> Copy Invite Link
                       </button>
@@ -776,7 +776,7 @@ export default function EventPortalTabs({
                         name="fullName"
                         required
                         placeholder="Full Name"
-                        className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                        className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                       />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -788,7 +788,7 @@ export default function EventPortalTabs({
                         name="email"
                         required
                         placeholder="you@university.edu"
-                        className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                        className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                       />
                     </div>
                   </div>
@@ -806,7 +806,7 @@ export default function EventPortalTabs({
                               name="regNum"
                               required
                               placeholder="APXX11XXXX"
-                              className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                              className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                             />
                           </div>
                         )}
@@ -819,7 +819,7 @@ export default function EventPortalTabs({
                               name="branch"
                               required
                               defaultValue=""
-                              className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors w-full"
+                              className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors w-full"
                             >
                               <option value="" disabled>
                                 Select Branch
@@ -846,7 +846,7 @@ export default function EventPortalTabs({
                               name="specialization"
                               required
                               placeholder="e.g. AI/ML"
-                              className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                              className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                             />
                           </div>
                         )}
@@ -862,7 +862,7 @@ export default function EventPortalTabs({
                             name="collegeName"
                             required
                             placeholder="e.g. VIT Chennai"
-                            className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                            className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                           />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -874,7 +874,7 @@ export default function EventPortalTabs({
                             name="city"
                             required
                             placeholder="e.g. Chennai"
-                            className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                            className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                           />
                         </div>
                       </>
@@ -887,7 +887,7 @@ export default function EventPortalTabs({
                         name="year"
                         required
                         defaultValue=""
-                        className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                        className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                       >
                         <option value="" disabled>
                           Select Year
@@ -908,7 +908,7 @@ export default function EventPortalTabs({
                           Team Registration (Optional)
                         </h4>
 
-                        <div className="flex items-center gap-3 mb-6 p-4 bg-[#18181b] border border-white/10 rounded-xl">
+                        <div className="flex items-center gap-3 mb-6 p-4 bg-white/5 border border-white/10 rounded-xl">
                           <input
                             type="checkbox"
                             id="createTeamToggle"
@@ -917,7 +917,7 @@ export default function EventPortalTabs({
                               setIsCreatingTeam(e.target.checked);
                               if (!e.target.checked) setTeamSize(1);
                             }}
-                            className="w-5 h-5 accent-blue-500 rounded border-white/20 bg-black"
+                            className="w-5 h-5 accent-blue-500 rounded border-white/20 bg-black/50"
                           />
                           <label
                             htmlFor="createTeamToggle"
@@ -928,7 +928,7 @@ export default function EventPortalTabs({
                         </div>
 
                         {isCreatingTeam && (
-                          <div className="flex flex-col gap-6 p-5 bg-[#18181b] rounded-xl border border-white/10 mb-6">
+                          <div className="flex flex-col gap-6 p-5 bg-white/5 rounded-xl border border-white/10 mb-6">
                             <div className="flex flex-col gap-2 mb-2 border-b border-white/10 pb-6">
                               <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider">
                                 Team Name
@@ -938,7 +938,7 @@ export default function EventPortalTabs({
                                 name="teamName"
                                 required
                                 placeholder="Enter a cool team name"
-                                className="p-3 bg-black border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full mb-4 transition-colors"
+                                className="p-3 bg-black/40 border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full mb-4 transition-colors"
                               />
 
                               <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider">
@@ -949,7 +949,7 @@ export default function EventPortalTabs({
                                 onChange={(e) =>
                                   setTeamSize(parseInt(e.target.value))
                                 }
-                                className="p-3 bg-black border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full md:w-1/2 mb-4 transition-colors"
+                                className="p-3 bg-black/40 border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full md:w-1/2 mb-4 transition-colors"
                               >
                                 {Array.from(
                                   { length: reqs.max_team_size },
@@ -973,7 +973,7 @@ export default function EventPortalTabs({
                                     onChange={(e) =>
                                       setTeamLeadIndex(parseInt(e.target.value))
                                     }
-                                    className="p-3 bg-black border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full md:w-1/2 transition-colors"
+                                    className="p-3 bg-black/40 border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full md:w-1/2 transition-colors"
                                   >
                                     <option value={0}>
                                       Me (Primary Registrant)
@@ -1012,7 +1012,7 @@ export default function EventPortalTabs({
                                         type="text"
                                         name={`member_${num}_name`}
                                         placeholder={`Member ${num + 1} Name`}
-                                        className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
                                       />
                                     </div>
                                     <div className="flex flex-col gap-2">
@@ -1023,7 +1023,7 @@ export default function EventPortalTabs({
                                         type="email"
                                         name={`member_${num}_email`}
                                         placeholder={`member${num + 1}@example.com`}
-                                        className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
                                       />
                                     </div>
                                   </div>
@@ -1039,7 +1039,7 @@ export default function EventPortalTabs({
                                               type="text"
                                               name={`member_${num}_regNum`}
                                               placeholder="Reg Number"
-                                              className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                              className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
                                             />
                                           </div>
                                         )}
@@ -1051,7 +1051,7 @@ export default function EventPortalTabs({
                                             <select
                                               name={`member_${num}_branch`}
                                               defaultValue=""
-                                              className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors w-full"
+                                              className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors w-full"
                                             >
                                               <option value="">
                                                 Select Branch
@@ -1083,7 +1083,7 @@ export default function EventPortalTabs({
                                               type="text"
                                               name={`member_${num}_spec`}
                                               placeholder="Spec"
-                                              className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                              className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
                                             />
                                           </div>
                                         )}
@@ -1096,7 +1096,7 @@ export default function EventPortalTabs({
                                       <select
                                         name={`member_${num}_year`}
                                         defaultValue=""
-                                        className="p-2 bg-black border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        className="p-2 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-blue-500 transition-colors"
                                       >
                                         <option value="">Select Year</option>
                                         <option value="1">1</option>
@@ -1145,8 +1145,8 @@ export default function EventPortalTabs({
               </div>
 
               {liveTeams.length === 0 ? (
-                <div className="text-center p-12 bg-[#18181b] rounded-2xl border border-white/10">
-                  <div className="w-16 h-16 bg-[#18181b] rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500">
+                <div className="text-center p-12 bg-white/5 rounded-2xl border border-white/10">
+                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500">
                     <i className="fas fa-users-slash text-2xl"></i>
                   </div>
                   <h3 className="text-lg font-bold text-white mb-1">
@@ -1171,7 +1171,7 @@ export default function EventPortalTabs({
                         Accepting Members
                       </p>
 
-                      <div className="bg-black rounded-xl p-4 mb-5 border border-white/5">
+                      <div className="bg-black/30 rounded-xl p-4 mb-5 border border-white/5">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">
                             <i className="fas fa-user-tie text-xs"></i>
@@ -1236,7 +1236,7 @@ export default function EventPortalTabs({
                       value={lookupEmail}
                       onChange={(e) => setLookupEmail(e.target.value)}
                       placeholder="lead@university.edu"
-                      className="p-4 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-lg transition-colors"
+                      className="p-4 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-lg transition-colors"
                     />
                   </div>
 
@@ -1257,7 +1257,7 @@ export default function EventPortalTabs({
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               {!currentReg ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="w-24 h-24 bg-[#18181b] rounded-full flex items-center justify-center mb-6 border border-white/10">
+                  <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
                     <i className="fas fa-lock text-4xl text-white/20"></i>
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-4">
@@ -1270,7 +1270,7 @@ export default function EventPortalTabs({
                 </div>
               ) : !hasCertificate ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="w-24 h-24 bg-[#18181b] rounded-full flex items-center justify-center mb-6 border border-white/10">
+                  <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/10">
                     <i
                       className={`fas text-4xl ${event.status === "completed" ? "fa-hourglass-half text-orange-400" : "fa-lock text-white/20"}`}
                     ></i>
@@ -1332,7 +1332,7 @@ export default function EventPortalTabs({
                       </h3>
 
                       {!unlockedCerts[member.id] ? (
-                        <div className="w-full max-w-md bg-[#18181b] border border-white/10 rounded-[16px] shadow-md p-8 flex flex-col items-center text-center">
+                        <div className="w-full max-w-md bg-[#18181b]/60 border border-white/10 rounded-[16px] shadow-md p-8 flex flex-col items-center text-center">
                           <i className="fas fa-shield-halved text-3xl text-[#0078d4] mb-4"></i>
                           <h4 className="text-md font-bold text-white mb-2">
                             Verify Your Identity
@@ -1360,7 +1360,7 @@ export default function EventPortalTabs({
                                 [member.id]: e.target.value,
                               }))
                             }
-                            className="w-full p-3 bg-black border border-white/10 rounded-xl text-white text-center mb-4 focus:outline-none focus:border-blue-500 transition-colors"
+                            className="w-full p-3 bg-black/40 border border-white/10 rounded-xl text-white text-center mb-4 focus:outline-none focus:border-blue-500 transition-colors"
                           />
                           <button
                             onClick={() =>
@@ -1419,7 +1419,7 @@ export default function EventPortalTabs({
         currentHash &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-start justify-center p-4 sm:p-6 bg-black  overflow-y-auto"
+            className="fixed inset-0 z-[9999] flex items-start justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto"
             onClick={() => setShowTicketModal(false)}
           >
             <div
@@ -1428,7 +1428,7 @@ export default function EventPortalTabs({
             >
               <button
                 onClick={() => setShowTicketModal(false)}
-                className="absolute top-0 right-0 px-4 py-2 bg-[#18181b] hover:bg-[#18181b] text-white rounded-full text-xs font-bold flex items-center gap-2  border border-white/20 transition-all cursor-pointer z-50 shadow-lg"
+                className="absolute top-0 right-0 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-xs font-bold flex items-center gap-2 backdrop-blur-md border border-white/20 transition-all cursor-pointer z-50 shadow-lg"
               >
                 <X className="w-4 h-4" /> Close
               </button>
@@ -1449,7 +1449,7 @@ export default function EventPortalTabs({
                 </button>
                 <button
                   onClick={() => setShowTicketModal(false)}
-                  className="flex-1 py-3 px-6 bg-[#18181b] hover:bg-[#18181b] border border-white/20 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
+                  className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
                 >
                   <X className="w-4 h-4" /> Close Ticket
                 </button>
@@ -1464,7 +1464,7 @@ export default function EventPortalTabs({
         showWaitlistModal &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black "
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
             onClick={() => setShowWaitlistModal(false)}
           >
             <div
@@ -1497,7 +1497,7 @@ export default function EventPortalTabs({
         selectedJoinTeam &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black "
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedJoinTeam(null)}
           >
             <div
@@ -1510,7 +1510,7 @@ export default function EventPortalTabs({
                 </h3>
                 <button
                   onClick={() => setSelectedJoinTeam(null)}
-                  className="w-8 h-8 bg-[#18181b] hover:bg-[#18181b] rounded-full flex items-center justify-center text-white transition-colors"
+                  className="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
                 >
                   <i className="fas fa-times text-sm"></i>
                 </button>
@@ -1532,7 +1532,7 @@ export default function EventPortalTabs({
                     name="joinName"
                     required
                     placeholder="Full Name"
-                    className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                    className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -1544,7 +1544,7 @@ export default function EventPortalTabs({
                     name="joinEmail"
                     required
                     placeholder="you@srmap.edu.in"
-                    className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                    className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -1556,7 +1556,7 @@ export default function EventPortalTabs({
                       type="text"
                       name="joinRegNum"
                       placeholder="APXX11XXXX"
-                      className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                      className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -1567,7 +1567,7 @@ export default function EventPortalTabs({
                       type="text"
                       name="joinBranch"
                       placeholder="CSE"
-                      className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                      className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -1579,7 +1579,7 @@ export default function EventPortalTabs({
                     name="joinYear"
                     required
                     defaultValue=""
-                    className="p-3 bg-black border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                    className="p-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
                   >
                     <option value="" disabled>
                       Select Year
