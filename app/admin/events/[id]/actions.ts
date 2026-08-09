@@ -8,17 +8,16 @@ export async function assignCertificates(eventId: string, registrationIds: strin
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -62,17 +61,16 @@ export async function updateRegistrationDetails(eventId: string, regId: string, 
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -102,17 +100,16 @@ export async function deleteRegistration(eventId: string, regId: string) {
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -149,17 +146,16 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -274,6 +270,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
       } else {
         successCount++;
         
+
       }
 
     } catch (err: any) {
@@ -291,17 +288,16 @@ export async function updateEventDetails(eventId: string, updateData: any) {
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin') {
+  if (!profile || profile.role !== 'admin') {
     return { error: 'Unauthorized' }
   }
 
@@ -325,17 +321,16 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 

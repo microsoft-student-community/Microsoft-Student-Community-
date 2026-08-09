@@ -164,7 +164,6 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
         window.removeEventListener('offline', handleOffline)
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Real-time background sync for IndexedDB
@@ -592,7 +591,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
               {isOnline ? 'Network: Online' : 'Network: Offline Mode'}
             </span>
           </div>
-          <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
+          <div className="text-xs text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
             {pendingSyncCount > 0 ? (
               <span className="text-orange-400 font-extrabold flex items-center gap-1">
                 <i className="fas fa-exclamation-circle animate-pulse"></i> {pendingSyncCount} Scan(s) Pending Sync
@@ -635,7 +634,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
       </div>
 
       {lastCacheTime && (
-        <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-4 font-semibold text-center">
+        <div className="text-xs text-slate-500 uppercase tracking-widest mb-4 font-semibold text-center">
           Last Local Sync: {lastCacheTime}
         </div>
       )}
@@ -673,7 +672,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
             <p className="text-slate-300 text-sm max-w-xs mb-4">{cameraError}</p>
             <button
               onClick={() => { triggerHaptic('light'); setCameraError(null); setIsCameraActive(false); }}
-              className="px-4 py-2 bg-slate-800 hover:bg-white/20 text-slate-100 rounded-md text-xs font-semibold cursor-pointer"
+              className="px-4 py-2 bg-slate-800 hover:bg-white text-slate-100 rounded-md text-xs font-semibold cursor-pointer"
             >
               Try Again
             </button>
@@ -727,7 +726,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                     <i className="fas fa-camera-rotate"></i>
                   </button>
                   <div className="absolute bottom-14 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 rounded-md p-2 hidden group-hover:flex flex-col gap-1 w-48 shadow-sm">
-                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block mb-1 text-center font-bold">Select Camera</span>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-400 block mb-1 text-center font-bold">Select Camera</span>
                     {cameras.map(device => (
                       <button
                         key={device.id}
@@ -735,7 +734,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                         className={`text-left px-2.5 py-1.5 rounded-lg text-xs truncate transition-all cursor-pointer ${
                           device.id === activeCameraId 
                             ? 'bg-blue-500 text-slate-100 font-bold' 
-                            : 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/50'
+                            : 'text-slate-300 hover:text-slate-100 hover:bg-slate-900'
                         }`}
                       >
                         {device.label || `Camera ${cameras.indexOf(device) + 1}`}
@@ -751,7 +750,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
 
       {/* Manual lookup input panel */}
       <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-md p-4 shadow-sm mb-6 z-10">
-        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Can&apos;t Scan? Manual Cache Search</label>
+        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Can&apos;t Scan? Manual Cache Search</label>
         <div className="relative">
           <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
           <input 
@@ -778,7 +777,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
               <div key={reg.id} className="py-2.5 flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="text-xs font-bold text-slate-100 truncate">{reg.form_data?.fullName || 'N/A'}</div>
-                  <div className="text-[10px] text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
+                  <div className="text-xs text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
                     <span className="font-mono">{reg.form_data?.regNum || reg.lead_email}</span>
                     {reg.team_data?.teamName && (
                       <span className="px-1.5 py-0.5 bg-purple-500/10 text-purple-400 text-[8px] font-bold rounded">
@@ -792,7 +791,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                     setManualSearchQuery('');
                     handleVerificationByHash(reg.hash_payload);
                   }}
-                  className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-[10px] font-bold text-slate-100 transition-all cursor-pointer"
+                  className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-xs font-bold text-slate-100 transition-all cursor-pointer"
                 >
                   Verify
                 </button>
@@ -805,7 +804,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
       {/* Real-time Scan Feed History (Last 5 scans) */}
       {scanHistory.length > 0 && (
         <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-md p-5 shadow-sm animate-in fade-in duration-300">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-1.5">
+          <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-1.5">
             <i className="fas fa-history text-xs text-blue-400"></i> Scan Activity History
           </h4>
           <div className="flex flex-col gap-2">
@@ -813,10 +812,10 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
               <div key={log.id} className="flex items-center justify-between gap-4 p-2 bg-slate-950 rounded-md border border-slate-800">
                 <div className="min-w-0">
                   <p className="text-xs font-bold text-slate-100/90 truncate">{log.name}</p>
-                  <p className="text-[10px] text-slate-400 truncate">{log.type} • {log.time}</p>
+                  <p className="text-xs text-slate-400 truncate">{log.type} • {log.time}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                     log.synced 
                       ? 'bg-green-500/10 text-green-500 border border-green-500/10' 
                       : 'bg-orange-500/10 text-orange-400 border border-orange-400/10'
@@ -832,7 +831,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
 
       {/* Slide-up Details Modal / Overlay */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-950/80  z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 bg-slate-900  z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-slate-900 border border-slate-800 rounded-lg max-w-lg w-full overflow-hidden shadow-sm relative max-h-[85vh] flex flex-col animate-in slide-in-from-bottom-8 duration-300">
             
             {/* Modal Header */}
@@ -840,7 +839,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
               <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Verify Ticket</span>
               <button 
                 onClick={handleCloseModal}
-                className="w-8 h-8 rounded-full bg-slate-800/50 hover:bg-slate-800 text-slate-300 hover:text-slate-100 flex items-center justify-center transition-all cursor-pointer"
+                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-slate-100 flex items-center justify-center transition-all cursor-pointer"
               >
                 <i className="fas fa-times"></i>
               </button>
@@ -884,31 +883,31 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                   {/* Primary Registrant Info */}
                   <div className="bg-slate-950 rounded-md p-5 border border-slate-800">
                     <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-2">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Primary Registrant</span>
+                      <span className="text-xs uppercase font-bold tracking-wider text-slate-400">Primary Registrant</span>
                       {isTeam && selectedReg.team_data.leadIndex === 0 && (
-                        <span className="text-[9px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
+                        <span className="text-[10px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
                       )}
                     </div>
                     
                     <div className="flex flex-col gap-3">
                       <div>
-                        <span className="text-[9px] uppercase tracking-wider text-slate-500 block mb-0.5">Name</span>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block mb-0.5">Name</span>
                         <span className="text-sm font-bold text-slate-100">{selectedReg.form_data?.fullName || 'N/A'}</span>
                       </div>
                       <div>
-                        <span className="text-[9px] uppercase tracking-wider text-slate-500 block mb-0.5">Email</span>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block mb-0.5">Email</span>
                         <span className="text-xs font-bold text-slate-200 font-mono">{selectedReg.lead_email}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-4 pt-1">
                         {selectedReg.form_data?.regNum && (
                           <div>
-                            <span className="text-[9px] uppercase tracking-wider text-slate-500 block mb-0.5">Roll No.</span>
+                            <span className="text-[10px] uppercase tracking-wider text-slate-500 block mb-0.5">Roll No.</span>
                             <span className="text-xs font-bold text-blue-400 font-mono">{selectedReg.form_data.regNum}</span>
                           </div>
                         )}
                         {selectedReg.form_data?.branch && (
                           <div>
-                            <span className="text-[9px] uppercase tracking-wider text-slate-500 block mb-0.5">Branch</span>
+                            <span className="text-[10px] uppercase tracking-wider text-slate-500 block mb-0.5">Branch</span>
                             <span className="text-xs font-bold text-slate-200">{selectedReg.form_data.branch}</span>
                           </div>
                         )}
@@ -916,7 +915,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                     </div>
 
                     <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-slate-400 uppercase">Gate Entry</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase">Gate Entry</span>
                       {selectedReg.checked_in ? (
                         <span className="px-3 py-1 bg-green-500/10 border border-green-500/30 text-green-500 rounded-lg text-xs font-bold flex items-center gap-1.5">
                           <i className="fas fa-check-circle"></i> Checked In
@@ -937,7 +936,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                     <div className="flex flex-col gap-3">
                       <div className="flex items-center gap-2 px-1 text-slate-400">
                         <i className="fas fa-users text-xs"></i>
-                        <span className="text-[10px] uppercase font-bold tracking-wider">
+                        <span className="text-xs uppercase font-bold tracking-wider">
                           Team: {selectedReg.team_data.teamName || 'Roster'} ({selectedReg.team_data.members.length + 1})
                         </span>
                       </div>
@@ -948,9 +947,9 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                           return (
                             <div key={index} className="bg-slate-950 rounded-md p-4 border border-slate-800 flex flex-col gap-2">
                               <div className="flex justify-between items-center mb-1">
-                                <span className="text-[9px] text-slate-400 font-bold uppercase">Member {index + 2}</span>
+                                <span className="text-[10px] text-slate-400 font-bold uppercase">Member {index + 2}</span>
                                 {isLead && (
-                                  <span className="text-[9px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
+                                  <span className="text-[10px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
                                 )}
                               </div>
                               <div className="grid grid-cols-2 gap-2 text-xs">
@@ -964,15 +963,15 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                                 </div>
                               </div>
                               <div className="flex items-center justify-between pt-2 border-t border-slate-800 mt-1">
-                                <span className="text-[10px] text-slate-400 font-bold uppercase">Status</span>
+                                <span className="text-xs text-slate-400 font-bold uppercase">Status</span>
                                 {member.checked_in ? (
-                                  <span className="px-2.5 py-0.5 bg-green-500/10 border border-green-500/30 text-green-500 rounded-md text-[10px] font-bold flex items-center gap-1">
+                                  <span className="px-2.5 py-0.5 bg-green-500/10 border border-green-500/30 text-green-500 rounded-md text-xs font-bold flex items-center gap-1">
                                     <i className="fas fa-check-circle"></i> Checked In
                                   </span>
                                 ) : (
                                   <button
                                     onClick={() => handleCheckinAction('MEMBER', index)}
-                                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-lg text-slate-100 font-bold text-[10px] transition-colors cursor-pointer"
+                                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-lg text-slate-100 font-bold text-xs transition-colors cursor-pointer"
                                   >
                                     Check In Member
                                   </button>
