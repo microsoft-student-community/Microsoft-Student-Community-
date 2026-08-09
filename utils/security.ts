@@ -1,9 +1,7 @@
 import crypto from 'crypto';
 
-// Encryption config for storing sensitive data (like pending passwords) securely
-const ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY;
-
 function getEncryptionKey(): Buffer {
+  const ENCRYPTION_KEY = process.env.DB_ENCRYPTION_KEY;
   if (!ENCRYPTION_KEY) {
     throw new Error('DB_ENCRYPTION_KEY is not set');
   }

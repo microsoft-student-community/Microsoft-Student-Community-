@@ -95,15 +95,24 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
     setIsDeleting(null)
   }
 
+  const escapeCSV = (val: any) => {
+    if (val === null || val === undefined) return 'N/A';
+    const str = String(val);
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+
   const exportToCSV = () => {
     const rows = []
-    rows.push(['Ticket ID', 'Email', 'Name', 'Reg Num', 'Branch', 'Team Name', 'Team Size', 'Status', 'Registration Date'])
+    rows.push(['Ticket ID', 'Email', 'Name', 'Reg Num', 'Branch', 'Team Name', 'Team Size', 'Status', 'Registration Date'].map(escapeCSV))
     
     liveRegs.forEach(reg => {
-      const teamName = reg.team_data?.teamName || 'N/A'
+      const teamName = reg.team_data?.teamName || reg.team_data?.team_name || 'N/A'
       const teamSize = reg.team_data?.members ? reg.team_data.members.length + 1 : 1
       const date = new Date(reg.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-      const ticketId = reg.hash_payload.substring(0, 8)
+      const ticketId = reg.hash_payload ? reg.hash_payload.substring(0, 8) : 'N/A'
       
       const exportedEmails = new Set()
 
@@ -124,7 +133,7 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
         teamSize,
         primaryStatus,
         date
-      ])
+      ].map(escapeCSV))
       exportedEmails.add(primaryEmail.toLowerCase())
 
       // Team members rows
@@ -143,7 +152,7 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
               teamSize,
               member.checked_in ? 'Checked In' : 'Pending',
               date
-            ])
+            ].map(escapeCSV))
             exportedEmails.add(email.toLowerCase())
           }
         })
@@ -165,6 +174,7 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
     return (
       reg.lead_email.toLowerCase().includes(term) ||
       (reg.team_data?.teamName && reg.team_data.teamName.toLowerCase().includes(term)) ||
+      (reg.team_data?.team_name && reg.team_data.team_name.toLowerCase().includes(term)) ||
       (reg.form_data?.fullName && reg.form_data.fullName.toLowerCase().includes(term))
     )
   })
@@ -279,9 +289,9 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
                       </td>
                       <td className="p-5 font-medium cursor-pointer" onClick={() => toggleExpand(reg.id)}>{reg.lead_email}</td>
                       <td className="p-5 cursor-pointer" onClick={() => toggleExpand(reg.id)}>
-                        {reg.team_data?.teamName ? (
+                        {(reg.team_data?.teamName || reg.team_data?.team_name) ? (
                           <span className="px-3 py-1 bg-purple-500/10 text-purple-400 font-bold uppercase tracking-wider text-[10px] rounded-full border border-purple-500/20">
-                            {reg.team_data.teamName} <span className="ml-1 text-white/40">({teamSize})</span>
+                            {reg.team_data.teamName || reg.team_data.team_name} <span className="ml-1 text-white/40">({teamSize})</span>
                           </span>
                         ) : <span className="text-white/40 text-xs">Individual</span>}
                       </td>
@@ -328,10 +338,10 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
                               )}
                             </div>
                             
-                            {editingId === reg.id && editForm.team_data ? (
+                            {editingId === reg.id && (editForm.team_data?.teamName !== undefined || editForm.team_data?.team_name !== undefined) ? (
                               <div className="mb-4 bg-white/5 border border-white/10 rounded-xl p-4">
                                 <label className="text-[10px] uppercase text-white/40 tracking-wider block mb-1">Team Name</label>
-                                <input type="text" value={editForm.team_data.teamName || ''} onChange={(e) => setEditForm({...editForm, team_data: {...editForm.team_data, teamName: e.target.value}})} className="w-full bg-black/40 border border-white/10 rounded-md p-2 text-white text-sm focus:border-blue-500 outline-none" />
+                                <input type="text" value={editForm.team_data.teamName || editForm.team_data.team_name || ''} onChange={(e) => setEditForm({...editForm, team_data: {...editForm.team_data, teamName: e.target.value, team_name: e.target.value}})} className="w-full bg-black/40 border border-white/10 rounded-md p-2 text-white text-sm focus:border-blue-500 outline-none" />
                               </div>
                             ) : null}
 

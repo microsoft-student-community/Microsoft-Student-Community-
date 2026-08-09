@@ -120,15 +120,15 @@ export async function deleteRegistration(eventId: string, regId: string) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // Get hash_payload to delete from teams if applicable
+  // Get team_id to delete from teams if applicable
   const { data: regData } = await supabaseAdmin
     .from('registrations')
-    .select('hash_payload')
+    .select('team_data')
     .eq('id', regId)
     .single()
 
-  if (regData?.hash_payload) {
-    await supabaseAdmin.from('teams').delete().eq('hash_payload', regData.hash_payload)
+  if (regData?.team_data?.team_id) {
+    await supabaseAdmin.from('teams').delete().eq('id', regData.team_data.team_id)
   }
 
   const { error } = await supabaseAdmin
@@ -270,24 +270,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
       } else {
         successCount++;
         
-        // Send email via Resend
-        if (eventData) {
-          const eventDateString = eventData.date_start 
-            ? new Date(eventData.date_start).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium' })
-            : 'TBA';
-            
-          sendRegistrationEmail({
-            to: email,
-            name: name || email.split('@')[0],
-            eventTitle: eventData.title || 'Event',
-            eventDate: eventDateString,
-            eventLocation: eventData.location || '',
-            status: 'confirmed',
-            hashPayload: hashPayload,
-            isTeam: !!teamName,
-            teamName: teamName || undefined
-          }).catch((err: any) => console.error(`Failed to send import confirmation email to ${email}:`, err));
-        }
+        // Email sending removed as per request
       }
 
     } catch (err: any) {
@@ -331,6 +314,7 @@ export async function updateEventDetails(eventId: string, updateData: any) {
 }
 
 export async function syncOfflineCheckins(eventId: string, checkins: Array<{
+  id?: string;
   hash: string;
   type: 'PRIMARY' | 'MEMBER';
   memberIndex?: number;
@@ -359,6 +343,7 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   );
 
   let successCount = 0;
+  const successIds: string[] = [];
   const errors: string[] = [];
 
   for (const checkin of checkins) {
@@ -374,6 +359,7 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
           errors.push(`Failed to check in primary ${checkin.hash}: ${error.message}`);
         } else {
           successCount++;
+          if (checkin.id) successIds.push(checkin.id);
         }
       } else if (checkin.type === 'MEMBER' && typeof checkin.memberIndex === 'number') {
         // Fetch latest team_data
@@ -403,6 +389,7 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
             errors.push(`Failed to check in member index ${checkin.memberIndex} of ${checkin.hash}: ${updateError.message}`);
           } else {
             successCount++;
+            if (checkin.id) successIds.push(checkin.id);
           }
         } else {
           errors.push(`Invalid member index ${checkin.memberIndex} for ${checkin.hash}`);
@@ -414,6 +401,6 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   }
 
   revalidatePath(`/admin/events/${eventId}`)
-  return { success: true, successCount, errors };
+  return { success: true, successCount, successIds, errors };
 }
 

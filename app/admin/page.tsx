@@ -66,7 +66,11 @@ export default function AdminPage() {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) return
     const { data } = await supabase.from('member_profiles').select('role').eq('id', session.user.id).single()
-    if (data) setUserRole(data.role)
+    if (data) {
+      setUserRole(data.role)
+    } else {
+      window.location.href = '/login?error=no_profile'
+    }
   }
 
   function showStatus(id: string, msg: string, type: 'error' | 'success' | 'info') {
@@ -493,23 +497,11 @@ export default function AdminPage() {
 
   if (userRole === null) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#09090b] text-[#f4f4f5] font-sans relative overflow-hidden">
-        {/* Glowing Backgrounds */}
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] left-[10%] w-[600px] h-[600px] rounded-full bg-purple-500/8 blur-[150px]"></div>
-        
-        {/* Brand Preloader Content */}
-        <div className="flex flex-col items-center gap-6 animate-pulse z-10">
-          <img src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png" alt="MSC Logo" className="w-16 h-16 object-contain animate-bounce" style={{ animationDuration: '2s' }} />
-          <div className="flex flex-col items-center gap-1">
-            <h1 className="font-syne font-black tracking-widest text-xl bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">
-              MSC PORTAL
-            </h1>
-            <p className="text-[10px] text-white/30 uppercase tracking-widest font-semibold">Establishing Secure Handshake...</p>
-          </div>
-          <div className="w-8 h-8 rounded-full border-2 border-blue-500/20 border-t-blue-500 animate-spin"></div>
-        </div>
-      </div>
+      <main className="route-loading" aria-label="Loading">
+        <span />
+        <span />
+        <span />
+      </main>
     )
   }
 

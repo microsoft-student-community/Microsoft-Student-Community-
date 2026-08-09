@@ -57,6 +57,6 @@ export async function submitOnboarding(formData: FormData) {
   if (profile?.role === "admin" || profile?.role === "core_member") {
     redirect("/admin");
   } else {
-    redirect("/dashboard");
+    redirect("/events");
   }
 }

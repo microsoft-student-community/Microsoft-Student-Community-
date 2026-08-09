@@ -346,6 +346,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
 
       // Convert local checkins to sync payload
       const payload = queue.map(q => ({
+        id: q.id,
         hash: q.hash,
         type: q.type,
         memberIndex: q.memberIndex
@@ -354,8 +355,9 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
       const res = await syncOfflineCheckins(eventId, payload)
       
       if (res?.success) {
-        const syncedIds = queue.map(q => q.id!)
-        await removeFromSyncQueue(syncedIds)
+        if (res.successIds && res.successIds.length > 0) {
+          await removeFromSyncQueue(res.successIds)
+        }
         
         const remainingQueue = await getSyncQueue()
         setPendingSyncCount(remainingQueue.length)
@@ -388,6 +390,11 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
     if (decodedText.includes('/admin/checkin/')) {
       hash = decodedText.split('/admin/checkin/')[1]
       // Strip potential URL parameters
+      if (hash.includes('?')) {
+        hash = hash.split('?')[0]
+      }
+    } else if (decodedText.includes('/ticket/')) {
+      hash = decodedText.split('/ticket/')[1]
       if (hash.includes('?')) {
         hash = hash.split('?')[0]
       }

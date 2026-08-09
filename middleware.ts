@@ -98,7 +98,7 @@ export async function middleware(request: NextRequest) {
       let windowMs = parseInt(process.env.RATE_LIMIT_DEFAULT_WINDOW_MS || '60000', 10);
       let max = parseInt(process.env.RATE_LIMIT_DEFAULT_MAX_REQUESTS || '100', 10);
 
-      if (currentPath.startsWith('/login') || request.headers.get('next-action')?.includes('login') || currentPath.includes('password_actions')) {
+      if (currentPath.startsWith('/login') || request.headers.get('next-action')?.includes('login') || currentPath.includes('password_actions') || currentPath.includes('request-password-reset')) {
         limiterName = 'auth';
         windowMs = parseInt(process.env.RATE_LIMIT_AUTH_WINDOW_MS || '60000', 10);
         max = parseInt(process.env.RATE_LIMIT_AUTH_MAX_REQUESTS || '10', 10);
@@ -166,7 +166,7 @@ export async function middleware(request: NextRequest) {
 
           if (currentPath.startsWith('/onboarding')) {
             if (is_onboarded || exemptFromOnboarding) {
-              return NextResponse.redirect(new URL(role === 'admin' || role === 'core_member' ? '/admin' : '/dashboard', request.url));
+              return NextResponse.redirect(new URL(role === 'admin' || role === 'core_member' ? '/admin' : '/events', request.url));
             }
           } else {
             if (!is_onboarded && !exemptFromOnboarding) {
@@ -183,6 +183,15 @@ export async function middleware(request: NextRequest) {
             }
             return NextResponse.redirect(new URL('/login?message=Unauthorized', request.url));
           }
+        } else {
+          // If a session exists but the member_profiles row is missing
+          if (isApiOrAction) {
+            return new NextResponse(JSON.stringify({ error: 'Forbidden: Profile not found' }), {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+          return NextResponse.redirect(new URL('/login?error=no_profile', request.url));
         }
       }
     }
