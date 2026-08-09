@@ -53,7 +53,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
     if (!event) return;
     const id = setInterval(() => setTime(calcTime(event.date_start)), 1000);
     return () => clearInterval(id);
-  }, [event?.date_start]);
+  }, [event]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';

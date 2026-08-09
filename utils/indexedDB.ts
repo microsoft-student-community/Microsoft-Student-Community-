@@ -1,7 +1,7 @@
 const DB_NAME = 'MSC_Scanner_DB';
 const DB_VERSION = 1;
 
-export interface OfflineCheckin {
+interface OfflineCheckin {
   id?: number;
   eventId: string;
   hash: string;

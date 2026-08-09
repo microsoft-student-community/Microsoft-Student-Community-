@@ -191,9 +191,10 @@ export async function middleware(request: NextRequest) {
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com;
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-      img-src 'self' blob: data: https://*.supabase.co https://avatars.githubusercontent.com https://upload.wikimedia.org;
+      img-src 'self' blob: data: https://lkbwunzswqbnoygxtilm.supabase.co https://*.supabase.co https://api.qrserver.com https://avatars.githubusercontent.com https://upload.wikimedia.org;
+      media-src 'self' blob: https://lkbwunzswqbnoygxtilm.supabase.co;
       font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-      connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+      connect-src 'self' https://lkbwunzswqbnoygxtilm.supabase.co https://*.supabase.co wss://*.supabase.co https://api.web3forms.com;
       frame-src 'self' https://checkout.razorpay.com;
     `.replace(/\s{2,}/g, ' ').trim();
 

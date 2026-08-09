@@ -37,13 +37,20 @@ export default function Footer() {
                 >
                   <i className="fab fa-instagram"></i>
                 </a>
-                <a
-                  href="https://discord.com/invite/wZ55nBhWtJ/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <i className="fab fa-discord"></i>
-                </a>
+                  <a
+                    href="https://discord.gg/K5NC5wAhg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="fab fa-discord"></i>
+                  </a>
+                  <a
+                    href="https://www.reddit.com/user/MSC_SRMAP/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="fab fa-reddit"></i>
+                  </a>
               </div>
             </div>
           </div>

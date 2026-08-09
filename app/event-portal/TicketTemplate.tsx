@@ -3,7 +3,7 @@
 import React, { forwardRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
-export interface TicketProps {
+interface TicketProps {
   eventTitle?: string;
   eventDate?: string;
   eventTime?: string;

@@ -8,7 +8,7 @@ import {
   submitPublicRegistration,
   lookupTeamRegistration,
   joinMatchmakingTeam,
-} from "../events/actions";
+} from "../(main)/events/actions";
 import { createClient } from "@/utils/supabase/client";
 import { X, Download } from "lucide-react";
 
@@ -214,7 +214,7 @@ export default function EventPortalTabs({
         supabase.removeChannel(channel);
       };
     }
-  }, [activeTab, event.id, openTeams]);
+  }, [activeTab, event.id, openTeams, supabase]);
 
   async function handleRegistrationSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

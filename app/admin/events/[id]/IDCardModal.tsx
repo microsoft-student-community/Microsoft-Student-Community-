@@ -23,21 +23,21 @@ export default function IDCardModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fdfaf6]/80 backdrop-blur-sm print:bg-white print:backdrop-blur-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm print:bg-white print:backdrop-blur-none">
       
       {/* Non-Printable Modal Controls */}
-      <div className="absolute top-0 w-full p-4 flex justify-between items-center bg-[#fdfaf6]/50 border-b border-4 border-black print:hidden">
-        <h2 className="text-xl font-bold text-black">ID Card Preview ({registrations.length})</h2>
+      <div className="absolute top-0 w-full p-4 flex justify-between items-center bg-black/50 border-b border-white/10 print:hidden">
+        <h2 className="text-xl font-bold text-white">ID Card Preview ({registrations.length})</h2>
         <div className="flex gap-4">
           <button 
             onClick={handlePrint}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-black font-bold rounded-none transition-colors flex items-center gap-2"
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg transition-colors flex items-center gap-2"
           >
             <i className="fas fa-print"></i> Print Badges
           </button>
           <button 
             onClick={onClose}
-            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-black font-bold rounded-none transition-colors"
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-bold rounded-lg transition-colors"
           >
             Close
           </button>
@@ -62,12 +62,12 @@ export default function IDCardModal({
             {registrations.map((reg) => (
               <div 
                 key={reg.id} 
-                className="id-badge w-[2.125in] h-[3.375in] bg-white border border-gray-200 rounded-none overflow-hidden flex flex-col items-center justify-between p-4  print:shadow-none relative"
+                className="id-badge w-[2.125in] h-[3.375in] bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col items-center justify-between p-4 shadow-xl print:shadow-none relative"
                 style={{ width: '220px', height: '350px' }}
               >
                 {/* Header Banner */}
                 <div className="absolute top-0 w-full h-12 bg-blue-600 flex items-center justify-center">
-                  <span className="text-[10px] font-black text-black tracking-widest uppercase truncate px-2 text-center w-full">
+                  <span className="text-[10px] font-black text-white tracking-widest uppercase truncate px-2 text-center w-full">
                     {eventTitle}
                   </span>
                 </div>
@@ -85,7 +85,7 @@ export default function IDCardModal({
                   </p>
 
                   {/* QR Code */}
-                  <div className="p-2 bg-white rounded-none border border-gray-200  mb-4">
+                  <div className="p-2 bg-white rounded-lg border border-gray-200 shadow-sm mb-4">
                     <QRCodeSVG value={getQrUrl(reg.hash_payload)} size={110} level="M" />
                   </div>
 

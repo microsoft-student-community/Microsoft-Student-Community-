@@ -28,12 +28,8 @@ interface EventsManagementProps {
   toggleEventStatus: (id: string, currentStatus: string) => Promise<void>
   toggleRegistration: (id: string, currentState: boolean) => Promise<void>
 
-  allowTeamsToggle: boolean
-  setAllowTeamsToggle: (val: boolean) => void
   eventPricingType: 'free' | 'paid'
   setEventPricingType: (val: 'free' | 'paid') => void
-  chargeType: 'per_person' | 'per_team'
-  setChargeType: (val: 'per_person' | 'per_team') => void
   triggerHaptic?: (type: 'light' | 'medium' | 'heavy') => void
 }
 
@@ -48,12 +44,8 @@ export default function EventsManagement({
   toggleEventStatus,
 
   toggleRegistration,
-  allowTeamsToggle,
-  setAllowTeamsToggle,
   eventPricingType,
   setEventPricingType,
-  chargeType,
-  setChargeType,
   triggerHaptic = () => { }
 }: EventsManagementProps) {
 
@@ -82,7 +74,7 @@ export default function EventsManagement({
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
+    <div className="admin-crm-events animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold tracking-tight text-black tracking-tight">Events Management</h2>
       </div>
@@ -249,7 +241,7 @@ export default function EventsManagement({
                   </label>
                 </div>
 
-                {/* Eligibility & Teams */}
+                {/* Eligibility */}
                 <div className="bg-[#f4f4f0] border border-2 md:border-4 border-black p-6 rounded-none flex flex-col gap-4">
                   <h5 className="text-[15px] font-bold text-black uppercase tracking-wider mb-2">Participant Eligibility</h5>
 
@@ -263,26 +255,6 @@ export default function EventsManagement({
                     <input type="checkbox" name="provide_certificates" defaultChecked className="w-5 h-5 border-2 border-black rounded-none checked:bg-[#FFEB3B] checked:border-black transition-all cursor-pointer" />
                   </label>
 
-                  <div className="border-t-2 border-black my-2"></div>
-
-                  <label className="flex items-center justify-between cursor-pointer group">
-                    <span className="text-[14px] font-bold text-black group-hover:text-blue-600 transition-colors">Allow Team Registrations</span>
-                    <div className="relative inline-flex items-center">
-                      <input type="checkbox" name="allow_teams" checked={allowTeamsToggle} onChange={(e) => setAllowTeamsToggle(e.target.checked)} className="sr-only peer" />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FFEB3B] border-2 border-black"></div>
-                    </div>
-                  </label>
-
-                  {allowTeamsToggle && (
-                    <div className="flex items-center justify-between mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <span className="text-[13px] font-bold text-gray-800">Team Size Range</span>
-                      <div className="flex items-center gap-2">
-                        <input type="number" name="min_team_size" min="2" max="10" defaultValue="2" className="w-16 px-2 py-1.5 bg-white border border-2 border-black text-black text-[14px] font-bold outline-none focus:ring-2 focus:ring-black rounded-none" placeholder="Min" />
-                        <span className="text-black font-bold">-</span>
-                        <input type="number" name="max_team_size" min="2" max="10" defaultValue="4" className="w-16 px-2 py-1.5 bg-white border border-2 border-black text-black text-[14px] font-bold outline-none focus:ring-2 focus:ring-black rounded-none" placeholder="Max" />
-                      </div>
-                    </div>
-                  )}
                 </div>
 
               </div>
@@ -304,19 +276,7 @@ export default function EventsManagement({
 
                   {eventPricingType === 'paid' && (
                     <div className="flex-1 flex flex-col gap-4 animate-in fade-in slide-in-from-left-4 duration-300 border-l-2 border-dashed border-black pl-8">
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[14px] font-medium text-black">Charge Type</label>
-                        <div className="flex gap-4 mt-1">
-                          <label className="flex items-center gap-2 cursor-pointer group">
-                            <input type="radio" name="charge_type_ui" checked={chargeType === 'per_person'} onChange={() => setChargeType('per_person')} className="w-4 h-4 text-black border-2 border-black focus:ring-black cursor-pointer" />
-                            <span className="text-[14px] font-bold text-black group-hover:text-blue-600 transition-colors">Per Person</span>
-                          </label>
-                          <label className={`flex items-center gap-2 cursor-pointer group ${!allowTeamsToggle ? 'opacity-50' : ''}`}>
-                            <input type="radio" name="charge_type_ui" checked={chargeType === 'per_team'} onChange={() => allowTeamsToggle && setChargeType('per_team')} disabled={!allowTeamsToggle} className="w-4 h-4 text-black border-2 border-black focus:ring-black cursor-pointer disabled:cursor-not-allowed" />
-                            <span className="text-[14px] font-bold text-black group-hover:text-blue-600 transition-colors">Per Team</span>
-                          </label>
-                        </div>
-                      </div>
+                      <p className="text-[13px] text-gray-800 font-medium">Paid registrations are charged per attendee.</p>
 
                       <div className="flex flex-col gap-2 mt-2">
                         <label className="text-[14px] font-medium text-black">Registration Fee (₹)</label>

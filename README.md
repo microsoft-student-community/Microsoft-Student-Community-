@@ -6,7 +6,7 @@ The official web platform for the Microsoft Student Community at SRM University 
 
 ## Tech Stack
 - **Framework:** Next.js (App Router, TypeScript)
-- **Database & Auth:** Supabase (PostgreSQL, Row Level Security)
+- **Database:** Supabase (PostgreSQL)
 - **Payments:** Razorpay
 - **Rate Limiting:** Upstash Redis
 - **Deploy & Cron:** Vercel
@@ -18,8 +18,8 @@ The official web platform for the Microsoft Student Community at SRM University 
    npm install
    ```
 
-2. **Environment Configuration**
-   Copy `.env.example` to `.env.local` and populate the required keys for Supabase, Razorpay, Upstash, and Resend.
+2. **Set Up Environment Variables**
+   Copy `.env.example` to `.env.local` and populate the required keys for Supabase, Razorpay, and Upstash.
 
 3. **Database Configuration**
    Apply the SQL migrations from `supabase/migrations/` via the Supabase SQL Editor to initialize tables, functions (RPCs), and RLS policies.

@@ -370,10 +370,10 @@ export default function About() {
                   <span className="credit-row-label">Founded by</span>
                   <span className="credit-row-value">Jayanth Ramakrishnan</span>
                 </div>
-                <div className="credit-row">
-                  <span className="credit-row-label">Guided by</span>
-                  <span className="credit-row-value">Murali & Tomy Sir</span>
-                </div>
+                  <div className="credit-row">
+                    <span className="credit-row-label">Guided by</span>
+                    <span className="credit-row-value">Dr. Murali Krishna Enduri Sir and Dr. CV Tomy Sir</span>
+                  </div>
                 <div className="credit-row">
                   <span className="credit-row-label">Established</span>
                   <span className="credit-row-value">SRM University AP</span>
@@ -416,12 +416,12 @@ export default function About() {
               <div className="bento-card-content">
                 <div className="bento-top-group">
                   <div className="bento-idx">01</div>
-                  <div>
-                    <h3 className="bento-card-title">The Vision</h3>
-                    <p className="bento-card-desc">
-                      To become the definitive student engineering collective — where curiosity meets deployment, and every single member ships something meaningful before they graduate. We build for the web, the cloud, and the future.
-                    </p>
-                  </div>
+                    <div>
+                      <h3 className="bento-card-title">The Vision</h3>
+                      <p className="bento-card-desc">
+                        To position ourselves as a student focused community and create visionaries of tomorrow
+                      </p>
+                    </div>
                 </div>
                 <div className="bento-badge-cloud">
                   <span className="bento-badge">Impact</span>
@@ -435,12 +435,12 @@ export default function About() {
               <div className="bento-card-content">
                 <div className="bento-top-group">
                   <div className="bento-idx">02</div>
-                  <div>
-                    <h3 className="bento-card-title">The Mission</h3>
-                    <p className="bento-card-desc">
-                      Bridge the gap between classroom theory and production-grade code. Through interactive bootcamps, hackathons, and structured peer mentorship, we give students the real-world reps they need to build confidently.
-                    </p>
-                  </div>
+                    <div>
+                      <h3 className="bento-card-title">The Mission</h3>
+                      <p className="bento-card-desc">
+                        To provide a student led and student focused platform for interaction and ideas. Committed towards bringing diversity in people and domains.
+                      </p>
+                    </div>
                 </div>
               </div>
             </article>
@@ -500,14 +500,14 @@ export default function About() {
                 <div className="timeline-node-inner"></div>
               </div>
               <article className="timeline-blueprint-card">
-                <div className="timeline-phase-meta">
-                  <span className="phase-number">Phase I</span>
-                  <span className="phase-year">The Past</span>
-                </div>
-                <h4>Foundations</h4>
-                <p>
-                  A handful of curious students, weekend meetups, and a shared Google Drive. The community was raw, but the ambition to learn cloud architecture and modern systems design was undeniable.
-                </p>
+                  <div className="timeline-phase-meta">
+                    <span className="phase-number">Phase I</span>
+                    <span className="phase-year">The Past</span>
+                  </div>
+                  <h4>Foundations</h4>
+                  <p>
+                    The community has successfully led major events providing student focused opportunities with events like HackMSC and Zero Jam which have formed a major part of the community's legacy and strengthen our vision for tomorrow.
+                  </p>
               </article>
             </div>
 
@@ -516,14 +516,14 @@ export default function About() {
                 <div className="timeline-node-inner"></div>
               </div>
               <article className="timeline-blueprint-card">
-                <div className="timeline-phase-meta">
-                  <span className="phase-number">Phase II</span>
-                  <span className="phase-year">The Present</span>
-                </div>
-                <h4>Execution</h4>
-                <p>
-                  Large-scale campus hackathons, Azure bootcamps, and an expanding alumni network. MSC is now a recognized engineering force, shipping tools and hosting training sessions for hundreds of developers.
-                </p>
+                  <div className="timeline-phase-meta">
+                    <span className="phase-number">Phase II</span>
+                    <span className="phase-year">The Present</span>
+                  </div>
+                  <h4>Execution</h4>
+                  <p>
+                    The community continues in the tradition of the star events while bringing new ideas to diversify student outreach to different courses and specializations. Thus fulfilling the student first commitment.
+                  </p>
               </article>
             </div>
 
@@ -532,14 +532,14 @@ export default function About() {
                 <div className="timeline-node-inner"></div>
               </div>
               <article className="timeline-blueprint-card">
-                <div className="timeline-phase-meta">
-                  <span className="phase-number">Phase III</span>
-                  <span className="phase-year">The Future</span>
-                </div>
-                <h4>Evolution</h4>
-                <p>
-                  Global student collaborations, contributing to open-source at scale, and incubating student-led startups that solve practical challenges. We are scaling our impact beyond the campus borders.
-                </p>
+                  <div className="timeline-phase-meta">
+                    <span className="phase-number">Phase III</span>
+                    <span className="phase-year">The Future</span>
+                  </div>
+                  <h4>Evolution</h4>
+                  <p>
+                    The community aims to be the forerunner in student led communities in providing students with opportunities while being transparent in its objective of working for all students and providing support.
+                  </p>
               </article>
             </div>
           </div>

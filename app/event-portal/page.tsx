@@ -1,7 +1,15 @@
 import { createPublicClient } from "@/utils/supabase/public";
+import { redirect } from "next/navigation";
 import EventPortalClient from "./EventPortalClient";
 
 export const dynamic = "force-dynamic";
+
+type EventSummary = {
+    id: string;
+    slug?: string | null;
+    registration_open?: boolean | null;
+    status?: string | null;
+};
 
 export default async function EventPortalPage({
     searchParams,
@@ -15,13 +23,19 @@ export default async function EventPortalPage({
     const { data: events } = await supabase
         .from("events")
         .select("*")
+        .eq("is_published", true)
         .order("date_start", { ascending: false });
+
+    if (!params.event) {
+        const defaultEvent =
+            events?.find((event: EventSummary) => event.registration_open && event.status !== "completed") ||
+            events?.find((event: EventSummary) => event.status !== "completed") ||
+            events?.[0];
+        redirect(defaultEvent ? `/event-portal?event=${defaultEvent.slug || defaultEvent.id}` : "/events");
+    }
 
     // If a specific event is requested, fetch its details
     let selectedEvent = null;
-    let openTeams: any[] = [];
-    let invitedTeam = null;
-    let registeredCount = 0;
 
     if (params.event) {
         const uuidRegex =
@@ -38,41 +52,13 @@ export default async function EventPortalPage({
         const { data } = await query.single();
         selectedEvent = data;
 
-        if (selectedEvent) {
-            // Fetch open teams for matchmaking
-            const { data: teams } = await supabase
-                .from("teams")
-                .select("*")
-                .eq("event_id", selectedEvent.id)
-                .eq("looking_for_members", true);
-            openTeams = teams || [];
+        if (!selectedEvent) redirect("/events");
 
-            // If invite param, fetch that team
-            if (params.invite) {
-                const { data: team } = await supabase
-                    .from("teams")
-                    .select("*")
-                    .eq("id", params.invite)
-                    .single();
-                invitedTeam = team;
-            }
-
-            // Fetch exact registered count
-            const { count } = await supabase
-                .from("registrations")
-                .select("*", { count: "exact", head: true })
-                .eq("event_id", selectedEvent.id);
-            registeredCount = count || 0;
-        }
     }
 
     return (
         <EventPortalClient
-            events={events || []}
             selectedEvent={selectedEvent}
-            openTeams={openTeams}
-            invitedTeam={invitedTeam}
-            registeredCount={registeredCount}
         />
     );
 }

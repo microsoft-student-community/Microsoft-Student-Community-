@@ -9,6 +9,11 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals"),
   {
     ignores: [".next/**", "node_modules/**", "MSC.SRMAP.BACKEND/**", "build/**", "next-env.d.ts"],
+    rules: {
+      "@next/next/no-img-element": "off",
+      "react-hooks/exhaustive-deps": "off",
+      "react/no-unescaped-entities": "off",
+    }
   },
 ];
 

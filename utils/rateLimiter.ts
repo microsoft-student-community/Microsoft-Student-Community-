@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
-export interface RateLimitResult {
+interface RateLimitResult {
   success: boolean;
   limit: number;
   remaining: number;

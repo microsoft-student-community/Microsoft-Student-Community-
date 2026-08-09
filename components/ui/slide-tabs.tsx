@@ -18,7 +18,7 @@ export const SlideTabs = ({ tabs = ["Home", "Pricing", "Features", "Docs", "Blog
     if (activeTab !== undefined && activeTab !== selected) {
       setSelected(activeTab);
     }
-  }, [activeTab]);
+  }, [activeTab, selected]);
 
   // This effect runs when the component mounts or when the selected tab changes.
   // It calculates the position of the selected tab and sets the cursor.

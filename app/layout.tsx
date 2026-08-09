@@ -1,8 +1,8 @@
 import "./globals.css";
-import AppChrome from "@/components/AppChrome";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mscsrmap.edu.in"),
   title: "Microsoft Student Community - SRM University AP",
   description:
     "Microsoft Student Community at SRM University AP - A vibrant student-led tech community focused on Azure, AI, and cloud computing.",
@@ -41,6 +41,7 @@ export const metadata: Metadata = {
       "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png",
     ],
   },
+  alternates: { canonical: "/" },
 };
 
 export default function RootLayout({
@@ -50,44 +51,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://cdnjs.cloudflare.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                document.documentElement.classList.remove('skip-loader');
-              })();
-            `,
-          }}
-        />
-      </head>
       <body>
-        <AppChrome>{children}</AppChrome>
+        {children}
       </body>
     </html>
   );

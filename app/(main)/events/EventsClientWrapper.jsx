@@ -199,6 +199,8 @@ export default function EventsClientWrapper({ events: initialEvents }) {
               src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
               alt="MSC Logo"
               className="loading-logo-img"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
           <div className="loader-text-group">
@@ -254,6 +256,8 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                 src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"
                 alt="Event Portal Banner"
                 className="featured-hero-img"
+                loading="eager"
+                fetchPriority="high"
               />
               <div className="featured-overlay-grad"></div>
               <div
@@ -271,25 +275,22 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                     animation: "pulseBlue 2s infinite",
                   }}
                 ></div>{" "}
-                EVENT PORTAL
+                COMMUNITY NETWORK
               </div>
             </div>
             <div className="featured-hero-content">
               <div className="featured-meta">
                 <span className="featured-date">LIVE</span>
-                <span className="featured-type">
-                  Official Registration System
-                </span>
+                <span className="featured-type">Meet. Build. Ship.</span>
               </div>
-              <h3 className="featured-title">MSC Event Portal</h3>
+              <h3 className="featured-title">Build with the community</h3>
               <p className="featured-desc">
-                Access our central portal to register for upcoming hackathons,
-                find teammates, manage your RSVPs, and download your
-                e-certificates for past events.
+                Join the MSC SRMAP Discord to meet builders, get event updates,
+                find teammates, and stay close to every workshop and hackathon.
               </p>
-              <Link href="/event-portal" className="featured-cta-btn">
-                Open Event Portal <i className="fa-solid fa-arrow-right"></i>
-              </Link>
+              <a href="https://discord.gg/K5NC5wAhg" target="_blank" rel="noopener noreferrer" className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
+                <i className="fab fa-discord"></i> Join Discord <i className="fa-solid fa-arrow-right btn-arrow"></i>
+              </a>
             </div>
           </div>
 
