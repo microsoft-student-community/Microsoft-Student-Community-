@@ -769,7 +769,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
                                 <input type="checkbox" name="lookingForMembers" className="w-5 h-5 mt-0.5 accent-cyan-500 rounded border-white/20 bg-black/50" />
                                 <div>
                                   <span className="text-sm font-bold text-cyan-400 block">Make my Team Public (Matchmaking)</span>
-                                  <span className="text-[11px] text-white/50 block mt-1">If checked, your team will appear in the "Find a Team" tab so other participants can join you! If left unchecked, your team will remain Private (you can still invite friends via a secret link).</span>
+                                  <span className="text-[11px] text-white/50 block mt-1">If checked, your team will appear in the &quot;Find a Team&quot; tab so other participants can join you! If left unchecked, your team will remain Private (you can still invite friends via a secret link).</span>
                                 </div>
                               </label>
                             </div>
@@ -845,7 +845,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="mb-8 border-b border-white/5 pb-6">
                 <h2 className="text-2xl font-bold text-white mb-2">Check Team Details & Retrieve Ticket</h2>
-                <p className="text-white/40 text-sm">Enter the Team Lead's email address to recover your registration form and QR code.</p>
+                <p className="text-white/40 text-sm">Enter the Team Lead&apos;s email address to recover your registration form and QR code.</p>
               </div>
 
               <div className="max-w-md mx-auto">
@@ -882,7 +882,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-4">E-Certificates Locked</h2>
                   <p className="text-white/40 text-center max-w-md">
-                    Please go to the <b>"Check Team Details"</b> tab and enter your email address to unlock your certificate!
+                    Please go to the <b>&quot;Check Team Details&quot;</b> tab and enter your email address to unlock your certificate!
                   </p>
                 </div>
               ) : !hasCertificate ? (
@@ -933,7 +933,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
                           </div>
                           <h3 className="text-xl font-bold text-white mb-2">Verify Identity</h3>
                           <p className="text-white/60 text-sm mb-6">
-                            To ensure privacy, please enter <strong>{member.name.split(' ')[0]}'s</strong> {authHint} to unlock this certificate.
+                            To ensure privacy, please enter <strong>{member.name.split(' ')[0]}&apos;s</strong> {authHint} to unlock this certificate.
                           </p>
                           <div className="flex w-full gap-3">
                             <input 
@@ -1009,7 +1009,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
                           )}
 
                           <button onClick={() => downloadCertificate(member.id, member.name)} className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-bold transition-all shadow-[0_10px_30px_rgba(59,130,246,0.3)] text-white flex items-center gap-3">
-                            <i className="fas fa-download text-xl"></i> Download {member.name.split(' ')[0]}'s Certificate
+                            <i className="fas fa-download text-xl"></i> Download {member.name.split(' ')[0]}&apos;s Certificate
                           </button>
                         </>
                       )}
@@ -1176,9 +1176,9 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
             <div className="w-20 h-20 bg-yellow-500/10 text-yellow-400 rounded-full flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
               <i className="fas fa-clock"></i>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">You're on the list!</h3>
+            <h3 className="text-2xl font-bold text-white mb-2">You&apos;re on the list!</h3>
             <p className="text-sm text-white/60 mb-8 leading-relaxed">
-              This event is currently at full capacity, but you've been added to the waitlist queue. If a spot opens up, the organizers will notify you and automatically issue your ticket!
+              This event is currently at full capacity, but you&apos;ve been added to the waitlist queue. If a spot opens up, the organizers will notify you and automatically issue your ticket!
             </p>
             <button onClick={() => setShowWaitlistModal(false)} className="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-colors shadow-lg">
               Got it
@@ -1196,7 +1196,7 @@ export default function EventPortalTabs({ event, isWaitlistMode = false, openTea
               <i className="fas fa-times text-lg"></i>
             </button>
             <div className="mb-6 relative z-10">
-              <h3 className="text-xl font-bold text-white mb-1">Join "{selectedJoinTeam.team_name}"</h3>
+              <h3 className="text-xl font-bold text-white mb-1">Join &quot;{selectedJoinTeam.team_name}&quot;</h3>
               <p className="text-sm text-white/40">Fill out your details below to instantly join this team.</p>
             </div>
             <form onSubmit={handleJoinSubmit} className="flex flex-col gap-4 relative z-10">

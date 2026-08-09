@@ -750,7 +750,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
 
       {/* Manual lookup input panel */}
       <div className="w-full max-w-lg bg-[#18181b]/50 border border-white/10 rounded-2xl p-4 shadow-lg mb-6 z-10">
-        <label className="block text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2">Can't Scan? Manual Cache Search</label>
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2">Can&apos;t Scan? Manual Cache Search</label>
         <div className="relative">
           <i className="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-xs"></i>
           <input 

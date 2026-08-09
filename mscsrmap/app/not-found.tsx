@@ -31,7 +31,7 @@ export default function NotFound() {
           </h2>
           
           <p className="text-[#a1a1aa] mt-4 max-w-md text-sm md:text-base leading-relaxed">
-            The page you're looking for has vanished into the digital void, or maybe it never existed in the first place.
+            The page you&apos;re looking for has vanished into the digital void, or maybe it never existed in the first place.
           </p>
 
           <Link 

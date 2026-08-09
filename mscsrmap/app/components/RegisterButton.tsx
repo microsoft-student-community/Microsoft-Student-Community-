@@ -370,9 +370,9 @@ export default function RegisterButton({ eventId, eventTitle, isRegistrationOpen
             <div className="w-20 h-20 bg-yellow-500/10 text-yellow-400 rounded-full flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(234,179,8,0.2)]">
               <i className="fas fa-clock"></i>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">You're on the list!</h3>
+            <h3 className="text-2xl font-bold text-white mb-2">You&apos;re on the list!</h3>
             <p className="text-sm text-white/60 mb-8 leading-relaxed">
-              This event is currently at full capacity, but you've been added to the waitlist queue. If a spot opens up, the organizers will notify you and automatically issue your ticket!
+              This event is currently at full capacity, but you&apos;ve been added to the waitlist queue. If a spot opens up, the organizers will notify you and automatically issue your ticket!
             </p>
             <button onClick={() => setShowWaitlistModal(false)} className="w-full py-4 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold transition-colors shadow-lg">
               Got it
