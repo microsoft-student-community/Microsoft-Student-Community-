@@ -154,7 +154,7 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
     const encodedUri = encodeURI(csvContent)
     const link = document.createElement("a")
     link.setAttribute("href", encodedUri)
-    link.setAttribute("download", `Registrations-${eventTitle.replace(/\s+/g, '-')}.csv`)
+    link.setAttribute("download", `Registrations-${eventTitle.replace(/\\s+/g, '-')}.csv`)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

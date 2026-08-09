@@ -34,7 +34,7 @@ export default async function AdminEventViewer({ params }: { params: Promise<{ i
   if (eventError || !event) return notFound()
 
   // Fetch all registrations using the verified event UUID
-  const { data: registrations } = await supabase
+  const { data: registrations, error: regsError } = await supabase
     .from('registrations')
     .select('*')
     .eq('event_id', event.id)
