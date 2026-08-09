@@ -2,23 +2,22 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
-
+import { sendRegistrationEmail } from '@/utils/resend'
 
 export async function assignCertificates(eventId: string, registrationIds: string[], type: string) {
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -62,17 +61,16 @@ export async function updateRegistrationDetails(eventId: string, regId: string, 
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -102,17 +100,16 @@ export async function deleteRegistration(eventId: string, regId: string) {
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -149,17 +146,16 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -228,12 +224,6 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
       }
 
       // 2. Insert Registration
-      // We will create individual registrations for now, or if Team Name exists, group them? 
-      // Unstop usually provides one row per team OR one row per member. 
-      // If it's one row per team, Unstop will have "Member 1 Email", "Member 2 Email".
-      // Assuming a flattened structure for simplicity where we just make a Team Lead registration.
-      
-      // Let's check if a registration for this email already exists for this event
       const { data: existingReg } = await supabaseAdmin.from('registrations')
         .select('id')
         .eq('event_id', eventId)
@@ -256,7 +246,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
       const teamData = teamName ? {
         teamName: teamName,
         leadIndex: 0,
-        members: [] // Not parsing complex nested members for now
+        members: []
       } : null;
 
       const hashPayload = require('crypto').randomUUID();
@@ -274,6 +264,24 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
       } else {
         successCount++;
         
+        // Send email via Resend
+        if (eventData) {
+          const eventDateString = eventData.date_start 
+            ? new Date(eventData.date_start).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium' })
+            : 'TBA';
+            
+          sendRegistrationEmail({
+            to: email,
+            name: name || email.split('@')[0],
+            eventTitle: eventData.title || 'Event',
+            eventDate: eventDateString,
+            eventLocation: eventData.location || '',
+            status: 'confirmed',
+            hashPayload: hashPayload,
+            isTeam: !!teamName,
+            teamName: teamName || undefined
+          }).catch(err => console.error(`Failed to send import confirmation email to ${email}:`, err));
+        }
       }
 
     } catch (err: any) {
@@ -291,17 +299,16 @@ export async function updateEventDetails(eventId: string, updateData: any) {
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin') {
+  if (!profile || profile.role !== 'admin') {
     return { error: 'Unauthorized' }
   }
 
@@ -325,17 +332,16 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   const supabase = await createClient()
 
   // Verify access
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-  if (userError || !user) return { error: 'Unauthorized' }
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
 
   const { data: profile } = await supabase
     .from('member_profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', session.user.id)
     .single()
 
-  const normalizedRole = (profile?.role || '').toLowerCase().replace(/[^a-z]/g, '')
-  if (normalizedRole !== 'admin' && !normalizedRole.includes('core')) {
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
     return { error: 'Unauthorized' }
   }
 
@@ -404,4 +410,3 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   revalidatePath(`/admin/events/${eventId}`)
   return { success: true, successCount, errors };
 }
-

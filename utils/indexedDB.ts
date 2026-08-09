@@ -42,46 +42,76 @@ export function initDB(): Promise<IDBDatabase> {
   });
 }
 
-async function getStore(storeName: 'registrations' | 'sync_queue', mode: IDBTransactionMode): Promise<IDBObjectStore> {
+export async function saveRegistrations(regs: any[]): Promise<void> {
   const db = await initDB();
-  return db.transaction(storeName, mode).objectStore(storeName);
-}
-
-function reqToPromise<T>(req: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+    const transaction = db.transaction(['registrations'], 'readwrite');
+    const store = transaction.objectStore('registrations');
+
+    // Clear old registrations first
+    store.clear();
+
+    regs.forEach((reg) => {
+      store.put(reg);
+    });
+
+    transaction.oncomplete = () => {
+      resolve();
+    };
+
+    transaction.onerror = (e) => {
+      console.error('Error saving registrations to IndexedDB:', e);
+      reject(e);
+    };
   });
 }
 
-export async function saveRegistrations(regs: any[]): Promise<void> {
-  const store = await getStore('registrations', 'readwrite');
-  await reqToPromise(store.clear());
-  await Promise.all(regs.map((reg) => reqToPromise(store.put(reg))));
-}
-
 export async function saveSingleRegistration(reg: any): Promise<void> {
-  const store = await getStore('registrations', 'readwrite');
-  await reqToPromise(store.put(reg));
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['registrations'], 'readwrite');
+    const store = transaction.objectStore('registrations');
+    const request = store.put(reg);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = (e) => {
+      console.error('Error saving single registration to IndexedDB:', e);
+      reject(e);
+    };
+  });
 }
 
 export async function getRegistrationByHash(hash: string): Promise<any | null> {
-  const store = await getStore('registrations', 'readonly');
+  const db = await initDB();
   return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['registrations'], 'readonly');
+    const store = transaction.objectStore('registrations');
     const request = store.openCursor();
-    request.onsuccess = (event: any) => {
-      const cursor = event.target.result;
+    
+    let found = false;
+
+    request.onsuccess = (event) => {
+      const cursor = (event.target as IDBRequest<IDBCursorWithValue | null>).result;
       if (cursor) {
         if (cursor.value.hash_payload === hash) {
           resolve(cursor.value);
-        } else {
-          cursor.continue();
+          found = true;
+          return;
         }
+        cursor.continue();
       } else {
-        resolve(null);
+        if (!found) {
+          resolve(null);
+        }
       }
     };
-    request.onerror = () => reject(request.error);
+
+    request.onerror = (e) => {
+      reject(e);
+    };
   });
 }
 
@@ -90,17 +120,32 @@ export async function updateLocalRegistrationCheckin(
   type: 'PRIMARY' | 'MEMBER',
   memberIndex?: number
 ): Promise<void> {
+  const db = await initDB();
   const reg = await getRegistrationByHash(hash);
   if (!reg) return;
 
-  if (type === 'PRIMARY') {
-    reg.checked_in = true;
-  } else if (type === 'MEMBER' && typeof memberIndex === 'number' && reg.team_data?.members?.[memberIndex]) {
-    reg.team_data.members[memberIndex].checked_in = true;
-  }
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['registrations'], 'readwrite');
+    const store = transaction.objectStore('registrations');
 
-  const store = await getStore('registrations', 'readwrite');
-  await reqToPromise(store.put(reg));
+    if (type === 'PRIMARY') {
+      reg.checked_in = true;
+    } else if (type === 'MEMBER' && typeof memberIndex === 'number' && reg.team_data && reg.team_data.members) {
+      if (reg.team_data.members[memberIndex]) {
+        reg.team_data.members[memberIndex].checked_in = true;
+      }
+    }
+
+    const request = store.put(reg);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = (e) => {
+      reject(e);
+    };
+  });
 }
 
 export async function addToSyncQueue(
@@ -109,46 +154,121 @@ export async function addToSyncQueue(
   type: 'PRIMARY' | 'MEMBER',
   memberIndex?: number
 ): Promise<void> {
-  const store = await getStore('sync_queue', 'readwrite');
-  await reqToPromise(
-    store.add({ eventId, hash, type, memberIndex, timestamp: Date.now() })
-  );
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['sync_queue'], 'readwrite');
+    const store = transaction.objectStore('sync_queue');
+
+    const checkin: OfflineCheckin = {
+      eventId,
+      hash,
+      type,
+      memberIndex,
+      timestamp: Date.now(),
+    };
+
+    const request = store.add(checkin);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = (e) => {
+      reject(e);
+    };
+  });
 }
 
 export async function getSyncQueue(): Promise<OfflineCheckin[]> {
-  const store = await getStore('sync_queue', 'readonly');
-  return reqToPromise(store.getAll());
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['sync_queue'], 'readonly');
+    const store = transaction.objectStore('sync_queue');
+    const request = store.getAll();
+
+    request.onsuccess = (event) => {
+      resolve((event.target as IDBRequest<OfflineCheckin[]>).result);
+    };
+
+    request.onerror = (e) => {
+      reject(e);
+    };
+  });
 }
 
 export async function removeFromSyncQueue(ids: number[]): Promise<void> {
-  const store = await getStore('sync_queue', 'readwrite');
-  await Promise.all(ids.map((id) => reqToPromise(store.delete(id))));
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['sync_queue'], 'readwrite');
+    const store = transaction.objectStore('sync_queue');
+
+    ids.forEach((id) => {
+      store.delete(id);
+    });
+
+    transaction.oncomplete = () => {
+      resolve();
+    };
+
+    transaction.onerror = (e) => {
+      reject(e);
+    };
+  });
 }
 
 export async function getRegistrationCount(): Promise<number> {
-  const store = await getStore('registrations', 'readonly');
-  return reqToPromise(store.count());
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['registrations'], 'readonly');
+    const store = transaction.objectStore('registrations');
+    const request = store.count();
+
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+
+    request.onerror = (e) => {
+      reject(e);
+    };
+  });
 }
 
 export async function searchCachedRegistrations(query: string): Promise<any[]> {
-  if (!query.trim()) return [];
-  const store = await getStore('registrations', 'readonly');
-  const all = await reqToPromise(store.getAll());
-  const term = query.toLowerCase();
-  const matches = all.filter((reg: any) => {
-    const leadEmail = reg.lead_email?.toLowerCase() || '';
-    const name = reg.form_data?.fullName?.toLowerCase() || '';
-    const regNum = reg.form_data?.regNum?.toLowerCase() || '';
-    const teamName = reg.team_data?.teamName?.toLowerCase() || '';
-
-    const memberMatch = reg.team_data?.members?.some((m: any) =>
-      m.fullName?.toLowerCase().includes(term) ||
-      m.regNum?.toLowerCase().includes(term) ||
-      m.email?.toLowerCase().includes(term)
-    );
-
-    return leadEmail.includes(term) || name.includes(term) || regNum.includes(term) || teamName.includes(term) || memberMatch;
+  const db = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['registrations'], 'readonly');
+    const store = transaction.objectStore('registrations');
+    const request = store.getAll();
+    
+    request.onsuccess = () => {
+      const all = request.result;
+      if (!query.trim()) {
+        resolve([]);
+        return;
+      }
+      const term = query.toLowerCase();
+      const matches = all.filter(reg => {
+        const leadEmail = reg.lead_email?.toLowerCase() || '';
+        const name = reg.form_data?.fullName?.toLowerCase() || '';
+        const regNum = reg.form_data?.regNum?.toLowerCase() || '';
+        const teamName = reg.team_data?.teamName?.toLowerCase() || '';
+        
+        let memberMatch = false;
+        if (reg.team_data?.members) {
+          memberMatch = reg.team_data.members.some((m: any) => 
+            m.fullName?.toLowerCase().includes(term) || 
+            m.regNum?.toLowerCase().includes(term) ||
+            m.email?.toLowerCase().includes(term)
+          );
+        }
+        
+        return leadEmail.includes(term) || name.includes(term) || regNum.includes(term) || teamName.includes(term) || memberMatch;
+      });
+      resolve(matches.slice(0, 5));
+    };
+    
+    request.onerror = (e) => {
+      reject(e);
+    };
   });
-
-  return matches.slice(0, 5);
 }
