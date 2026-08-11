@@ -238,7 +238,7 @@ export default function Home() {
                 </div>
                 <div className="telemetry-item">
                   <div className="telemetry-lbl">FOCUS TRACKS</div>
-                  <div className="telemetry-val">AZURE ┬╖ AI ┬╖ OS</div>
+                  <div className="telemetry-val">AZURE AI OS</div>
                 </div>
                 <div className="telemetry-item">
                   <div className="telemetry-lbl">IMPACT HACKATHONS</div>
