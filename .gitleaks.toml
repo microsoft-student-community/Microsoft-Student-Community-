@@ -1,0 +1,10 @@
+title = "MSC Gitleaks Config"
+
+[allowlist]
+description = "Known non-secret CI placeholders (never real credentials)"
+regexes = [
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MjYxOTU1MDksImV4cCI6MTkzMTc3MTUwOX0\.1234567890abcdef''',
+  '''sb_publishable_ci_placeholder_key_not_real''',
+  '''rzp_test_placeholder''',
+  '''https://placeholder-url\.supabase\.co''',
+]
