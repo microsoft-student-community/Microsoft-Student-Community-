@@ -346,6 +346,13 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
               <div className="text-center py-4 bg-white/5 border border-white/10 rounded-xl">
                 <div className="font-semibold text-slate-300 mb-1">Event Completed</div>
                 <div className="text-xs text-slate-500 mb-3">Thank you to everyone who attended!</div>
+                <button
+                  onClick={onRegisterClick}
+                  className="w-full py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#0078d4] to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  Open Event Portal
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                </button>
               </div>
             ) : !event.registration_open ? (
               <div className="text-center py-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">

@@ -5,9 +5,8 @@ import "./events-premium.css";
 export const dynamic = "force-dynamic";
 
 export default async function EventsPage() {
-  const supabase = createPublicClient();
-
   try {
+    const supabase = createPublicClient();
     const { data: events, error } = await supabase
       .from("events")
       .select("*")

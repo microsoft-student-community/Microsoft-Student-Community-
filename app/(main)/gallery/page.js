@@ -11,8 +11,8 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function GalleryPage() {
-  const supabase = createPublicClient();
   try {
+    const supabase = createPublicClient();
     const { data: galleryItems, error } = await supabase
       .from("gallery_items")
       .select("*")
