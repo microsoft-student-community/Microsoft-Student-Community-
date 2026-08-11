@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { TicketTemplate } from "./TicketTemplate";
@@ -11,6 +11,9 @@ import {
 } from "../(main)/events/actions";
 import { createClient } from "@/utils/supabase/client";
 import { X, Download } from "lucide-react";
+
+/** Stable default so `openTeams = []` does not create a new array every render. */
+const EMPTY_TEAMS: any[] = [];
 
 function openRazorpayCheckout(options: any): Promise<any> {
   return new Promise((resolve) => {
@@ -119,7 +122,7 @@ function CertificatePreview({ member, reqs, event, currentReg }: any) {
 export default function EventPortalTabs({
   event,
   isWaitlistMode = false,
-  openTeams = [],
+  openTeams = EMPTY_TEAMS,
   invitedTeam = null,
 }: {
   event: any;
@@ -183,38 +186,40 @@ export default function EventPortalTabs({
   }, [invitedTeam]);
 
   const [liveTeams, setLiveTeams] = useState<any[]>(openTeams);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     setLiveTeams(openTeams);
+  }, [openTeams]);
 
-    if (activeTab === "matchmaking" && event.id) {
-      const channel = supabase
-        .channel(`matchmaking_${event.id}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "teams",
-            filter: `event_id=eq.${event.id}`,
-          },
-          async () => {
-            const { data } = await supabase
-              .from("teams")
-              .select("*")
-              .eq("event_id", event.id)
-              .eq("looking_for_members", true);
-            if (data) setLiveTeams(data);
-          },
-        )
-        .subscribe();
+  useEffect(() => {
+    if (activeTab !== "matchmaking" || !event.id) return;
 
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-  }, [activeTab, event.id, openTeams, supabase]);
+    const channel = supabase
+      .channel(`matchmaking_${event.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "teams",
+          filter: `event_id=eq.${event.id}`,
+        },
+        async () => {
+          const { data } = await supabase
+            .from("teams")
+            .select("*")
+            .eq("event_id", event.id)
+            .eq("looking_for_members", true);
+          if (data) setLiveTeams(data);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeTab, event.id, supabase]);
 
   async function handleRegistrationSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

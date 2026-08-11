@@ -5,9 +5,8 @@ import "./team-premium.css";
 export const revalidate = 60;
 
 export default async function TeamPage() {
-  const supabase = createPublicClient();
-
   try {
+    const supabase = createPublicClient();
     const { data: members, error } = await supabase
       .from("team_members")
       .select("*");

@@ -403,15 +403,13 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                             View Event Photos{" "}
                             <i className="fa-solid fa-arrow-right"></i>
                           </Link>
-                          {evt.status?.toLowerCase() !== 'completed' && (
-                            <Link
-                              href={evt.portalLink || "/event-portal"}
-                              className="event-portal-link"
-                            >
-                              Open Event Portal{" "}
-                              <i className="fa-solid fa-up-right-from-square"></i>
-                            </Link>
-                          )}
+                          <Link
+                            href={evt.portalLink || "/event-portal"}
+                            className="event-portal-link"
+                          >
+                            Open Event Portal{" "}
+                            <i className="fa-solid fa-up-right-from-square"></i>
+                          </Link>
                         </div>
                       </div>
                       <div className="event-summary-right">
