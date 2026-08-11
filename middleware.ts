@@ -6,11 +6,9 @@ import { checkRateLimit, getClientIp } from "./utils/rateLimiter";
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
   : [
-    'https://mscsrmap.edu.in',
-    'https://msc-srmap.web.app',
     'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'https://msc-srmap.vercel.app',
+    'http://127.0.0.1:30000',
+    'https://mscsrmap.vercel.app',
     process.env.NEXT_PUBLIC_APP_URL || ''
   ].filter(Boolean);
 
@@ -18,7 +16,15 @@ export async function middleware(request: NextRequest) {
   try {
     const currentPath = request.nextUrl.pathname;
     const origin = request.headers.get('origin');
-    const isAllowedOrigin = origin && ALLOWED_ORIGINS.includes(origin);
+    let isAllowedOrigin = false;
+    if (origin && origin !== 'null') {
+      try {
+        const isSameOrigin = new URL(origin).host === request.nextUrl.host;
+        isAllowedOrigin = isSameOrigin || ALLOWED_ORIGINS.includes(origin);
+      } catch {
+        isAllowedOrigin = false;
+      }
+    }
     const isApiRequest = currentPath.startsWith('/api/');
 
     if (isApiRequest && origin && !isAllowedOrigin) {
