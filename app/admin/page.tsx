@@ -396,7 +396,10 @@ export default function AdminPage() {
   async function fetchTeam() {
     setLoadingTeam(true)
     const { data, error } = await supabase.from('team_members').select('*').order('created_at', { ascending: true })
-    if (!error && data) setTeam(data)
+    if (!error && data) {
+      const tierRank: Record<string, number> = { chief: 0, president: 0, board: 1, lead: 1, member: 2 }
+      setTeam([...data].sort((a, b) => (tierRank[a.tier] ?? 2) - (tierRank[b.tier] ?? 2)))
+    }
     setLoadingTeam(false)
   }
 
@@ -405,6 +408,7 @@ export default function AdminPage() {
     const formData = new FormData(e.currentTarget)
     const name = formData.get('name') as string
     const role = formData.get('role') as string
+    const tier = (formData.get('tier') as string) || 'member'
     const linkedin_url = formData.get('linkedin_url') as string
     const github_url = formData.get('github_url') as string
     const twitter_url = formData.get('twitter_url') as string
@@ -425,7 +429,8 @@ export default function AdminPage() {
       }
     }
 
-    const payload = { name, role, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
+    // `tier` drives public /team sections (chief / board / member) via TeamClientWrapper
+    const payload = { name, role, tier, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
 
     const { error } = await supabase.from('team_members').insert([payload])
     if (error) {
@@ -444,6 +449,7 @@ export default function AdminPage() {
     const formData = new FormData(e.currentTarget)
     const name = formData.get('name') as string
     const role = formData.get('role') as string
+    const tier = (formData.get('tier') as string) || editingTeamMember.tier || 'member'
     const linkedin_url = formData.get('linkedin_url') as string
     const github_url = formData.get('github_url') as string
     const twitter_url = formData.get('twitter_url') as string
@@ -464,7 +470,7 @@ export default function AdminPage() {
       }
     }
 
-    const payload = { name, role, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
+    const payload = { name, role, tier, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
 
     const { error } = await supabase.from('team_members').update(payload).eq('id', editingTeamMember.id)
     if (error) {
@@ -1068,7 +1074,7 @@ export default function AdminPage() {
                     <i className="fas fa-user-plus text-purple-400"></i> Add Team Member
                   </h3>
                   <form onSubmit={handleCreateTeam} className="flex flex-col gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="flex flex-col gap-2">
                         <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
                         <input type="text" name="name" required placeholder="e.g. John Doe" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
@@ -1076,6 +1082,14 @@ export default function AdminPage() {
                       <div className="flex flex-col gap-2">
                         <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Role</label>
                         <input type="text" name="role" required placeholder="e.g. Technical Lead" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Public Tier</label>
+                        <select name="tier" defaultValue="member" required className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all">
+                          <option value="chief">Chief Board (President / VP / MD)</option>
+                          <option value="board">Board / Lead</option>
+                          <option value="member">Core Team Member</option>
+                        </select>
                       </div>
                     </div>
 
@@ -1155,7 +1169,12 @@ export default function AdminPage() {
                         )}
                       </div>
                       <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{member.name}</h3>
-                      <p className="text-xs text-white/50 mb-4 font-medium line-clamp-1">{member.role}</p>
+                      <p className="text-xs text-white/50 mb-2 font-medium line-clamp-1">{member.role}</p>
+                      <span className="mb-4 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-white/5 border border-white/10 text-white/40">
+                        {member.tier === 'chief' || member.tier === 'president' ? 'Chief Board'
+                          : member.tier === 'board' || member.tier === 'lead' ? 'Board / Lead'
+                          : 'Core Member'}
+                      </span>
                       
                       <div className="flex gap-3 mb-4">
                         {member.linkedin_url && (
@@ -1199,7 +1218,7 @@ export default function AdminPage() {
                     </div>
                     
                     <form key={editingTeamMember.id} onSubmit={handleUpdateTeam} className="flex flex-col gap-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="flex flex-col gap-2">
                           <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
                           <input type="text" name="name" required defaultValue={editingTeamMember.name} placeholder="e.g. John Doe" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
@@ -1207,6 +1226,23 @@ export default function AdminPage() {
                         <div className="flex flex-col gap-2">
                           <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Role</label>
                           <input type="text" name="role" required defaultValue={editingTeamMember.role} placeholder="e.g. Technical Lead" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Public Tier</label>
+                          <select
+                            name="tier"
+                            defaultValue={
+                              editingTeamMember.tier === 'president' ? 'chief'
+                              : editingTeamMember.tier === 'lead' ? 'board'
+                              : (editingTeamMember.tier || 'member')
+                            }
+                            required
+                            className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all"
+                          >
+                            <option value="chief">Chief Board (President / VP / MD)</option>
+                            <option value="board">Board / Lead</option>
+                            <option value="member">Core Team Member</option>
+                          </select>
                         </div>
                       </div>
 
