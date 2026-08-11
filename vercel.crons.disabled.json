@@ -1,0 +1,13 @@
+{
+  "_comment": "Temporarily disabled. Restore these into vercel.json \"crons\" when ready.",
+  "crons": [
+    {
+      "path": "/api/cron/expire-reservations",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/keepalive",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

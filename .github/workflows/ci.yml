@@ -75,7 +75,14 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
+      # gitleaks-action requires a paid org license (GITLEAKS_LICENSE).
+      # Use the free open-source CLI instead.
+      - name: Install Gitleaks CLI
+        run: |
+          GITLEAKS_VERSION="8.24.2"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
       - name: Run Gitleaks Secret Scanner
-        uses: gitleaks/gitleaks-action@v2.3.9
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gitleaks detect --source . --verbose --redact

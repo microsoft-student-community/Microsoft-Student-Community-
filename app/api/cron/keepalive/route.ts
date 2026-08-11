@@ -3,6 +3,8 @@ import { createAdminClient } from "@/utils/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
+// TEMPORARILY DISABLED: cron schedule removed from vercel.json.
+// Re-enable by restoring the entry in vercel.crons.disabled.json → vercel.json.
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization");
