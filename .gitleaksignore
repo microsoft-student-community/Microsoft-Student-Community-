@@ -1,0 +1,3 @@
+# False positive: CI build placeholder JWT (not a real secret).
+# Old fingerprint stays in git history even after the placeholder was replaced.
+5d77de34860e2f72da3de9332fce31632807d4cf:.github/workflows/ci.yml:jwt:55
