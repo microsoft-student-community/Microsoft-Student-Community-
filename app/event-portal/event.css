@@ -9,6 +9,7 @@
   --font-s: var(--font-instrument-serif), serif;
   --font-b: var(--font-inter), sans-serif;
   --bg: #0a0a0b;
+  --bg-2: #0d0d0f;
   --w100: #ffffff;
   --w95: rgba(255, 255, 255, 0.95);
   --w80: rgba(255, 255, 255, 0.8);
@@ -16,6 +17,9 @@
   --w45: rgba(255, 255, 255, 0.45);
   --w40: rgba(255, 255, 255, 0.4);
   --w20: rgba(255, 255, 255, 0.2);
+  --w10: rgba(255, 255, 255, 0.1);
+  --w06: rgba(255, 255, 255, 0.06);
+  --glass-specular: rgba(255, 255, 255, 0.12);
   --blue: #0078d4;
   --blue-dim: rgba(0, 120, 212, 0.15);
   --blue-glow: rgba(0, 120, 212, 0.5);

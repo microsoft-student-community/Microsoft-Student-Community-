@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import "./event.css";
 import "./portal.css";
 
 export const metadata: Metadata = {
