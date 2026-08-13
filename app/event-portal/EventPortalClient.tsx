@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import EventPortalTabs from "./EventPortalTabs";
-import { Calendar, Clock, MapPin, Tag, Users } from "lucide-react";
+import { Calendar, Clock, Hourglass, MapPin, Tag, Users } from "lucide-react";
 
 export default function EventPortalClient({
   selectedEvent,
+  invitedTeam = null,
+  openTeams = [],
 }: {
   selectedEvent: any;
+  invitedTeam?: any;
+  openTeams?: any[];
 }) {
   if (!selectedEvent) return null;
 
@@ -74,7 +78,36 @@ export default function EventPortalClient({
 
         <div className={agenda.length || speakers.length ? "event-portal-layout event-portal-layout--aside" : "event-portal-layout"}>
           <section className="event-portal-workspace">
-            <EventPortalTabs event={selectedEvent} />
+            {!selectedEvent.registration_open && selectedEvent.show_opening_soon ? (
+              <div className="event-portal-opening-soon">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35 }}
+                  className="event-portal-opening-soon-card"
+                >
+                  <div className="event-portal-opening-soon-icon">
+                    <Hourglass size={28} />
+                  </div>
+                  <span className="event-portal-opening-soon-eyebrow">Registrations Not Yet Open</span>
+                  <h2>Registrations Are Opening Soon</h2>
+                  <p>
+                    Please be patient. The MSC team is finalizing the details for{" "}
+                    <strong>{selectedEvent.title}</strong> and will open registrations
+                    very shortly. Keep an eye on this page for updates!
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => window.location.reload()}
+                    className="event-portal-opening-soon-refresh"
+                  >
+                    <Clock size={14} /> Check Again
+                  </button>
+                </motion.div>
+              </div>
+            ) : (
+              <EventPortalTabs event={selectedEvent} invitedTeam={invitedTeam} openTeams={openTeams} />
+            )}
           </section>
           {(agenda.length || speakers.length) > 0 && (
             <aside className="event-portal-aside">

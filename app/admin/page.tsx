@@ -342,7 +342,7 @@ export default function AdminPage() {
     const max_capacity = maxCapStr ? parseInt(maxCapStr) : null
 
     const { error } = await supabase.from('events').insert([{ 
-      title, slug, date_start, status, type, location: formData.get('location'), description: formData.get('description'), image_url, registration_open: formData.get('registration_open') === 'on', form_requirements, certificate_html: certificateHtml, max_capacity 
+      title, slug, date_start, status, type, location: formData.get('location'), description: formData.get('description'), image_url, registration_open: formData.get('registration_open') === 'on', show_opening_soon: formData.get('show_opening_soon') === 'on', form_requirements, certificate_html: certificateHtml, max_capacity 
     }])
     
     if (error) {
@@ -376,6 +376,16 @@ export default function AdminPage() {
   async function toggleRegistration(id: string, currentState: boolean) {
     showStatus(`event_${id}`, 'Toggling...', 'info')
     const { error } = await supabase.from('events').update({ registration_open: !currentState }).eq('id', id)
+    if (error) {
+      showStatus(`event_${id}`, `Failed: ${error.message}`, 'error')
+    } else {
+      fetchEvents()
+    }
+  }
+
+  async function toggleOpeningSoon(id: string, currentState: boolean) {
+    showStatus(`event_${id}`, 'Toggling...', 'info')
+    const { error } = await supabase.from('events').update({ show_opening_soon: !currentState }).eq('id', id)
     if (error) {
       showStatus(`event_${id}`, `Failed: ${error.message}`, 'error')
     } else {
@@ -803,12 +813,20 @@ export default function AdminPage() {
                         <input type="file" name="image" accept="image/*" className="w-full bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl px-4 py-2.5 text-white outline-none transition-all text-sm file:mr-4 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 file:transition-all cursor-pointer" />
                       </div>
                       
-                      <div className="flex items-center">
+                      <div className="flex flex-col gap-5 justify-center">
                         <label className="flex items-center gap-3 cursor-pointer select-none">
                           <input type="checkbox" name="registration_open" className="w-5 h-5 accent-blue-500 rounded border-white/20 bg-black/50 cursor-pointer" />
                           <div>
                             <span className="text-sm font-bold text-white block">Open Registrations Instantly</span>
                             <span className="text-[10px] text-white/40 block mt-0.5">Let participants register as soon as the event is created.</span>
+                          </div>
+                        </label>
+
+                        <label className="flex items-center gap-3 cursor-pointer select-none">
+                          <input type="checkbox" name="show_opening_soon" className="w-5 h-5 accent-yellow-500 rounded border-white/20 bg-black/50 cursor-pointer" />
+                          <div>
+                            <span className="text-sm font-bold text-white block">Show "Opening Soon" Page</span>
+                            <span className="text-[10px] text-white/40 block mt-0.5">While registrations are closed, users see an "Opening Soon – be patient" page on the event portal.</span>
                           </div>
                         </label>
                       </div>
@@ -1014,6 +1032,11 @@ export default function AdminPage() {
                               Closed
                             </span>
                           )}
+                          {!evt.registration_open && evt.show_opening_soon && (
+                            <span className="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                              Coming Soon
+                            </span>
+                          )}
                         </div>
                       </div>
                       
@@ -1046,9 +1069,12 @@ export default function AdminPage() {
                               <button onClick={() => { triggerHaptic('medium'); toggleEventStatus(evt.id, evt.status); }} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:border-green-500/30 hover:bg-green-500/10 flex items-center justify-center text-white/60 hover:text-green-400 transition-all cursor-pointer" title={evt.status === 'completed' ? 'Mark Upcoming' : 'Mark Completed'}>
                                 <i className={`fas ${evt.status === 'completed' ? 'fa-calendar-plus' : 'fa-calendar-check'} text-xs`}></i>
                               </button>
-                              <button onClick={() => { triggerHaptic('medium'); toggleRegistration(evt.id, !!evt.registration_open); }} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:border-orange-500/30 hover:bg-orange-500/10 flex items-center justify-center text-white/60 hover:text-orange-400 transition-all cursor-pointer" title={evt.registration_open ? 'Close Registration' : 'Open Registration'}>
-                                <i className={`fas ${evt.registration_open ? 'fa-lock' : 'fa-lock-open'} text-xs`}></i>
-                              </button>
+<button onClick={() => { triggerHaptic('medium'); toggleRegistration(evt.id, !!evt.registration_open); }} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:border-orange-500/30 hover:bg-orange-500/10 flex items-center justify-center text-white/60 hover:text-orange-400 transition-all cursor-pointer" title={evt.registration_open ? 'Close Registration' : 'Open Registration'}>
+  <i className={`fas ${evt.registration_open ? 'fa-lock' : 'fa-lock-open'} text-xs`}></i>
+</button>
+<button onClick={() => { triggerHaptic('medium'); toggleOpeningSoon(evt.id, !!evt.show_opening_soon); }} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-500/30 hover:bg-yellow-500/10 flex items-center justify-center text-white/60 hover:text-yellow-400 transition-all cursor-pointer" title={evt.show_opening_soon ? 'Hide "Opening Soon" Page' : 'Show "Opening Soon" Page'}>
+  <i className={`fas ${evt.show_opening_soon ? 'fa-hourglass-end' : 'fa-hourglass-half'} text-xs`}></i>
+</button>
                               <button onClick={() => { triggerHaptic('heavy'); deleteEvent(evt.id, evt.title); }} className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 hover:border-red-500/30 hover:bg-red-500/10 flex items-center justify-center text-white/60 hover:text-red-400 transition-all cursor-pointer" title="Delete Event">
                                 <i className="fas fa-trash-alt text-xs"></i>
                               </button>
