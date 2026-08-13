@@ -78,7 +78,7 @@ export default function EventPortalClient({
 
         <div className={agenda.length || speakers.length ? "event-portal-layout event-portal-layout--aside" : "event-portal-layout"}>
           <section className="event-portal-workspace">
-            {!selectedEvent.registration_open && selectedEvent.show_opening_soon ? (
+            {selectedEvent.status !== "completed" && !selectedEvent.registration_open && selectedEvent.show_opening_soon ? (
               <div className="event-portal-opening-soon">
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}

@@ -619,13 +619,14 @@ export default function EventPortalTabs({
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full event-portal-tabs">
         {/* Tabs */}
         <div className="flex flex-col md:flex-row gap-2 mb-8 bg-[#18181b]/40 backdrop-blur-md p-2 rounded-2xl border border-white/5">
           {event.status !== "completed" && (
             <button
               onClick={() => setActiveTab("register")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-[#0078d4]/10 text-[#0078d4] border border-[#0078d4]/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-slate-500 hover:text-white hover:bg-white/5"}`}
+              className={`event-portal-tab ${activeTab === "register" ? "event-portal-tab-active" : ""} flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "register" ? (isWaitlistMode ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]" : "bg-[#0078d4]/10 text-[#0078d4] border border-[#0078d4]/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]") : "text-slate-500 hover:text-white hover:bg-white/5"}`}
+              data-accent={isWaitlistMode ? "yellow" : "blue"}
             >
               <i
                 className={`fas ${isWaitlistMode ? "fa-clock" : "fa-user-plus"}`}
@@ -638,10 +639,11 @@ export default function EventPortalTabs({
 
           <button
             onClick={() => setActiveTab("check")}
-            className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "check"
+            className={`event-portal-tab ${activeTab === "check" ? "event-portal-tab-active" : ""} flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "check"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]"
                 : "text-slate-500 hover:text-white hover:bg-white/5"
               }`}
+              data-accent="purple"
           >
             <i className="fas fa-search"></i> Check Team Details
           </button>
@@ -649,11 +651,12 @@ export default function EventPortalTabs({
           {provideCertificates && (
             <button
               onClick={() => setActiveTab("certificate")}
-              className={`flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "certificate"
+className={`event-portal-tab ${activeTab === "certificate" ? "event-portal-tab-active" : ""} flex-1 py-4 px-6 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === "certificate"
                   ? "bg-green-500/10 text-green-400 border border-green-500/20 shadow-[0_0_15px_rgba(34,197,94,0.1)]"
                   : "text-slate-500 hover:text-white hover:bg-white/5"
                 }`}
-            >
+              data-accent="green"
+          >
               <i className="fas fa-certificate"></i> E-Certificate
             </button>
           )}
@@ -1180,6 +1183,7 @@ export default function EventPortalTabs({
               </div>
 
               {liveTeams.length === 0 ? (
+                
                 <div className="text-center p-12 bg-white/5 rounded-2xl border border-white/10">
                   <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500">
                     <i className="fas fa-users-slash text-2xl"></i>
