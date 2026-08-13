@@ -47,6 +47,7 @@ export default function EditEventForm({ event }: { event: any }) {
     const imageFile = formData.get('image') as File
     const certificateHtml = formData.get('certificate_html') as string
     const registration_open = formData.get('registration_open') === 'on'
+    const show_opening_soon = formData.get('show_opening_soon') === 'on'
     const galleryFiles = newGalleryFiles
 
     const form_requirements: Record<string, any> = {
@@ -95,7 +96,7 @@ export default function EditEventForm({ event }: { event: any }) {
     const finalGallery = [...existingGallery, ...newGalleryUrls]
 
     const updateData = {
-      title, date_start, status, type, location, description, image_url, registration_open, form_requirements, certificate_html: certificateHtml, max_capacity, gallery_urls: finalGallery 
+      title, date_start, status, type, location, description, image_url, registration_open, show_opening_soon, form_requirements, certificate_html: certificateHtml, max_capacity, gallery_urls: finalGallery 
     }
 
     const res = await updateEventDetails(event.id, updateData)
@@ -168,11 +169,16 @@ export default function EditEventForm({ event }: { event: any }) {
             {event.image_url && <img src={event.image_url} alt="Current poster" className="mt-2 h-20 rounded-md opacity-50" />}
           </div>
           
-          <div className="flex flex-col gap-2 justify-center">
+          <div className="flex flex-col gap-3 justify-center">
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" name="registration_open" defaultChecked={event.registration_open} className="w-5 h-5 accent-blue-500 cursor-pointer" />
               <span className="text-sm font-bold text-white">Open Registrations Immediately</span>
             </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" name="show_opening_soon" defaultChecked={event.show_opening_soon} className="w-5 h-5 accent-yellow-500 cursor-pointer" />
+              <span className="text-sm font-bold text-white">Show "Opening Soon" Page</span>
+            </label>
+            <span className="text-[10px] text-white/40 -mt-1 pl-7">While registrations are closed, users see an "Opening Soon – be patient" page on the event portal.</span>
           </div>
         </div>
 

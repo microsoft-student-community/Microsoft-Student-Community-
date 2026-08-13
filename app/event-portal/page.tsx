@@ -53,12 +53,37 @@ export default async function EventPortalPage({
         selectedEvent = data;
 
         if (!selectedEvent) redirect("/events");
+    }
 
+    // Fetch invited team if invite param exists
+    let invitedTeam = null;
+    let openTeams: any[] = [];
+
+    if (params.invite && selectedEvent?.id) {
+        const { data: team } = await supabase
+            .from("teams")
+            .select("*")
+            .eq("id", params.invite)
+            .eq("event_id", selectedEvent.id)
+            .single();
+        invitedTeam = team;
+    }
+
+    // Fetch open teams for matchmaking tab
+    if (selectedEvent?.id) {
+        const { data: teams } = await supabase
+            .from("teams")
+            .select("*")
+            .eq("event_id", selectedEvent.id)
+            .eq("looking_for_members", true);
+        openTeams = teams || [];
     }
 
     return (
         <EventPortalClient
             selectedEvent={selectedEvent}
+            invitedTeam={invitedTeam}
+            openTeams={openTeams}
         />
     );
 }

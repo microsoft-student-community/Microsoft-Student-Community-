@@ -13,6 +13,7 @@ interface Event {
   location?: string
   status: string
   registration_open?: boolean
+  show_opening_soon?: boolean
   image_url?: string
   slug?: string
 }
@@ -306,6 +307,16 @@ export default function EventsManagement({
                   <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all"></div>
                 </label>
               </div>
+              <div className="bg-[#f4f4f0] border border-2 md:border-4 border-black p-6 rounded-none flex items-center justify-between">
+                <div>
+                  <h5 className="text-[15px] font-medium text-black">Show "Registrations Opening Soon" Page</h5>
+                  <p className="text-[13px] text-gray-800 font-bold mt-1">While registrations are closed, users see an "Opening Soon – please be patient" message on the event portal.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="show_opening_soon" className="sr-only peer" />
+                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FFEB3B] text-black font-black uppercase tracking-widest border-2 md:border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]  border border-black hover:translate-x-[2px] hover:translate-y-[2px] md:hover:translate-x-[4px] md:hover:translate-y-[4px] hover:shadow-none transition-all"></div>
+                </label>
+              </div>
             </div>
 
             {/* Form Actions */}
@@ -363,6 +374,11 @@ export default function EventsManagement({
                   {!evt.registration_open && (
                     <span className="px-2.5 py-1 rounded-[6px] text-[11px] font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] backdrop-blur-md bg-red-500 text-white">
                       Locked
+                    </span>
+                  )}
+                  {!evt.registration_open && evt.show_opening_soon && (
+                    <span className="px-2.5 py-1 rounded-[6px] text-[11px] font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] backdrop-blur-md bg-yellow-500 text-black">
+                      Opening Soon
                     </span>
                   )}
                 </div>

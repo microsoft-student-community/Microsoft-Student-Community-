@@ -70,6 +70,7 @@ create table if not exists public.events (
   date_end timestamptz,
   image_url text,
   registration_open boolean not null default false,
+  show_opening_soon boolean not null default false,  -- show "Opening Soon" teaser page when registration_open is false
   is_published boolean not null default true,
   max_capacity integer,
   form_requirements jsonb not null default '{}'::jsonb,
