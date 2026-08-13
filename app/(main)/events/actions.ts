@@ -65,13 +65,24 @@ export async function submitPublicRegistration(eventId: string, formData: any) {
  // Check event capacity & status
  const { data: event } = await supabase
  .from("events")
- .select("id, registration_open, max_capacity")
+ .select("id, registration_open, max_capacity, form_requirements")
  .eq("id", eventId)
  .single();
 
  if (!event) return { error: "Event not found." };
  if (!event.registration_open)
  return { error: "Registrations are currently closed for this event." };
+
+ const reqs = event.form_requirements || {};
+ const minTeamSize = Number(reqs.min_team_size) || 1;
+ const maxTeamSize = Number(reqs.max_team_size) || 1;
+ const teamsRequired = !!(reqs.allow_teams && maxTeamSize > 1);
+
+ if (teamsRequired && !formData.teamName) {
+ return {
+ error: "This event requires team registration. Please register as part of a team.",
+ };
+ }
 
  // Count existing registrations
  const { count } = await supabase
@@ -88,7 +99,24 @@ export async function submitPublicRegistration(eventId: string, formData: any) {
  let teamData = null;
  let teamId = null;
 
- if (formData.teamName && formData.teamMembers?.length > 0) {
+ if (formData.teamName) {
+ const filledMembers = formData.teamMembers?.length
+ ? formData.teamMembers.filter(
+ (m: any) => m.email && String(m.email).trim() !== "",
+ ).length
+ : 0;
+ const totalMembers = 1 + filledMembers;
+
+ if (totalMembers < minTeamSize) {
+ return {
+ error: `A team needs at least ${minTeamSize} member${minTeamSize > 1 ? "s" : ""}. Please add ${minTeamSize - 1} more member${minTeamSize - 1 > 1 ? "s" : ""}.`,
+ };
+ }
+
+ if (totalMembers > maxTeamSize) {
+ return { error: `Teams can have a maximum of ${maxTeamSize} members.` };
+ }
+
  // Create team first
  const { data: team, error: teamError } = await supabase
  .from("teams")
@@ -113,7 +141,7 @@ export async function submitPublicRegistration(eventId: string, formData: any) {
  teamData = {
  team_id: teamId,
  team_name: formData.teamName,
- members: formData.teamMembers.map((m: any) => ({
+ members: (formData.teamMembers || []).map((m: any) => ({
  fullName: m.fullName,
  email: m.email,
  year: m.year,

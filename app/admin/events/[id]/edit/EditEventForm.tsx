@@ -56,6 +56,7 @@ export default function EditEventForm({ event }: { event: any }) {
       allow_teams: formData.get('allow_teams') === 'on',
       allow_external_students: formData.get('allow_external_students') === 'on',
       max_team_size: formData.get('allow_teams') === 'on' ? parseInt(formData.get('max_team_size') as string) || 1 : 1,
+      min_team_size: formData.get('allow_teams') === 'on' ? parseInt(formData.get('min_team_size') as string) || 1 : 1,
       provide_certificates: formData.get('provide_certificates') === 'on',
       certificate_html: certificateHtml || null,
       event_pricing: eventPricingType,
@@ -269,9 +270,15 @@ export default function EditEventForm({ event }: { event: any }) {
                 <span className="text-sm text-white/80 font-semibold text-blue-400">Allow Team Registrations</span>
               </label>
               {allowTeamsToggle && (
-                <div className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-200">
-                  <span className="text-sm text-white/60">Max Team Size:</span>
-                  <input type="number" name="max_team_size" defaultValue={event.form_requirements?.max_team_size || 3} min={2} max={10} className="w-20 p-2 bg-black/40 border border-white/10 rounded-lg text-white text-center focus:outline-none focus:border-blue-500" />
+                <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-white/60">Max Team Size:</span>
+                    <input type="number" name="max_team_size" defaultValue={event.form_requirements?.max_team_size || 3} min={2} max={10} className="w-20 p-2 bg-black/40 border border-white/10 rounded-lg text-white text-center focus:outline-none focus:border-blue-500" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-white/60">Min Team Size:</span>
+                    <input type="number" name="min_team_size" defaultValue={event.form_requirements?.min_team_size || 1} min={1} max={10} className="w-20 p-2 bg-black/40 border border-white/10 rounded-lg text-white text-center focus:outline-none focus:border-blue-500" />
+                  </div>
                 </div>
               )}
             </div>

@@ -131,11 +131,24 @@ export default function EventPortalTabs({
   invitedTeam?: any;
 }) {
   const isOpen = !!event.registration_open;
+  const reqs = event.form_requirements || {
+    req_reg_num: true,
+    req_branch: false,
+    req_spec: false,
+    allow_teams: false,
+    max_team_size: 1,
+    min_team_size: 1,
+    provide_certificates: true,
+  };
+  const provideCertificates = reqs.provide_certificates !== false;
+  const minTeamSize = reqs.min_team_size || 1;
+  const maxTeamSize = reqs.max_team_size || 1;
+  const teamsRequired = !!(reqs.allow_teams && maxTeamSize > 1);
   const [activeTab, setActiveTab] = useState<
     "register" | "matchmaking" | "check" | "certificate"
   >(event.status === "completed" || !isOpen ? "check" : "register");
   const [mounted, setMounted] = useState(false);
-  const [isCreatingTeam, setIsCreatingTeam] = useState(false);
+  const [isCreatingTeam, setIsCreatingTeam] = useState(teamsRequired);
 
   // Registration State
   const [loading, setLoading] = useState(false);
@@ -162,20 +175,10 @@ export default function EventPortalTabs({
   const [joinLoading, setJoinLoading] = useState(false);
 
   // Dynamic Form State
-  const [teamSize, setTeamSize] = useState(1);
+  const [teamSize, setTeamSize] = useState(teamsRequired ? minTeamSize : 1);
   const [teamLeadIndex, setTeamLeadIndex] = useState(0);
   const [isInternal, setIsInternal] = useState(true);
   const ticketRef = useRef<HTMLDivElement>(null);
-
-  const reqs = event.form_requirements || {
-    req_reg_num: true,
-    req_branch: false,
-    req_spec: false,
-    allow_teams: false,
-    max_team_size: 1,
-    provide_certificates: true,
-  };
-  const provideCertificates = reqs.provide_certificates !== false;
 
   useEffect(() => {
     setMounted(true);
@@ -296,7 +299,22 @@ export default function EventPortalTabs({
     baseData.teamMembers = teamMembers;
     baseData.teamLeadIndex = teamLeadIndex;
 
+    if (teamsRequired && !isCreatingTeam) {
+      setErrorMsg(
+        "Team registration is required for this event. You cannot register as a solo participant.",
+      );
+      setLoading(false);
+      return;
+    }
+
     if (isCreatingTeam) {
+      if (1 + teamMembers.length < minTeamSize) {
+        setErrorMsg(
+          `A team needs at least ${minTeamSize} members. Please register ${minTeamSize - 1} more member${minTeamSize - 1 > 1 ? "s" : ""}.`,
+        );
+        setLoading(false);
+        return;
+      }
       baseData.teamName = formData.get("teamName");
       baseData.lookingForMembers = formData.get("lookingForMembers") === "on";
       baseData.maxTeamSize = teamSize;
@@ -910,7 +928,7 @@ export default function EventPortalTabs({
                     reqs.max_team_size > 1 && (
                       <div className="mt-4 pt-6 border-t border-white/10">
                         <h4 className="text-lg font-bold text-white mb-4">
-                          Team Registration (Optional)
+                          Team Registration
                         </h4>
 
                         <div className="flex items-center gap-3 mb-6 p-4 bg-white/5 border border-white/10 rounded-xl">
@@ -918,17 +936,21 @@ export default function EventPortalTabs({
                             type="checkbox"
                             id="createTeamToggle"
                             checked={isCreatingTeam}
+                            disabled={teamsRequired}
                             onChange={(e) => {
                               setIsCreatingTeam(e.target.checked);
                               if (!e.target.checked) setTeamSize(1);
+                              else setTeamSize(minTeamSize);
                             }}
-                            className="w-5 h-5 accent-blue-500 rounded border-white/20 bg-black/50"
+                            className="w-5 h-5 accent-blue-500 rounded border-white/20 bg-black/50 disabled:opacity-60"
                           />
                           <label
                             htmlFor="createTeamToggle"
                             className="text-sm font-semibold text-white cursor-pointer select-none"
                           >
-                            I want to create or register a Team
+                            {teamsRequired
+                              ? "Team registration is required for this event"
+                              : "I want to create or register a Team"}
                           </label>
                         </div>
 
@@ -948,6 +970,11 @@ export default function EventPortalTabs({
 
                               <label className="text-[13px] font-semibold text-[#0078d4] uppercase tracking-wider">
                                 How many members are you registering right now?
+                                {minTeamSize > 1 && (
+                                  <span className="block text-[11px] font-normal normal-case text-white/50 mt-0.5">
+                                    Minimum {minTeamSize} member{minTeamSize > 1 ? "s" : ""} per team
+                                  </span>
+                                )}
                               </label>
                               <select
                                 value={teamSize}
@@ -957,8 +984,11 @@ export default function EventPortalTabs({
                                 className="p-3 bg-black/40 border border-blue-500/30 rounded-xl text-white focus:outline-none focus:border-blue-500 w-full md:w-1/2 mb-4 transition-colors"
                               >
                                 {Array.from(
-                                  { length: reqs.max_team_size },
-                                  (_, i) => i + 1,
+                                  {
+                                    length:
+                                      Math.max(maxTeamSize - minTeamSize + 1, 1),
+                                  },
+                                  (_, i) => i + minTeamSize,
                                 ).map((num: number) => (
                                   <option key={num} value={num}>
                                     {num === 1
