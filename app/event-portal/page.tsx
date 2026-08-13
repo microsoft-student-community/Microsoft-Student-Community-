@@ -23,7 +23,6 @@ export default async function EventPortalPage({
     const { data: events } = await supabase
         .from("events")
         .select("*")
-        .eq("is_published", true)
         .order("date_start", { ascending: false });
 
     if (!params.event) {
