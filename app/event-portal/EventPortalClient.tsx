@@ -18,18 +18,18 @@ export default function EventPortalClient({
 
   const startDate = selectedEvent.date_start
     ? new Date(selectedEvent.date_start).toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        timeZone: "Asia/Kolkata",
-      })
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "Asia/Kolkata",
+    })
     : "TBA";
   const startTime = selectedEvent.date_start
     ? new Date(selectedEvent.date_start).toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Asia/Kolkata",
-      })
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Kolkata",
+    })
     : "TBA";
   const agenda = Array.isArray(selectedEvent.form_requirements?.agenda)
     ? selectedEvent.form_requirements.agenda.filter((item: any) => item.time || item.t || item.title || item.d)
