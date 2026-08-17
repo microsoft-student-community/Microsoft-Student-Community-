@@ -386,7 +386,6 @@
   z-index: 2;
 }
 
-/* Drawer inner content — 2-column layout on desktop */
 .event-drawer-content {
   padding-top: 24px;
   margin-top: 24px;
@@ -395,6 +394,21 @@
   grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
   grid-template-rows: auto auto;
   gap: 1.5rem 2rem;
+}
+
+.event-drawer-content.event-drawer-content--no-image {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+}
+
+.event-drawer-content.event-drawer-content--no-image .event-summary-left {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.event-drawer-content.event-drawer-content--no-image .event-summary-right {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 /* Poster frame — spans left column, both rows */

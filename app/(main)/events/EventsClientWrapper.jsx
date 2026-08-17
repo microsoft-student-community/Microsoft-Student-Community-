@@ -38,10 +38,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
       tag: e.type ? e.type.charAt(0).toUpperCase() + e.type.slice(1) : "Event",
       desc: e.description || "",
       status: e.status === "completed" ? "Completed" : "Upcoming",
-      location: e.location || "",
-      img:
-        e.image_url ||
-        "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg",
+      img: e.image_url || null,
       summary: e.long_description || e.description || "Join us for this event!",
       galleryLink: `/gallery#gallery-${e.slug || e.id}`,
       portalLink: `/event-portal?event=${e.slug || e.id}`,
@@ -393,15 +390,17 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                       maxHeight: expandedCard === evt.id ? "1000px" : null,
                     }}
                   >
-                    <div className="event-drawer-content">
-                      <div className="drawer-poster-frame">
-                        <img
-                          src={evt.img}
-                          alt={`${evt.title} visual`}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
+                    <div className={`event-drawer-content ${!evt.img ? 'event-drawer-content--no-image' : ''}`}>
+                      {evt.img && (
+                        <div className="drawer-poster-frame">
+                          <img
+                            src={evt.img}
+                            alt={`${evt.title} visual`}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
+                      )}
                       <div className="event-summary-left">
                         <h4>Event Summary</h4>
                         <p>{evt.summary}</p>
