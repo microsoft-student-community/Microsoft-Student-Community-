@@ -136,6 +136,7 @@ export default function TeamClientWrapper({
             alt={member.name}
             className="tm-photo-img"
             loading="lazy"
+            decoding="async"
           />
           <div className="msc-image-box__glare"></div>
           <div className="msc-image-box__hud">
@@ -272,6 +273,9 @@ export default function TeamClientWrapper({
               src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
               alt="MSC Logo"
               className="loading-logo-img"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
           <div className="loader-text-group">

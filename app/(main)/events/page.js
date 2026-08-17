@@ -2,14 +2,16 @@ import { createPublicClient } from "@/utils/supabase/public";
 import EventsClientWrapper from "./EventsClientWrapper";
 import "./events-premium.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function EventsPage() {
   try {
     const supabase = createPublicClient();
     const { data: events, error } = await supabase
       .from("events")
-      .select("*")
+      .select(
+        "id, slug, title, type, description, status, location, image_url, date_start, date_end",
+      )
       .order("date_start", { ascending: false });
 
     if (error) throw error;

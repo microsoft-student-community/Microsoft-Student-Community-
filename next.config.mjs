@@ -9,6 +9,8 @@ const nextConfig = {
   serverExternalPackages: ['html5-qrcode'],
   outputFileTracingRoot: fileURLToPath(new URL('.', import.meta.url)),
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,7 +21,27 @@ const nextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ['lucide-react', 'html-to-image'],
+    optimizePackageImports: [
+      'lucide-react',
+      'html-to-image',
+      'framer-motion',
+      'papaparse',
+      '@supabase/supabase-js',
+      'qrcode.react',
+    ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|jpeg|png|webp|avif|ico|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
 };
 

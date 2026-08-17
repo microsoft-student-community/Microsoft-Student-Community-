@@ -48,9 +48,10 @@ export default function EventPortalClient({
                 src={selectedEvent.image_url}
                 alt={selectedEvent.title}
                 loading="eager"
+                decoding="async"
                 fetchPriority="high"
               />
-              {/* No image placeholder */}
+            ) : null}
           </div>
           <div className="event-portal-hero-copy">
             <div className="event-portal-eyebrows">

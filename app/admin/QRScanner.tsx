@@ -19,42 +19,33 @@ import { syncOfflineCheckins } from '@/app/admin/events/[id]/actions'
 
 import { triggerHaptic } from '@/utils/haptic'
 
-// Synthesis of beep sound offline using Web Audio API
+let sharedAudioCtx: AudioContext | null = null
+
 function playSound(type: 'success' | 'error' | 'click') {
   if (typeof window === 'undefined') return
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
-    const ctx = new AudioContextClass()
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
+    if (!AudioCtx) return
+    if (!sharedAudioCtx) sharedAudioCtx = new AudioCtx()
+    if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume()
+
+    const osc = sharedAudioCtx.createOscillator()
+    const gain = sharedAudioCtx.createGain()
     osc.connect(gain)
-    gain.connect(ctx.destination)
-    
-    if (type === 'success') {
-      osc.frequency.setValueAtTime(587.33, ctx.currentTime) // D5
-      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1) // A5
-      gain.gain.setValueAtTime(0.08, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
-      osc.start(ctx.currentTime)
-      osc.stop(ctx.currentTime + 0.3)
-    } else if (type === 'error') {
-      osc.type = 'sawtooth'
-      osc.frequency.setValueAtTime(150, ctx.currentTime)
-      osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.25)
-      gain.gain.setValueAtTime(0.12, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25)
-      osc.start(ctx.currentTime)
-      osc.stop(ctx.currentTime + 0.25)
-    } else {
-      osc.frequency.setValueAtTime(700, ctx.currentTime)
-      gain.gain.setValueAtTime(0.03, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05)
-      osc.start(ctx.currentTime)
-      osc.stop(ctx.currentTime + 0.05)
-    }
+    gain.connect(sharedAudioCtx.destination)
+
+    const now = sharedAudioCtx.currentTime
+    const freq = type === 'success' ? 880 : type === 'error' ? 220 : 600
+    const duration = type === 'click' ? 0.05 : 0.2
+
+    osc.frequency.setValueAtTime(freq, now)
+    gain.gain.setValueAtTime(0.05, now)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+
+    osc.start(now)
+    osc.stop(now + duration)
   } catch (err) {
-    console.error('AudioContext beep failed:', err)
+    console.error('Audio feedback error:', err)
   }
 }
 

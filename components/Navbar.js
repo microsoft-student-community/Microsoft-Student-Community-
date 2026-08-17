@@ -82,6 +82,11 @@ export default function Navbar() {
             src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
             alt="MSC"
             className="nav-logo-img"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width={130}
+            height={40}
           />
         </Link>
         <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`} ref={navRef}>

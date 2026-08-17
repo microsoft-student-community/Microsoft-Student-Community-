@@ -15,7 +15,7 @@ export default async function GalleryPage() {
     const supabase = createPublicClient();
     const { data: galleryItems, error } = await supabase
       .from("gallery_items")
-      .select("*")
+      .select("id, title, category, image_url, created_at")
       .order("created_at", { ascending: false });
 
     if (error) throw error;

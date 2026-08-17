@@ -225,6 +225,9 @@ export default function GalleryClientWrapper({ items: galleryData }) {
               src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
               alt="MSC Logo"
               className="loading-logo-img"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
           <div className="loader-text-group">
@@ -376,7 +379,12 @@ export default function GalleryClientWrapper({ items: galleryData }) {
                 >
                   <div className="msc-image-box">
                     <div className="msc-image-box__media">
-                      <img src={item.image} alt={item.title} loading="lazy" />
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
                     <div className="msc-image-box__glare"></div>
 
@@ -440,7 +448,12 @@ export default function GalleryClientWrapper({ items: galleryData }) {
 
             {activeItem && (
               <div className="vf-img-wrapper msc-image-box">
-                <img src={activeItem.image} alt={activeItem.title} id="vfImg" />
+                <img
+                  src={activeItem.image}
+                  alt={activeItem.title}
+                  id="vfImg"
+                  decoding="async"
+                />
                 <div className="msc-image-box__glare"></div>
                 <div className="msc-image-box__hud">
                   <div className="msc-hud-top">
