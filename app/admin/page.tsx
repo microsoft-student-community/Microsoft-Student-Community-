@@ -45,6 +45,8 @@ export default function AdminPage() {
   const [allowTeamsToggle, setAllowTeamsToggle] = useState(false)
   const [eventPricingType, setEventPricingType] = useState<'free' | 'paid'>('free')
   const [chargeType, setChargeType] = useState<'per_person' | 'per_team'>('per_person')
+  const [createPosterFile, setCreatePosterFile] = useState<File | null>(null)
+  const [createPosterPreview, setCreatePosterPreview] = useState<string | null>(null)
   
   const [statusMsg, setStatusMsg] = useState<{ id: string, msg: string, type: 'error' | 'success' | 'info' } | null>(null)
 
@@ -137,9 +139,14 @@ export default function AdminPage() {
 
   async function uploadImage(file: File, pathPrefix: string) {
     const compressed = await compressAndConvertImage(file)
-    const fileName = `${pathPrefix}-${Math.random().toString(36).substring(2)}-${Date.now()}.webp`
+    const fileExt = compressed.type === 'image/webp' ? 'webp' : (file.name.split('.').pop() || 'png')
+    const fileName = `${pathPrefix}-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
     
-    const { data, error } = await supabase.storage.from('images').upload(fileName, compressed)
+    const { data, error } = await supabase.storage.from('images').upload(fileName, compressed, {
+      contentType: compressed.type || 'image/webp',
+      cacheControl: '3600',
+      upsert: true
+    })
     if (error) throw error
     
     const { data: publicData } = supabase.storage.from('images').getPublicUrl(fileName)
@@ -296,9 +303,23 @@ export default function AdminPage() {
     setLoadingEvents(false)
   }
 
+  function handleCreatePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) {
+      setCreatePosterFile(file)
+      setCreatePosterPreview(URL.createObjectURL(file))
+    }
+  }
+
+  function handleRemoveCreatePoster() {
+    setCreatePosterFile(null)
+    setCreatePosterPreview(null)
+  }
+
   async function handleCreateEvent(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    const formElement = e.currentTarget
+    const formData = new FormData(formElement)
     const title = formData.get('title') as string
     const dateStartRaw = formData.get('date_start') as string
     const date_start = dateStartRaw ? new Date(dateStartRaw).toISOString() : new Date().toISOString()
@@ -329,9 +350,10 @@ export default function AdminPage() {
     showStatus('create_event', 'Uploading and saving...', 'info')
     
     let image_url = ''
-    if (imageFile && imageFile.size > 0) {
+    const fileToUpload = createPosterFile || (imageFile && imageFile.size > 0 ? imageFile : null)
+    if (fileToUpload && fileToUpload.size > 0) {
       try {
-        image_url = await uploadImage(imageFile, 'event')
+        image_url = await uploadImage(fileToUpload, 'event')
       } catch (err: any) {
         showStatus('create_event', `Poster Upload Failed: ${err.message}`, 'error')
         return
@@ -349,7 +371,9 @@ export default function AdminPage() {
       showStatus('create_event', `Failed: ${error.message}`, 'error')
     } else {
       showStatus('create_event', 'Event Created Successfully!', 'success')
-      ;(e.target as HTMLFormElement).reset()
+      formElement.reset()
+      setCreatePosterFile(null)
+      setCreatePosterPreview(null)
       fetchEvents()
     }
   }
@@ -810,7 +834,39 @@ export default function AdminPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl">
                       <div>
                         <label className="block text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider mb-2">Event Poster Image <span className="text-white/20 lowercase font-normal">(optional)</span></label>
-                        <input type="file" name="image" accept="image/*" className="w-full bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl px-4 py-2.5 text-white outline-none transition-all text-sm file:mr-4 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 file:transition-all cursor-pointer" />
+                        <input 
+                          type="file" 
+                          name="image" 
+                          accept="image/*" 
+                          onChange={handleCreatePosterChange}
+                          className="w-full bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl px-4 py-2.5 text-white outline-none transition-all text-sm file:mr-4 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 file:transition-all cursor-pointer" 
+                        />
+                        {createPosterPreview && (
+                          <div className="mt-3 flex items-start gap-4 p-3 bg-black/40 border border-white/10 rounded-xl">
+                            <img 
+                              src={createPosterPreview} 
+                              alt="Poster preview" 
+                              className="w-20 h-28 object-cover rounded-lg border border-white/10 shadow shrink-0" 
+                            />
+                            <div className="flex-1 flex flex-col justify-between h-28 py-1">
+                              <div>
+                                <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                  Poster Selected
+                                </span>
+                                <p className="text-xs text-white/60 mt-1.5 truncate max-w-[200px]">
+                                  {createPosterFile?.name}
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleRemoveCreatePoster}
+                                className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1.5 w-fit"
+                              >
+                                <i className="fas fa-trash-alt"></i> Remove Poster
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       
                       <div className="flex flex-col gap-5 justify-center">

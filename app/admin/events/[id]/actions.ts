@@ -279,7 +279,7 @@ export async function updateEventDetails(eventId: string, updateData: any) {
     .single()
 
   if (!profile || profile.role !== 'admin') {
-    return { error: 'Unauthorized' }
+    return { error: 'Unauthorized: Admin access required' }
   }
 
   const { error } = await supabase
@@ -291,6 +291,8 @@ export async function updateEventDetails(eventId: string, updateData: any) {
 
   revalidatePath('/admin', 'layout')
   revalidatePath('/events', 'layout')
+  revalidatePath('/event-portal', 'layout')
+  revalidatePath(`/admin/events/${eventId}`, 'page')
   return { success: true }
 }
 

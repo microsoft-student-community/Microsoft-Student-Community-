@@ -44,13 +44,19 @@ export default function EventPortalClient({
         >
           <div className="event-portal-hero-media">
             {selectedEvent.image_url ? (
-              <img
-                src={selectedEvent.image_url}
-                alt={selectedEvent.title}
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-              />
+              <>
+                <div 
+                  className="event-portal-hero-media-blur" 
+                  style={{ backgroundImage: `url(${selectedEvent.image_url})` }}
+                />
+                <img
+                  src={selectedEvent.image_url}
+                  alt={selectedEvent.title}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                />
+              </>
             ) : null}
           </div>
           <div className="event-portal-hero-copy">

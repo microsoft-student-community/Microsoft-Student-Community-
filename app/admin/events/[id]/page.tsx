@@ -50,12 +50,30 @@ export default async function AdminEventViewer({ params }: { params: Promise<{ i
             <i className="fas fa-arrow-left"></i> Back to Dashboard
           </Link>
 
-          <div className="bg-[#18181b]/60 backdrop-blur-xl border border-white/10 rounded-[20px] p-8 mb-8 shadow-2xl flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{event.title}</h1>
-              <p className="text-white/40 text-sm">
-                <i className="fas fa-calendar-alt mr-2 text-blue-400"></i> {new Date(event.date_start).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium' })}
-              </p>
+          <div className="bg-[#18181b]/60 backdrop-blur-xl border border-white/10 rounded-[20px] p-8 mb-8 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="flex items-center gap-6">
+              {event.image_url ? (
+                <img
+                  src={event.image_url}
+                  alt={event.title}
+                  className="w-20 h-24 object-cover rounded-xl border border-white/10 shadow-md shrink-0"
+                />
+              ) : (
+                <div className="w-20 h-24 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 shrink-0">
+                  <i className="fas fa-image text-2xl"></i>
+                </div>
+              )}
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">{event.title}</h1>
+                <p className="text-white/40 text-sm">
+                  <i className="fas fa-calendar-alt mr-2 text-blue-400"></i> {new Date(event.date_start).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium' })}
+                </p>
+                {event.location && (
+                  <p className="text-white/40 text-sm mt-1">
+                    <i className="fas fa-map-marker-alt mr-2 text-red-400"></i> {event.location}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="text-right">
               <p className="text-4xl font-black bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent">

@@ -70,36 +70,36 @@ export default function TicketClient({ ticket }: { ticket: any }) {
  </div>
 
  <div className="space-y-4">
- <div>
- <span className="inline-block px-2 py-0.5 rounded border border-white/10 bg-slate-800 text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-3">
- {event?.category || "EVENT TICKET"}
- </span>
- <h1 className="font-syne font-black text-3xl text-white leading-[1.1] tracking-tight line-clamp-2">
- {event?.title}
- </h1>
- </div>
+  <div>
+  <span className="inline-block px-2 py-0.5 rounded border border-white/10 bg-slate-800 text-[9px] font-mono text-slate-400 uppercase tracking-widest mb-3">
+  {event?.type || event?.category || "EVENT TICKET"}
+  </span>
+  <h1 className="font-syne font-black text-3xl text-white leading-[1.1] tracking-tight line-clamp-2">
+  {event?.title}
+  </h1>
+  </div>
 
- <div className="pt-2 flex flex-col gap-2.5">
- <div className="flex items-center gap-3 text-slate-300">
- <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
- <Calendar className="w-3.5 h-3.5 text-[#0078d4]" />
- </div>
- <div className="flex flex-col">
- <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Date</span>
- <span className="text-xs font-semibold">{event?.date_start ? new Date(event.date_start).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }) : 'TBA'}</span>
- </div>
- </div>
- 
- <div className="flex items-center gap-3 text-slate-300">
- <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
- <MapPin className="w-3.5 h-3.5 text-[#a8329b]" />
- </div>
- <div className="flex flex-col">
- <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Venue</span>
- <span className="text-xs font-semibold">{event?.venue || 'TBA'}</span>
- </div>
- </div>
- </div>
+  <div className="pt-2 flex flex-col gap-2.5">
+  <div className="flex items-center gap-3 text-slate-300">
+  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
+  <Calendar className="w-3.5 h-3.5 text-[#0078d4]" />
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Date</span>
+  <span className="text-xs font-semibold">{event?.date_start ? new Date(event.date_start).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }) : 'TBA'}</span>
+  </div>
+  </div>
+  
+  <div className="flex items-center gap-3 text-slate-300">
+  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
+  <MapPin className="w-3.5 h-3.5 text-[#a8329b]" />
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Venue</span>
+  <span className="text-xs font-semibold">{event?.location || event?.venue || 'TBA'}</span>
+  </div>
+  </div>
+  </div>
  </div>
  </div>
 
