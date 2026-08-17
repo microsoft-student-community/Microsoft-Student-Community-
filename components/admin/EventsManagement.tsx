@@ -359,13 +359,8 @@ export default function EventsManagement({
           events.map(evt => (
             <div key={evt.id} className="bg-white rounded-none overflow-hidden border border-2 md:border-4 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:border-2 md:border-4 border-black transition-all duration-300 flex flex-col group translate-y-0 hover:-translate-y-1">
               <div className="relative h-48 bg-[#f4f4f0] w-full overflow-hidden border-b border-2 md:border-4 border-black">
-                {evt.image_url ? (
+                {evt.image_url && (
                   <img src={evt.image_url} alt={evt.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-300">
-                    <Calendar className="w-10 h-10 mb-2 opacity-50" strokeWidth={1.5} />
-                    <span className="text-[11px] font-medium uppercase tracking-widest">No Poster</span>
-                  </div>
                 )}
                 <div className="absolute top-4 left-4 flex gap-2">
                   <span className={`px-2.5 py-1 rounded-[6px] text-[11px] font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] backdrop-blur-md ${evt.status === 'completed' ? 'bg-[#E0E0E0] text-gray-800 font-bold border border-2 md:border-4 border-black' : 'bg-green-500 text-white'}`}>
@@ -390,7 +385,7 @@ export default function EventsManagement({
                   <div className="grid grid-cols-2 gap-y-3 gap-x-2 mb-6">
                     <div className="flex items-start gap-2 text-[13px] text-black font-medium">
                       <Clock className="w-4 h-4 text-gray-800 font-bold shrink-0 mt-0.5" />
-                      <span className="leading-tight">{new Date(evt.date_start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span className="leading-tight">{(() => { const d = new Date(evt.date_start); const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`; })()}</span>
                     </div>
                     {evt.location && (
                       <div className="flex items-start gap-2 text-[13px] text-black font-medium">

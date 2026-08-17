@@ -24,13 +24,7 @@ export default function EventPortalClient({
       timeZone: "Asia/Kolkata",
     })
     : "TBA";
-  const startTime = selectedEvent.date_start
-    ? new Date(selectedEvent.date_start).toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Asia/Kolkata",
-    })
-    : "TBA";
+
   const agenda = Array.isArray(selectedEvent.form_requirements?.agenda)
     ? selectedEvent.form_requirements.agenda.filter((item: any) => item.time || item.t || item.title || item.d)
     : [];
@@ -56,9 +50,7 @@ export default function EventPortalClient({
                 loading="eager"
                 fetchPriority="high"
               />
-            ) : (
-              <div className="event-portal-hero-placeholder" />
-            )}
+              {/* No image placeholder */}
           </div>
           <div className="event-portal-hero-copy">
             <div className="event-portal-eyebrows">
@@ -68,8 +60,7 @@ export default function EventPortalClient({
             <h1>{selectedEvent.title}</h1>
             <p>{selectedEvent.description || "Join the Microsoft Student Community for a focused session of learning, collaboration, and building."}</p>
             <div className="event-portal-meta-grid">
-              <div><Calendar size={16} /><small>Date</small><strong>{startDate}</strong></div>
-              <div><Clock size={16} /><small>Time</small><strong>{startTime}</strong></div>
+               <div><Calendar size={16} /><small>Date</small><strong>{startDate}</strong></div>
               <div><MapPin size={16} /><small>Venue</small><strong>{selectedEvent.location || "TBA"}</strong></div>
               <div><Users size={16} /><small>Capacity</small><strong>{selectedEvent.max_capacity ? `${selectedEvent.max_capacity} seats` : "Unlimited"}</strong></div>
             </div>
