@@ -16,7 +16,7 @@ export default async function TicketPage(props: { params: Promise<{ id: string }
 
  const { data: registration, error } = await supabase
  .from("registrations")
- .select("id, hash_payload, status, checked_in, form_data, team_data, events(title, date_start, venue, category, poster_url)")
+ .select("id, hash_payload, status, checked_in, form_data, team_data, events(title, date_start, location, type, image_url)")
  .eq("hash_payload", ticketId)
  .single();
 

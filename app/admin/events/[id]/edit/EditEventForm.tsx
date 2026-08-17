@@ -11,6 +11,9 @@ export default function EditEventForm({ event }: { event: any }) {
   const [allowTeamsToggle, setAllowTeamsToggle] = useState(event.form_requirements?.allow_teams || false)
   const [eventPricingType, setEventPricingType] = useState<'free' | 'paid'>(event.form_requirements?.event_pricing || 'free')
   const [chargeType, setChargeType] = useState<'per_person' | 'per_team'>(event.form_requirements?.charge_type || 'per_person')
+  const [currentPosterUrl, setCurrentPosterUrl] = useState<string>(event.image_url || '')
+  const [selectedPosterFile, setSelectedPosterFile] = useState<File | null>(null)
+  const [posterPreview, setPosterPreview] = useState<string | null>(null)
   const [existingGallery, setExistingGallery] = useState<string[]>(event.gallery_urls || [])
   const [newGalleryFiles, setNewGalleryFiles] = useState<File[]>([])
   const [statusMsg, setStatusMsg] = useState<{ id: string, msg: string, type: 'error' | 'success' | 'info' } | null>(null)
@@ -23,15 +26,91 @@ export default function EditEventForm({ event }: { event: any }) {
     }
   }
 
+  async function compressAndConvertImage(file: File, maxW = 1200, maxH = 1200, quality = 0.85): Promise<File> {
+    if (typeof window === 'undefined' || !window.FileReader) return file
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = (event) => {
+        const img = new Image()
+        img.src = event.target?.result as string
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+
+          if (width > height) {
+            if (width > maxW) {
+              height = Math.round((height * maxW) / width)
+              width = maxW
+            }
+          } else {
+            if (height > maxH) {
+              width = Math.round((width * maxH) / height)
+              height = maxH
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+
+          const ctx = canvas.getContext('2d')
+          if (!ctx) {
+            resolve(file)
+            return
+          }
+
+          ctx.drawImage(img, 0, 0, width, height)
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                  type: 'image/webp',
+                  lastModified: Date.now()
+                })
+                resolve(compressedFile)
+              } else {
+                resolve(file)
+              }
+            },
+            'image/webp',
+            quality
+          )
+        }
+        img.onerror = () => resolve(file)
+      }
+      reader.onerror = () => resolve(file)
+    })
+  }
+
   async function uploadImage(file: File, pathPrefix: string) {
-    const fileExt = file.name.split('.').pop()
+    const compressed = await compressAndConvertImage(file)
+    const fileExt = compressed.type === 'image/webp' ? 'webp' : (file.name.split('.').pop() || 'png')
     const fileName = `${pathPrefix}-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
     
-    const { data, error } = await supabase.storage.from('images').upload(fileName, file)
+    const { data, error } = await supabase.storage.from('images').upload(fileName, compressed, {
+      contentType: compressed.type || 'image/webp',
+      cacheControl: '3600',
+      upsert: true
+    })
     if (error) throw error
     
     const { data: publicData } = supabase.storage.from('images').getPublicUrl(fileName)
     return publicData.publicUrl
+  }
+
+  function handlePosterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedPosterFile(file)
+      setPosterPreview(URL.createObjectURL(file))
+    }
+  }
+
+  function handleRemovePoster() {
+    setSelectedPosterFile(null)
+    setPosterPreview(null)
+    setCurrentPosterUrl('')
   }
 
   async function handleEditEvent(e: React.FormEvent<HTMLFormElement>) {
@@ -44,7 +123,6 @@ export default function EditEventForm({ event }: { event: any }) {
     const type = formData.get('type') as string
     const location = formData.get('location') as string
     const description = formData.get('description') as string
-    const imageFile = formData.get('image') as File
     const certificateHtml = formData.get('certificate_html') as string
     const registration_open = formData.get('registration_open') === 'on'
     const show_opening_soon = formData.get('show_opening_soon') === 'on'
@@ -67,10 +145,10 @@ export default function EditEventForm({ event }: { event: any }) {
 
     showStatus('edit_event', 'Saving changes...', 'info')
     
-    let image_url = event.image_url // Keep existing by default
-    if (imageFile && imageFile.size > 0) {
+    let image_url = currentPosterUrl
+    if (selectedPosterFile && selectedPosterFile.size > 0) {
       try {
-        image_url = await uploadImage(imageFile, 'event')
+        image_url = await uploadImage(selectedPosterFile, 'event')
       } catch (err: any) {
         showStatus('edit_event', `Poster Upload Failed: ${err.message}`, 'error')
         return
@@ -107,7 +185,7 @@ export default function EditEventForm({ event }: { event: any }) {
       showStatus('edit_event', 'Event Updated Successfully!', 'success')
       setTimeout(() => {
         router.push(`/admin/events/${event.slug || event.id}`)
-      }, 1500)
+      }, 1200)
     }
   }
 
@@ -162,11 +240,46 @@ export default function EditEventForm({ event }: { event: any }) {
           <span className="text-[10px] text-white/40">If set, any registrations past this limit will automatically be placed on a Waitlist.</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] border border-white/5 p-5 rounded-2xl">
           <div>
-            <label className="block text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-2">Event Poster <span className="text-white/30 lowercase font-normal">(optional - leave blank to keep current)</span></label>
-            <input type="file" name="image" accept="image/*" className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/20 file:text-blue-400 hover:file:bg-blue-500/30 transition-all cursor-pointer" />
-            {event.image_url && <img src={event.image_url} alt="Current poster" className="mt-2 h-20 rounded-md opacity-50" />}
+            <label className="block text-xs font-bold text-[#a1a1aa] uppercase tracking-wider mb-2">
+              Event Poster <span className="text-white/30 lowercase font-normal">(upload new image to update)</span>
+            </label>
+            <input 
+              type="file" 
+              name="image" 
+              accept="image/*" 
+              onChange={handlePosterChange}
+              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-500/20 file:text-blue-400 hover:file:bg-blue-500/30 transition-all cursor-pointer" 
+            />
+            
+            {/* Poster Preview */}
+            {(posterPreview || currentPosterUrl) && (
+              <div className="mt-3 flex items-start gap-4 p-3 bg-black/40 border border-white/10 rounded-xl">
+                <img 
+                  src={posterPreview || currentPosterUrl} 
+                  alt="Poster preview" 
+                  className="w-20 h-28 object-cover rounded-lg border border-white/10 shadow" 
+                />
+                <div className="flex-1 flex flex-col justify-between h-28 py-1">
+                  <div>
+                    <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${posterPreview ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+                      {posterPreview ? 'New Poster Selected' : 'Current Active Poster'}
+                    </span>
+                    <p className="text-xs text-white/60 mt-1.5 truncate max-w-[200px]">
+                      {selectedPosterFile ? selectedPosterFile.name : (currentPosterUrl ? 'Existing uploaded poster' : '')}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRemovePoster}
+                    className="text-xs text-red-400 hover:text-red-300 font-semibold flex items-center gap-1.5 w-fit"
+                  >
+                    <i className="fas fa-trash-alt"></i> Remove Poster
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="flex flex-col gap-3 justify-center">
