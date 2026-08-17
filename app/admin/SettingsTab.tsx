@@ -264,7 +264,13 @@ export default function SettingsTab() {
             <div className="relative group mb-6">
               <div className="w-40 h-40 rounded-full border-4 border-white/10 shadow-2xl bg-white/5 overflow-hidden transition-all duration-300 group-hover:border-blue-500/30">
                 {profile.profile_picture_url ? (
-                  <img src={profile.profile_picture_url} alt="Avatar" className="w-full h-full object-cover" />
+                  <img
+                    src={profile.profile_picture_url}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-white/20">
                     <i className="fas fa-user text-4xl mb-2"></i>

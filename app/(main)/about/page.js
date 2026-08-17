@@ -194,6 +194,9 @@ export default function About() {
               src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
               alt="MSC Logo"
               className="loading-logo-img"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
           <div className="loader-text-group">
@@ -387,6 +390,7 @@ export default function About() {
                   alt="MSC Innovation Artwork"
                   className="artwork-img"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>

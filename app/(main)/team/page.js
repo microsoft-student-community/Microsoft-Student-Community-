@@ -9,7 +9,9 @@ export default async function TeamPage() {
     const supabase = createPublicClient();
     const { data: members, error } = await supabase
       .from("team_members")
-      .select("*");
+      .select(
+        "id, name, role, tier, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url",
+      );
 
     if (error) throw error;
 

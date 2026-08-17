@@ -1003,7 +1003,13 @@ export default function AdminPage() {
                       {/* Poster image Header */}
                       <div className="h-44 bg-zinc-950/80 relative flex items-center justify-center overflow-hidden border-b border-white/5">
                         {evt.image_url ? (
-                          <img src={evt.image_url} alt={evt.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                          <img
+                            src={evt.image_url}
+                            alt={evt.title}
+                            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         ) : (
                           <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-transparent flex items-center justify-center">
                             <i className="fas fa-calendar-alt text-4xl text-white/5"></i>
@@ -1192,7 +1198,13 @@ export default function AdminPage() {
                       <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
                       <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/15 flex items-center justify-center overflow-hidden mb-4 shadow-md group-hover:border-blue-500/40 transition-all">
                         {member.image_url ? (
-                          <img src={member.image_url} alt={member.name} className="w-full h-full object-cover" />
+                          <img
+                            src={member.image_url}
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
                         ) : (
                           <span className="text-2xl font-bold text-white/80">{member.name.charAt(0)}</span>
                         )}

@@ -200,6 +200,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
               alt="MSC Logo"
               className="loading-logo-img"
               loading="eager"
+              decoding="async"
               fetchPriority="high"
             />
           </div>
@@ -257,6 +258,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                 alt="Event Portal Banner"
                 className="featured-hero-img"
                 loading="eager"
+                decoding="async"
                 fetchPriority="high"
               />
               <div className="featured-overlay-grad"></div>
@@ -393,7 +395,12 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                   >
                     <div className="event-drawer-content">
                       <div className="drawer-poster-frame">
-                        <img src={evt.img} alt={`${evt.title} visual`} />
+                        <img
+                          src={evt.img}
+                          alt={`${evt.title} visual`}
+                          loading="lazy"
+                          decoding="async"
+                        />
                       </div>
                       <div className="event-summary-left">
                         <h4>Event Summary</h4>

@@ -19,13 +19,13 @@ export default async function EventPortalPage({
     const params = await searchParams;
     const supabase = createPublicClient();
 
-    // Fetch all events for the selector
-    const { data: events } = await supabase
-        .from("events")
-        .select("*")
-        .order("date_start", { ascending: false });
-
     if (!params.event) {
+        // Fetch minimal event summary only when resolving default fallback
+        const { data: events } = await supabase
+            .from("events")
+            .select("id, slug, registration_open, status")
+            .order("date_start", { ascending: false });
+
         const defaultEvent =
             events?.find((event: EventSummary) => event.registration_open && event.status !== "completed") ||
             events?.find((event: EventSummary) => event.status !== "completed") ||

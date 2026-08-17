@@ -1,6 +1,8 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
+import crypto from 'crypto'
 import { revalidatePath } from 'next/cache'
 
 export async function assignCertificates(eventId: string, registrationIds: string[], type: string) {
@@ -20,12 +22,7 @@ export async function assignCertificates(eventId: string, registrationIds: strin
     return { error: 'Unauthorized' }
   }
 
-  // Create Admin Supabase Client for bypassing RLS
-  const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseAdmin = createAdminClient();
 
   // Fetch all target registrations to update their form_data
   const { data: regs, error: fetchError } = await supabaseAdmin
@@ -73,12 +70,7 @@ export async function updateRegistrationDetails(eventId: string, regId: string, 
     return { error: 'Unauthorized' }
   }
 
-  // Create Admin Supabase Client for bypassing RLS
-  const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseAdmin = createAdminClient();
 
   const { error } = await supabaseAdmin
     .from('registrations')
@@ -112,12 +104,7 @@ export async function deleteRegistration(eventId: string, regId: string) {
     return { error: 'Unauthorized' }
   }
 
-  // Create Admin Supabase Client for bypassing RLS
-  const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseAdmin = createAdminClient();
 
   // Get team_id to delete from teams if applicable
   const { data: regData } = await supabaseAdmin
@@ -158,12 +145,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
     return { error: 'Unauthorized' }
   }
 
-  // Create Admin Supabase Client for creating users
-  const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseAdmin = createAdminClient();
 
   // Fetch event details for confirmation emails
   const { data: eventData } = await supabaseAdmin
@@ -197,7 +179,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
 
       if (!existingUser) {
         // Create an auth user first
-        const randomPassword = require('crypto').randomUUID();
+        const randomPassword = crypto.randomUUID();
         const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
           email: email,
           password: randomPassword,
@@ -254,7 +236,7 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
         members: [] // Not parsing complex nested members for now
       } : null;
 
-      const hashPayload = require('crypto').randomUUID();
+      const hashPayload = crypto.randomUUID();
       const { error: regError } = await supabaseAdmin.from('registrations').insert({
         event_id: eventId,
         lead_email: email,
@@ -334,12 +316,7 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
     return { error: 'Unauthorized' }
   }
 
-  // Create Admin Supabase Client for bypassing RLS
-  const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseAdmin = createAdminClient();
 
   let successCount = 0;
   const successIds: number[] = [];

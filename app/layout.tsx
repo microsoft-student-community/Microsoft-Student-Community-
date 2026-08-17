@@ -1,5 +1,36 @@
 import "./globals.css";
 import { Metadata } from "next";
+import { Syne, DM_Mono, Inter, Instrument_Serif } from "next/font/google";
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-d",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-s",
+  display: "swap",
+});
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-m",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-b",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mscsrmap.edu.in"),
@@ -50,12 +81,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${syne.variable} ${instrumentSerif.variable} ${dmMono.variable} ${inter.variable}`}
+    >
       <head>
         <link
+          rel="dns-prefetch"
+          href="https://lkbwunzswqbnoygxtilm.supabase.co"
+        />
+        <link
           rel="preconnect"
-          href="https://cdnjs.cloudflare.com"
-          crossOrigin="anonymous"
+          href="https://lkbwunzswqbnoygxtilm.supabase.co"
+          crossOrigin=""
         />
         <link
           rel="stylesheet"
