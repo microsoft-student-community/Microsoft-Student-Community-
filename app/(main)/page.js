@@ -319,23 +319,22 @@ export default function Home() {
           <div className="upcoming-list">
             <article className="event-cassette glow-card">
               <div className="event-spine">
-                <span className="event-month">OCT</span>
-                <span className="event-day">14</span>
+                <span className="event-month">SEP</span>
+                <span className="event-day">17</span>
               </div>
               <div className="event-body">
-                <h3>HackMSC - Solution Day Hackathon</h3>
+                <h3>SYNORA</h3>
                 <p>
-                  An intense sprint where members built and pitched complete
-                  technical solutions to panel judges within a single day.
+                  It is a fresher-oriented 18-hour technology event that combines 6 hours of orientation and technical talks with a 12-hour intensive hackathon, giving students a complete experience of learning, collaboration, and hands-on project building.
                 </p>
                 <div className="event-meta">
                   <span
                     className="event-status"
                     style={{ color: "#666", borderColor: "#666" }}
                   >
-                    Completed
+                    Not Completed
                   </span>
-                  <span className="event-note">Past Event</span>
+                  <span className="event-note">Upcoming Event</span>
                 </div>
               </div>
               <div className="event-edge">
@@ -343,52 +342,9 @@ export default function Home() {
               </div>
             </article>
 
-            <article className="event-cassette glow-card">
-              <div className="event-spine">
-                <span className="event-month" id="next-event-month">
-                  NOV
-                </span>
-                <span className="event-day" id="next-event-day">
-                  02
-                </span>
-              </div>
-              <div className="event-body">
-                <h3>Quantum Computing Session</h3>
-                <p>
-                  Introduction to qubits, quantum states, and algorithmic basics
-                  using IBM&apos;s Qiskit. No prior physics knowledge required.
-                </p>
-                <div className="event-meta">
-                  <span className="event-status">Upcoming</span>
-                  <span className="event-note">Registration opening soon.</span>
-                </div>
-              </div>
-              <div className="event-edge">
-                <span>WORKSHOP</span>
-              </div>
-            </article>
+            
 
-            <article className="event-cassette glow-card">
-              <div className="event-spine">
-                <span className="event-month">FEB</span>
-                <span className="event-day">20</span>
-              </div>
-              <div className="event-body">
-                <h3>TechFest &apos;25 Spring Sprint</h3>
-                <p>
-                  Collaborative open-source hack sprint to contribute to
-                  community repos, learn Git workflows, and ship production
-                  code.
-                </p>
-                <div className="event-meta">
-                  <span className="event-status">Planning</span>
-                  <span className="event-note">Details in progress.</span>
-                </div>
-              </div>
-              <div className="event-edge">
-                <span>COMMUNITY</span>
-              </div>
-            </article>
+            
           </div>
         </div>
       </section>
