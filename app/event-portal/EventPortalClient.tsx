@@ -8,11 +8,9 @@ import { Calendar, Clock, Hourglass, MapPin, Tag, Users } from "lucide-react";
 export default function EventPortalClient({
   selectedEvent,
   invitedTeam = null,
-  openTeams = [],
 }: {
   selectedEvent: any;
   invitedTeam?: any;
-  openTeams?: any[];
 }) {
   if (!selectedEvent) return null;
 
@@ -104,7 +102,7 @@ export default function EventPortalClient({
                 </motion.div>
               </div>
             ) : (
-              <EventPortalTabs event={selectedEvent} invitedTeam={invitedTeam} openTeams={openTeams} />
+              <EventPortalTabs event={selectedEvent} invitedTeam={invitedTeam} />
             )}
           </section>
           {(agenda.length || speakers.length) > 0 && (

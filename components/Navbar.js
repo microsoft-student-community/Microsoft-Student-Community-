@@ -67,11 +67,11 @@ export default function Navbar() {
 
   const navbarStyle = scrolled
     ? {
-        background: "rgba(15, 15, 20, 0.75)",
-        backdropFilter: "blur(25px) saturate(150%)",
-        boxShadow:
-          "0 4px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-      }
+      background: "rgba(15, 15, 20, 0.75)",
+      backdropFilter: "blur(25px) saturate(150%)",
+      boxShadow:
+        "0 4px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+    }
     : {};
 
   return (
