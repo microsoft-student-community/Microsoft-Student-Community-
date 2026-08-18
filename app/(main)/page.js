@@ -260,7 +260,7 @@ export default function Home() {
       {/* Ecosystem Pillars Bento Section */}
       <section id="ecosystem" className="home-pillars-section">
         <div className="container">
-          <span className="section-label">{"// 01 ΓÇö CORE PILLARS"}</span>
+          
           <h2 className="section-title">
             Built for serious student developers.
           </h2>
@@ -314,7 +314,7 @@ export default function Home() {
       {/* Upcoming Events Section */}
       <section id="upcoming" className="upcoming">
         <div className="container">
-          <span className="section-label">{"// 02 ΓÇö CALENDAR"}</span>
+         
           <h2 className="section-title">Upcoming Events</h2>
           <div className="upcoming-list">
             <article className="event-cassette glow-card">
@@ -352,7 +352,7 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="contact">
         <div className="container">
-          <span className="section-label">{"// 03 ΓÇö CONNECT"}</span>
+         
           <h2 className="section-title">Get In Touch</h2>
           <div className="contact-content">
             <div className="contact-info">
