@@ -566,11 +566,17 @@ create policy "Staff write images"
   on storage.objects for all
   using (
     bucket_id in ('images', 'webpage')
-    and public.current_user_role() in ('admin', 'core_member')
+    and exists (
+      select 1 from public.member_profiles
+      where id = auth.uid() and role in ('admin', 'core_member')
+    )
   )
   with check (
     bucket_id in ('images', 'webpage')
-    and public.current_user_role() in ('admin', 'core_member')
+    and exists (
+      select 1 from public.member_profiles
+      where id = auth.uid() and role in ('admin', 'core_member')
+    )
   );
 
 -- Users manage their own avatars (path starts with their user id)
