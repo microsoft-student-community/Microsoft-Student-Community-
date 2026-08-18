@@ -68,21 +68,10 @@ export default async function EventPortalPage({
         invitedTeam = team;
     }
 
-    // Fetch open teams for matchmaking tab
-    if (selectedEvent?.id) {
-        const { data: teams } = await supabase
-            .from("teams")
-            .select("*")
-            .eq("event_id", selectedEvent.id)
-            .eq("looking_for_members", true);
-        openTeams = teams || [];
-    }
-
     return (
         <EventPortalClient
             selectedEvent={selectedEvent}
             invitedTeam={invitedTeam}
-            openTeams={openTeams}
         />
     );
 }

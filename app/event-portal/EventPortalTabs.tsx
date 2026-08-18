@@ -12,8 +12,6 @@ import {
 import { createClient } from "@/utils/supabase/client";
 import { X, Download } from "lucide-react";
 
-/** Stable default so `openTeams = []` does not create a new array every render. */
-const EMPTY_TEAMS: any[] = [];
 
 function openRazorpayCheckout(options: any): Promise<any> {
   return new Promise((resolve) => {
@@ -122,12 +120,10 @@ function CertificatePreview({ member, reqs, event, currentReg }: any) {
 export default function EventPortalTabs({
   event,
   isWaitlistMode = false,
-  openTeams = EMPTY_TEAMS,
   invitedTeam = null,
 }: {
   event: any;
   isWaitlistMode?: boolean;
-  openTeams?: any[];
   invitedTeam?: any;
 }) {
   const isOpen = !!event.registration_open;
@@ -145,7 +141,7 @@ export default function EventPortalTabs({
   const maxTeamSize = reqs.max_team_size || 1;
   const teamsRequired = !!(reqs.allow_teams && maxTeamSize > 1);
   const [activeTab, setActiveTab] = useState<
-    "register" | "matchmaking" | "check" | "certificate"
+    "register" | "check" | "certificate"
   >(event.status === "completed" || !isOpen ? "check" : "register");
   const [mounted, setMounted] = useState(false);
   const [isCreatingTeam, setIsCreatingTeam] = useState(teamsRequired);
@@ -183,46 +179,12 @@ export default function EventPortalTabs({
   useEffect(() => {
     setMounted(true);
     if (invitedTeam) {
-      setActiveTab("matchmaking");
       setSelectedJoinTeam(invitedTeam);
     }
   }, [invitedTeam]);
 
-  const [liveTeams, setLiveTeams] = useState<any[]>(openTeams);
   const supabase = useMemo(() => createClient(), []);
 
-  useEffect(() => {
-    setLiveTeams(openTeams);
-  }, [openTeams]);
-
-  useEffect(() => {
-    if (activeTab !== "matchmaking" || !event.id) return;
-
-    const channel = supabase
-      .channel(`matchmaking_${event.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "teams",
-          filter: `event_id=eq.${event.id}`,
-        },
-        async () => {
-          const { data } = await supabase
-            .from("teams")
-            .select("*")
-            .eq("event_id", event.id)
-            .eq("looking_for_members", true);
-          if (data) setLiveTeams(data);
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [activeTab, event.id, supabase]);
 
   async function handleRegistrationSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -1168,78 +1130,6 @@ export default function EventPortalTabs({
                         : "Complete Registration"}
                   </button>
                 </form>
-              )}
-            </div>
-          )}
-
-          {/* MATCHMAKING TAB */}
-          {activeTab === "matchmaking" && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <div className="mb-8 border-b border-white/5 pb-6">
-                <h2 className="text-2xl font-bold text-cyan-400 mb-2">
-                  Team Matchmaking
-                </h2>
-                <p className="text-slate-500 text-sm">
-                  Looking for a team? Browse teams that are actively seeking
-                  members and join one instantly!
-                </p>
-              </div>
-
-              {liveTeams.length === 0 ? (
-                
-                <div className="text-center p-12 bg-white/5 rounded-2xl border border-white/10">
-                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500">
-                    <i className="fas fa-users-slash text-2xl"></i>
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    No Open Teams
-                  </h3>
-                  <p className="text-sm text-slate-500">
-                    Check back later or register a new team yourself!
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {liveTeams.map((team: any) => (
-                    <div
-                      key={team.id}
-                      className="bg-[#1e1e24] border border-cyan-500/20 rounded-2xl p-6 relative group overflow-hidden hover:border-cyan-500/40 transition-colors"
-                    >
-                      <div className="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
-                      <h3 className="text-xl font-bold text-white mb-1">
-                        {team.team_name}
-                      </h3>
-                      <p className="text-xs text-cyan-400 font-semibold mb-4 uppercase tracking-wider">
-                        Accepting Members
-                      </p>
-
-                      <div className="bg-black/30 rounded-xl p-4 mb-5 border border-white/5">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400">
-                            <i className="fas fa-user-tie text-xs"></i>
-                          </div>
-                          <div>
-                            <p className="text-sm text-slate-400">Team Leader</p>
-                            <p className="text-sm font-bold text-white">
-                              {team.leader_name}
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-xs text-slate-400 pl-11">
-                          {team.leader_year} Year &bull; {team.leader_branch}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => setSelectedJoinTeam(team)}
-                        className="w-full py-3 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 rounded-xl font-bold text-sm transition-all shadow-[0_0_15px_rgba(34,211,238,0.1)] flex items-center justify-center gap-2"
-                      >
-                        <i className="fas fa-right-to-bracket"></i> Request to
-                        Join
-                      </button>
-                    </div>
-                  ))}
-                </div>
               )}
             </div>
           )}
