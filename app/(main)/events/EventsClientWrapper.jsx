@@ -156,6 +156,12 @@ export default function EventsClientWrapper({ events: initialEvents }) {
     setExpandedCard(expandedCard === id ? null : id);
   };
 
+  const upcomingEventsWithImg = events.filter((e) => e.status === "Upcoming" && e.img);
+  const completedEventsWithImg = events.filter((e) => e.status === "Completed" && e.img);
+  const featuredEvent = upcomingEventsWithImg.length > 0 
+    ? upcomingEventsWithImg[upcomingEventsWithImg.length - 1] 
+    : (completedEventsWithImg.length > 0 ? completedEventsWithImg[0] : null);
+
   const filteredEvents =
     filter === "all" ? events : events.filter((e) => e.category === filter);
 
@@ -248,50 +254,98 @@ export default function EventsClientWrapper({ events: initialEvents }) {
         style={{ position: "relative", padding: "2rem 0 6rem" }}
       >
         <div className="container">
-          <div className="featured-event-hero glow-card">
-            <div className="featured-hero-visual">
-              <img
-                src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"
-                alt="Event Portal Banner"
-                className="featured-hero-img"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-              />
-              <div className="featured-overlay-grad"></div>
-              <div
-                className="featured-status-badge"
-                style={{
-                  borderColor: "rgba(0, 120, 212, 0.4)",
-                  color: "var(--blue)",
-                }}
-              >
+          {featuredEvent ? (
+            <div className="featured-event-hero glow-card">
+              <div className="featured-hero-visual">
+                <img
+                  src={featuredEvent.img}
+                  alt={featuredEvent.title}
+                  className="featured-hero-img"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                />
+                <div className="featured-overlay-grad"></div>
                 <div
-                  className="pulse-dot"
+                  className="featured-status-badge"
                   style={{
-                    background: "var(--blue)",
-                    boxShadow: "0 0 10px var(--blue-glow)",
-                    animation: "pulseBlue 2s infinite",
+                    borderColor: "rgba(0, 120, 212, 0.4)",
+                    color: "var(--blue)",
                   }}
-                ></div>{" "}
-                COMMUNITY NETWORK
+                >
+                  {featuredEvent.status === "Upcoming" ? (
+                    <div
+                      className="pulse-dot"
+                      style={{
+                        background: "var(--blue)",
+                        boxShadow: "0 0 10px var(--blue-glow)",
+                        animation: "pulseBlue 2s infinite",
+                      }}
+                    ></div>
+                  ) : null}{" "}
+                  {featuredEvent.status === "Upcoming" ? "UPCOMING EVENT" : "PAST EVENT"}
+                </div>
+              </div>
+              <div className="featured-hero-content">
+                <div className="featured-meta">
+                  <span className="featured-date">{featuredEvent.day} {featuredEvent.month}</span>
+                  <span className="featured-type">{featuredEvent.tag}</span>
+                </div>
+                <h3 className="featured-title">{featuredEvent.title}</h3>
+                <p className="featured-desc">
+                  {featuredEvent.desc}
+                </p>
+                <a href={featuredEvent.portalLink} className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
+                  Open Event Portal <i className="fa-solid fa-arrow-right btn-arrow"></i>
+                </a>
               </div>
             </div>
-            <div className="featured-hero-content">
-              <div className="featured-meta">
-                <span className="featured-date">LIVE</span>
-                <span className="featured-type">Meet. Build. Ship.</span>
+          ) : (
+            <div className="featured-event-hero glow-card">
+              <div className="featured-hero-visual">
+                <img
+                  src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"
+                  alt="Event Portal Banner"
+                  className="featured-hero-img"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                />
+                <div className="featured-overlay-grad"></div>
+                <div
+                  className="featured-status-badge"
+                  style={{
+                    borderColor: "rgba(0, 120, 212, 0.4)",
+                    color: "var(--blue)",
+                  }}
+                >
+                  <div
+                    className="pulse-dot"
+                    style={{
+                      background: "var(--blue)",
+                      boxShadow: "0 0 10px var(--blue-glow)",
+                      animation: "pulseBlue 2s infinite",
+                    }}
+                  ></div>{" "}
+                  COMMUNITY NETWORK
+                </div>
               </div>
-              <h3 className="featured-title">Build with the community</h3>
-              <p className="featured-desc">
-                Join the MSC SRMAP Discord to meet builders, get event updates,
-                find teammates, and stay close to every workshop and hackathon.
-              </p>
-              <a href="https://discord.gg/K5NC5wAhg" target="_blank" rel="noopener noreferrer" className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
-                <i className="fab fa-discord"></i> Join Discord <i className="fa-solid fa-arrow-right btn-arrow"></i>
-              </a>
+              <div className="featured-hero-content">
+                <div className="featured-meta">
+                  <span className="featured-date">LIVE</span>
+                  <span className="featured-type">Meet. Build. Ship.</span>
+                </div>
+                <h3 className="featured-title">Build with the community</h3>
+                <p className="featured-desc">
+                  Join the MSC SRMAP Discord to meet builders, get event updates,
+                  find teammates, and stay close to every workshop and hackathon.
+                </p>
+                <a href="https://discord.gg/K5NC5wAhg" target="_blank" rel="noopener noreferrer" className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
+                  <i className="fab fa-discord"></i> Join Discord <i className="fa-solid fa-arrow-right btn-arrow"></i>
+                </a>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="events-filter-bar">
             <button
@@ -361,7 +415,14 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                     </div>
                     <div className="event-info-col">
                       <div className="event-info-header">
-                        <h3>{evt.title}</h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                          {evt.img && (
+                            <div className="event-row-thumbnail">
+                              <img src={evt.img} alt={evt.title} />
+                            </div>
+                          )}
+                          <h3>{evt.title}</h3>
+                        </div>
                         <span className="event-cat-tag">{evt.tag}</span>
                       </div>
                       <p className="event-lead-desc">{evt.desc}</p>
