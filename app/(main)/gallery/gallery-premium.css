@@ -55,7 +55,7 @@
 }
 
 .hero-badge-text {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -63,7 +63,7 @@
 }
 
 .gallery-hero-title {
-  font-family: var(--font-d, 'Syne', sans-serif);
+  font-family: var(--font-sans);
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
   line-height: 1.05;
@@ -73,7 +73,7 @@
 }
 
 .gallery-hero-title .accent-serif {
-  font-family: var(--font-s, 'Instrument Serif', serif);
+  font-family: var(--font-sans);
   font-style: italic;
   font-weight: 400;
   color: #50e6ff;
@@ -86,7 +86,7 @@
 }
 
 .gallery-hero-desc {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.7;
@@ -127,7 +127,7 @@
 }
 
 .filter-pill {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.6);
@@ -181,7 +181,7 @@
   border-radius: 100px;
   padding: 8px 16px 8px 38px;
   color: #ffffff;
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   outline: none;
   transition: all 0.3s ease;
@@ -201,7 +201,7 @@
   border-radius: 100px;
   background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%);
   color: #ffffff;
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 600;
   border: none;
@@ -277,7 +277,7 @@
 
 .bento-meta-badge {
   align-self: flex-start;
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -291,7 +291,7 @@
 }
 
 .bento-title {
-  font-family: var(--font-d, 'Syne', sans-serif);
+  font-family: var(--font-sans);
   font-size: 1.25rem;
   font-weight: 700;
   color: #ffffff;
@@ -304,7 +304,7 @@
 }
 
 .bento-date {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.55);
 }
@@ -450,7 +450,7 @@
 }
 
 .vf-tag {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -462,13 +462,13 @@
 }
 
 .vf-date {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.5);
 }
 
 .vf-title {
-  font-family: var(--font-d, 'Syne', sans-serif);
+  font-family: var(--font-sans);
   font-size: 1.6rem;
   font-weight: 700;
   color: #ffffff;
@@ -477,7 +477,7 @@
 }
 
 .vf-desc {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.65;
@@ -505,7 +505,7 @@
 }
 
 .vf-stat-label {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   color: rgba(255, 255, 255, 0.45);
   text-transform: uppercase;
@@ -514,7 +514,7 @@
 }
 
 .vf-stat-value {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 600;
   color: #ffffff;
@@ -532,7 +532,7 @@
   width: 100%;
   padding: 12px 20px;
   border-radius: 100px;
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
@@ -599,7 +599,7 @@
 }
 
 .upload-modal-title {
-  font-family: var(--font-d, 'Syne', sans-serif);
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   font-weight: 700;
   color: #ffffff;
@@ -607,7 +607,7 @@
 }
 
 .upload-modal-subtitle {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.55);
   margin: 0;
@@ -661,7 +661,7 @@
 }
 
 .drop-title {
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 600;
   color: #ffffff;
@@ -724,7 +724,7 @@
 }
 
 .form-group label {
-  font-family: var(--font-m, 'DM Mono', monospace);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -739,7 +739,7 @@
   border-radius: 8px;
   padding: 10px 14px;
   color: #ffffff;
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   outline: none;
   transition: border-color 0.3s ease;
@@ -767,7 +767,7 @@
 .form-btn {
   padding: 10px 20px;
   border-radius: 100px;
-  font-family: var(--font-b, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;

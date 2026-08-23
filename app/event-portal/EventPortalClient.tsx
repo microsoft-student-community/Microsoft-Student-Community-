@@ -31,7 +31,7 @@ export default function EventPortalClient({
     : [];
 
   return (
-    <main className="event-portal-shell min-h-screen" style={{ fontFamily: "var(--font-b)" }}>
+    <main className="event-portal-shell min-h-screen" style={{ fontFamily: "var(--font-sans)" }}>
       <div className="event-portal-frame">
         <Link href="/events" className="event-portal-back">← Back to events</Link>
         <motion.section

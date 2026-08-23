@@ -32,7 +32,7 @@
 }
 
 .font-serif-italic {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-style: italic;
   color: var(--w100);
 }
@@ -76,7 +76,7 @@
 }
 
 .ab-eyebrow-tag {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -84,7 +84,7 @@
 }
 
 .ab-heading-hero {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: clamp(2.5rem, 5vw, 4.2rem);
   line-height: 1.1;
   font-weight: 800;
@@ -94,7 +94,7 @@
 }
 
 .ab-heading-accent {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-style: italic;
   font-weight: 400;
   background: linear-gradient(135deg, var(--w100) 30%, var(--blue) 100%);
@@ -164,7 +164,7 @@
 .console-dot:nth-child(3) { background: #27c93f; }
 
 .console-title {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--w45);
   letter-spacing: 0.1em;
@@ -172,7 +172,7 @@
 
 .console-body {
   padding: 24px;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.6;
 }
@@ -212,7 +212,7 @@
 }
 
 .metric-val {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--w100);
@@ -321,7 +321,7 @@
 }
 
 .bento-idx {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--blue);
   letter-spacing: 0.1em;
@@ -339,7 +339,7 @@
 }
 
 .bento-card-title {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--w100);
@@ -363,7 +363,7 @@
 }
 
 .bento-badge {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -408,7 +408,7 @@
 }
 
 .editorial-quote {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 3.5vw, 2.8rem);
   line-height: 1.25;
   color: var(--w100);
@@ -423,7 +423,7 @@
   left: -28px;
   top: -20px;
   opacity: 0.15;
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
 }
 
 .editorial-desc {
@@ -448,7 +448,7 @@
 }
 
 .credit-row-label {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   text-transform: uppercase;
   color: var(--w40);
@@ -634,7 +634,7 @@
 }
 
 .phase-number {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   color: var(--blue);
@@ -642,7 +642,7 @@
 }
 
 .phase-year {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   color: var(--w40);
@@ -653,7 +653,7 @@
 }
 
 .timeline-blueprint-card h4 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--w100);
@@ -774,7 +774,7 @@
 }
 
 .ab-marquee-item {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--w40);

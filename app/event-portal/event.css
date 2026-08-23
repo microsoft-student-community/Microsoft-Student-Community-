@@ -4,14 +4,8 @@
    ========================================================================== */
 
 :root {
-  --font-dm-mono: "DM Mono", monospace;
-  --font-syne: "Syne", sans-serif;
-  --font-instrument-serif: "Instrument Serif", serif;
-  --font-inter: "Inter", sans-serif;
-  --font-m: var(--font-dm-mono), monospace;
-  --font-d: var(--font-syne), sans-serif;
-  --font-s: var(--font-instrument-serif), serif;
-  --font-b: var(--font-inter), sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --bg: #0a0a0b;
   --bg-2: #0d0d0f;
   --w100: #ffffff;
@@ -85,7 +79,7 @@
 }
 
 .events-eyebrow-tag {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -94,7 +88,7 @@
 }
 
 .events-main-title {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 800;
   line-height: 1.1;
@@ -104,7 +98,7 @@
 }
 
 .title-serif-italic {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-style: italic;
   font-weight: 400;
   text-transform: none;
@@ -132,7 +126,7 @@
 }
 
 .filter-btn {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -242,7 +236,7 @@
 }
 
 .event-month-lbl {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   color: var(--w40);
@@ -252,7 +246,7 @@
 }
 
 .event-day-lbl {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 2rem;
   font-weight: 800;
   color: var(--w100);
@@ -283,7 +277,7 @@
 }
 
 .event-info-header h3 {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--w95);
@@ -298,7 +292,7 @@
 
 /* Category tag */
 .event-cat-tag {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.52rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -339,7 +333,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   color: var(--w40);
   letter-spacing: 0.04em;
@@ -442,7 +436,7 @@
 }
 
 .event-summary-left h4 {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   text-transform: uppercase;
   color: var(--blue);
@@ -470,7 +464,7 @@
   border: 1px dashed rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   padding: 16px 18px;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--w40);
   line-height: 1.6;
@@ -524,7 +518,7 @@
 
 .gallery-link,
 .event-portal-link {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -630,7 +624,7 @@
   border-radius: 20px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   color: var(--w100);
   letter-spacing: 0.12em;
@@ -675,7 +669,7 @@
 }
 
 .featured-date {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.8rem;
   color: var(--blue);
   letter-spacing: 0.05em;
@@ -683,7 +677,7 @@
 }
 
 .featured-type {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -693,7 +687,7 @@
 }
 
 .featured-title {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   color: var(--w100);
   line-height: 1.2;
@@ -716,7 +710,7 @@
   padding: 13px 26px;
   background: var(--w100);
   color: var(--bg);
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
