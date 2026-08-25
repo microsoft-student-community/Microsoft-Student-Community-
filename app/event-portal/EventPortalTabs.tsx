@@ -140,6 +140,7 @@ export default function EventPortalTabs({
   const minTeamSize = reqs.min_team_size || 1;
   const maxTeamSize = reqs.max_team_size || 1;
   const teamsRequired = !!(reqs.allow_teams && maxTeamSize > 1);
+  const externalRegistrationLink = reqs.external_registration_link || null;
   const [activeTab, setActiveTab] = useState<
     "register" | "check" | "certificate"
   >(event.status === "completed" || !isOpen ? "check" : "register");
@@ -711,6 +712,25 @@ export default function EventPortalTabs({
                       </button>
                     )}
                   </div>
+                </div>
+              ) : externalRegistrationLink ? (
+                <div className="bg-[#0078d4]/10 border border-[#0078d4]/20 rounded-2xl p-8 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-[#0078d4]/20 rounded-full flex items-center justify-center mb-4 text-[#0078d4]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-blue-400 mb-2">
+                    Register on External Site
+                  </h3>
+                  <p className="text-blue-400/60 text-sm mb-6">
+                    Registrations for this event are hosted on an external platform.
+                  </p>
+                  <button
+                    onClick={() => window.open(externalRegistrationLink, '_blank', 'noopener,noreferrer')}
+                    className="px-6 py-3 bg-[#0078d4] hover:bg-blue-600 rounded-xl font-bold transition-colors text-white flex items-center gap-2"
+                  >
+                    Open Registration Page
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                  </button>
                 </div>
               ) : (
                 <form

@@ -73,6 +73,7 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
 
   const agenda = event.form_requirements?.agenda || [];
   const speakers = event.form_requirements?.speakers || [];
+  const externalRegistrationLink = event.form_requirements?.external_registration_link || null;
 
   const dateStr = new Date(event.date_start).toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
@@ -366,11 +367,23 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
               </div>
             ) : (
               <button
-                onClick={onRegisterClick}
+                onClick={() => {
+                  if (externalRegistrationLink) {
+                    window.open(externalRegistrationLink, '_blank', 'noopener,noreferrer');
+                  } else {
+                    onRegisterClick();
+                  }
+                }}
                 className="w-full py-3.5 rounded-xl text-[15px] font-bold text-white shadow-lg transition-all active:scale-[0.98] bg-gradient-to-r from-[#0078d4] to-blue-600 hover:from-blue-600 hover:to-blue-700 hover:shadow-[0_0_20px_rgba(0,120,212,0.4)] flex items-center justify-center gap-2 cursor-pointer z-50 relative"
               >
-                {isFree ? 'Register for Free' : `Register Now · ₹${price}`}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                {externalRegistrationLink 
+                  ? 'Register on External Site' 
+                  : (isFree ? 'Register for Free' : `Register Now · ₹${price}`)}
+                {externalRegistrationLink ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
+                )}
               </button>
             )}
 
