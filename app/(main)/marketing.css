@@ -44,16 +44,14 @@ html {
   --glass-specular-strong: rgba(255, 255, 255, 0.2);
   --glass-outer-glow: rgba(0, 120, 212, 0.08);
   --glass-hover-glow: rgba(0, 120, 212, 0.15);
-  --font-d: "Syne", sans-serif;
-  --font-s: "Instrument Serif", serif;
-  --font-m: "DM Mono", monospace;
-  --font-b: "Inter", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 body {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--w70);
   line-height: 1.7;
@@ -759,7 +757,7 @@ html.skip-loader .loading-screen {
 }
 
 .loader-brand-line {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -770,7 +768,7 @@ html.skip-loader .loading-screen {
 }
 
 .loader-chapter-line {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.55rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -913,7 +911,7 @@ body.board-page .board {
 }
 
 .nav-link {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -949,7 +947,7 @@ body.board-page .board {
   border-radius: 100px;
   color: var(--w100);
   text-decoration: none;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -1150,7 +1148,7 @@ body.board-page .board {
 }
 
 .nav-link {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -1184,7 +1182,7 @@ body.board-page .board {
   border-radius: 100px;
   color: var(--w100);
   text-decoration: none;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -1499,7 +1497,7 @@ body.board-page .board {
 }
 
 .hero-status-text {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1508,7 +1506,7 @@ body.board-page .board {
 
 /* Main Display Title */
 .hero-title-v2 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: clamp(2.6rem, 5vw, 4.5rem);
   font-weight: 800;
   line-height: 1.08;
@@ -1519,7 +1517,7 @@ body.board-page .board {
 }
 
 .hero-italic-highlight {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-style: italic;
   font-weight: 400;
   background: linear-gradient(135deg, #ffffff 20%, var(--blue) 100%);
@@ -1559,7 +1557,7 @@ body.board-page .board {
   align-items: center;
   gap: 0.75rem;
   padding: 0.9rem 2rem;
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 500;
   color: #ffffff;
@@ -1594,7 +1592,7 @@ body.board-page .board {
   align-items: center;
   gap: 0.6rem;
   padding: 0.9rem 1.8rem;
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--w80);
@@ -1661,7 +1659,7 @@ body.board-page .board {
 }
 
 .console-tag-mono {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.14em;
   color: var(--w45);
@@ -1688,7 +1686,7 @@ body.board-page .board {
 }
 
 .telemetry-lbl {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1697,7 +1695,7 @@ body.board-page .board {
 }
 
 .telemetry-val {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--w100);
@@ -1708,7 +1706,7 @@ body.board-page .board {
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   padding: 12px 14px;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--w70);
   display: flex;
@@ -1839,7 +1837,7 @@ body.board-page .board {
 }
 
 .bento-card-head {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--w100);
@@ -1897,7 +1895,7 @@ body.board-page .board {
 .events-hero h1,
 .team-hero h1,
 .board-hero h1 {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: 3.5rem;
   font-weight: 500;
   background: linear-gradient(to bottom, var(--w100), var(--w95), var(--w70));
@@ -1924,7 +1922,7 @@ section {
 }
 
 .section-title {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: clamp(2.5rem, 4vw, 3.5rem);
   font-weight: 400;
   background: linear-gradient(to bottom, var(--w100), var(--w95), var(--w70));
@@ -1942,7 +1940,7 @@ section {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   color: var(--w80);
@@ -2063,7 +2061,7 @@ section {
 .event-spine {
   display: flex;
   flex-direction: column;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--w40);
@@ -2071,7 +2069,7 @@ section {
 }
 
 .event-day {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 2rem;
   color: var(--w70);
   letter-spacing: -0.02em;
@@ -2095,7 +2093,7 @@ section {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2116,7 +2114,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2166,7 +2164,7 @@ section {
 }
 
 .stat-item h3 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--w100);
@@ -2174,7 +2172,7 @@ section {
 }
 
 .stat-item p {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   color: var(--w40);
   font-weight: 400;
   font-size: 0.7rem;
@@ -2229,7 +2227,7 @@ section {
 }
 
 .credit-label {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   color: var(--w40);
@@ -2276,13 +2274,13 @@ section {
 }
 
 .impact-value {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.6rem;
   color: var(--w100);
 }
 
 .impact-label {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -2291,7 +2289,7 @@ section {
 
 /* ===== EVENTS SECTION ===== */
 .events-subtitle {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 400;
   margin-bottom: 2rem;
@@ -2410,7 +2408,7 @@ section {
 }
 
 .event-date .month {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--w70);
@@ -2420,7 +2418,7 @@ section {
 }
 
 .event-date .day {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 3rem;
   font-weight: 700;
   color: var(--w100);
@@ -2440,7 +2438,7 @@ section {
 }
 
 .event-content h4 {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 1.15rem;
   font-weight: 500;
   margin-bottom: 0.75rem;
@@ -2470,7 +2468,7 @@ section {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--w40);
   letter-spacing: 0.05em;
@@ -2506,7 +2504,7 @@ section {
 }
 
 .tbd-text {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 400;
   color: var(--w40);
@@ -2632,7 +2630,7 @@ section {
 }
 
 .board-info h3 {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   font-weight: 400;
   margin-bottom: 0.2rem;
@@ -2640,7 +2638,7 @@ section {
 }
 
 .board-role {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   color: var(--w40);
   font-weight: 400;
   margin-bottom: 1rem;
@@ -2757,7 +2755,7 @@ section {
 }
 
 .team-info h3 {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   font-weight: 400;
   margin-bottom: 0.2rem;
@@ -2765,7 +2763,7 @@ section {
 }
 
 .team-role {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   color: var(--w40);
   font-weight: 400;
   margin-bottom: 1rem;
@@ -2823,7 +2821,7 @@ section {
 }
 
 .contact-info h3 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.1rem;
   color: var(--w100);
   margin-bottom: 0.5rem;
@@ -2866,7 +2864,7 @@ section {
 }
 
 .contact-form h3 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.1rem;
   color: var(--w100);
   margin-bottom: 1.5rem;
@@ -2883,7 +2881,7 @@ section {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   color: var(--w100);
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.9rem;
   transition: all 0.3s var(--ease);
   backdrop-filter: blur(var(--glass-blur-light))
@@ -2911,7 +2909,7 @@ section {
 }
 
 .contact-form button {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--w95);
@@ -3058,7 +3056,7 @@ section {
 }
 
 .footer-connect p {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   color: var(--w40);
   font-weight: 500;
   font-size: 0.68rem;
@@ -3102,7 +3100,7 @@ section {
 }
 
 .footer-right p {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--w40);
   letter-spacing: 0.04em;
@@ -3111,7 +3109,7 @@ section {
 
 /* ===== MORE BUTTON ===== */
 .more-btn {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   background: transparent;
   color: var(--w40);
   font-weight: 400;
@@ -3204,7 +3202,7 @@ section {
 }
 
 .event-modal-title {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--w100);
@@ -3212,7 +3210,7 @@ section {
 }
 
 .event-modal-date {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--w40);
   font-weight: 400;
@@ -3259,7 +3257,7 @@ section {
 }
 
 .event-modal-register {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   background: transparent;
   color: var(--w70);
   border: 1px solid var(--border);
@@ -3500,7 +3498,7 @@ section {
   color: var(--w70);
   line-height: 1.6;
   margin-top: 1rem;
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
 }
 
 /* Dossier Grid Overview */
@@ -3557,7 +3555,7 @@ section {
 }
 
 .dossier-stat-num {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 3rem;
   font-weight: 800;
   color: var(--w100);
@@ -3566,7 +3564,7 @@ section {
 }
 
 .dossier-stat-lbl {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   color: var(--w40);
@@ -3671,11 +3669,11 @@ section {
   font-size: 1.5rem;
   color: var(--blue);
   margin-bottom: 1.5rem;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
 }
 
 .manifesto-card h3 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 1.75rem;
   margin-bottom: 1rem;
   color: var(--w100);
@@ -3693,7 +3691,7 @@ section {
 }
 
 .timeline-header {
-  font-family: var(--font-s);
+  font-family: var(--font-sans);
   font-size: clamp(2.5rem, 4vw, 3.5rem);
   margin-bottom: 4rem;
   text-align: center;
@@ -3736,7 +3734,7 @@ section {
   color: var(--w40);
   padding: 1rem 1.25rem;
   text-align: left;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3799,7 +3797,7 @@ section {
 }
 
 .pane-meta {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--blue);
   letter-spacing: 0.2em;
@@ -3809,7 +3807,7 @@ section {
 }
 
 .timeline-pane h4 {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 2rem;
   color: var(--w100);
   margin-bottom: 1.25rem;
@@ -3857,7 +3855,7 @@ section {
 .events-sidebar-header {
   padding: 1.5rem;
   border-bottom: 1px solid var(--w10);
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   color: var(--w40);
@@ -3901,13 +3899,13 @@ section {
 }
 
 .event-deck-idx {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--blue);
 }
 
 .event-deck-status {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.08em;
   color: var(--w40);
@@ -3922,7 +3920,7 @@ section {
 }
 
 .event-deck-title {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--w70);
@@ -3960,7 +3958,7 @@ section {
 }
 
 .event-pane-tag {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--blue);
   letter-spacing: 0.25em;
@@ -3968,7 +3966,7 @@ section {
 }
 
 .event-pane-title {
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 2.25rem;
   color: var(--w100);
   margin-top: 0.5rem;
@@ -3988,7 +3986,7 @@ section {
 }
 
 .event-pane-info-item span.lbl {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.1em;
   color: var(--w40);
@@ -4007,7 +4005,7 @@ section {
 }
 
 .event-pane-body h5 {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 1.1rem;
   color: var(--w100);
   margin-bottom: 0.75rem;
@@ -4020,7 +4018,7 @@ section {
 }
 
 .event-gallery-btn {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--w100);
   border: 1px solid var(--blue);
@@ -4069,7 +4067,7 @@ section {
   background: var(--glass-bg-light);
   border: 1px solid transparent;
   color: var(--w40);
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   padding: 0.5rem 1rem;
@@ -4191,14 +4189,14 @@ section {
 }
 
 .bento-meta-title {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--w100);
 }
 
 .bento-meta-specs {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.05em;
   color: var(--blue);
@@ -4357,7 +4355,7 @@ section {
 }
 
 .lightbox-meta-tag {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   color: var(--blue);
@@ -4365,7 +4363,7 @@ section {
 }
 
 .lightbox-meta-title {
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--w100);
@@ -4394,7 +4392,7 @@ section {
 }
 
 .lightbox-spec-item span.label {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   color: var(--w40);
 }
 
@@ -4403,7 +4401,7 @@ section {
 }
 
 .lightbox-meta-bottom {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   color: var(--w20);
   letter-spacing: 0.1em;
@@ -4646,7 +4644,7 @@ section {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: var(--font-b);
+  font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -4712,7 +4710,7 @@ section {
   border: 1px solid rgba(0, 120, 212, 0.4);
   color: #fff;
   text-decoration: none;
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -5335,7 +5333,7 @@ section {
 .auth-form button[type="submit"] {
   min-height: 52px;
   border-radius: 13px !important;
-  font-family: var(--font-d);
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   letter-spacing: -0.01em;
 }
@@ -5403,7 +5401,7 @@ section {
   border-radius: 14px !important;
 }
 .admin-sidebar [class*="text-[10px]"] {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   letter-spacing: 0.14em;
 }
 .admin-main {
@@ -5437,12 +5435,12 @@ section {
 .admin-screen h1,
 .admin-screen h2,
 .admin-screen h3 {
-  font-family: var(--font-d) !important;
+  font-family: var(--font-sans) !important;
   letter-spacing: -0.045em;
 }
 .admin-workspace label,
 .admin-screen label {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.68rem !important;
   letter-spacing: 0.055em;
 }
@@ -5498,7 +5496,7 @@ section {
 }
 .admin-workspace table th,
 .admin-screen table th {
-  font-family: var(--font-m);
+  font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.08em;
   color: var(--w45);
@@ -5705,7 +5703,7 @@ section {
   align-items: center;
   gap: 8px;
   color: rgba(220, 242, 255, 0.52);
-  font: 0.64rem var(--font-m);
+  font: 0.64rem var(--font-mono);
   letter-spacing: 0.08em;
   text-decoration: none;
   text-transform: uppercase;
@@ -5803,7 +5801,7 @@ section {
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
   color: white;
   cursor: pointer;
-  font-family: var(--font-d) !important;
+  font-family: var(--font-sans) !important;
   letter-spacing: -0.02em !important;
   transition:
     transform 0.2s var(--ease),
@@ -5832,7 +5830,7 @@ section {
   gap: 8px;
   margin: 28px 0 0;
   color: rgba(255, 255, 255, 0.33);
-  font: 0.61rem var(--font-m);
+  font: 0.61rem var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -5892,7 +5890,7 @@ section {
 .auth-intro-index {
   margin: 0 0 17px;
   color: rgba(178, 224, 255, 0.42);
-  font: 0.62rem var(--font-m);
+  font: 0.62rem var(--font-mono);
   letter-spacing: 0.16em;
 }
 .auth-login .auth-intro h1 {
@@ -5961,7 +5959,7 @@ section {
 }
 .auth-form-meta span {
   color: rgba(255, 255, 255, 0.3);
-  font: 0.59rem var(--font-m);
+  font: 0.59rem var(--font-mono);
   letter-spacing: 0.12em;
 }
 .auth-login .auth-form-heading h2 {

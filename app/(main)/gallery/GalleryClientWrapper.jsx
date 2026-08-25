@@ -354,7 +354,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
                 ></i>
                 <h3
                   style={{
-                    fontFamily: "var(--font-d)",
+                    fontFamily: "var(--font-sans)",
                     color: "#fff",
                     marginBottom: "8px",
                   }}
