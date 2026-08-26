@@ -35,5 +35,11 @@ The official web platform for the Microsoft Student Community at SRM University 
 - **Automated Workflows:** Vercel Cron jobs for expiring abandoned payment reservations and database keepalives.
 - **Admin Dashboard:** Role-based access control (RBAC) protecting internal community management tools.
 
+## Contributors
+
+<a href="https://github.com/microsoft-student-community/Microsoft-Student-Community-/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=microsoft-student-community/Microsoft-Student-Community-" />
+</a>
+
 ## License
 Proprietary - Microsoft Student Community — SRM University AP.
