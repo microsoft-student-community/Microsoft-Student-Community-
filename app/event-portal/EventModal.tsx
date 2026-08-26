@@ -356,9 +356,19 @@ export default function EventModal({ event, registeredCount, onClose, onRegister
                 </button>
               </div>
             ) : !event.registration_open ? (
-              <div className="text-center py-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-                <div className="font-semibold text-yellow-400 mb-1">Registrations Closed</div>
-                <div className="text-xs text-yellow-500/70 mb-1">Keep an eye out for updates.</div>
+              <div className="flex flex-col gap-3 w-full max-w-[280px]">
+                <div className="text-center py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-xl mb-2">
+                  <div className="text-yellow-400 text-sm font-bold flex items-center justify-center gap-2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Registrations Closed
+                  </div>
+                </div>
+                <button
+                  onClick={onRegisterClick}
+                  className="w-full py-3 rounded-xl text-sm font-bold text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 hover:bg-yellow-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <i className="fas fa-ticket-alt"></i> Find Ticket / Team Details
+                </button>
               </div>
             ) : pct >= 100 && !isUnlimited ? (
               <div className="text-center py-4 bg-red-500/10 border border-red-500/20 rounded-xl">
