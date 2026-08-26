@@ -30,6 +30,13 @@ const nextConfig = {
       'qrcode.react',
     ],
   },
+  webpack: (config) => {
+    config.infrastructureLogging = {
+      ...config.infrastructureLogging,
+      level: 'error',
+    };
+    return config;
+  },
   async headers() {
     return [
       {

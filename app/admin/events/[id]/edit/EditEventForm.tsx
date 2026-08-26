@@ -141,6 +141,7 @@ export default function EditEventForm({ event }: { event: any }) {
       event_pricing: eventPricingType,
       charge_type: eventPricingType === 'paid' ? chargeType : null,
       registration_fee: eventPricingType === 'paid' ? parseInt(formData.get('registration_fee') as string) || 0 : 0,
+      external_registration_link: formData.get('external_registration_link') || null,
     }
 
     showStatus('edit_event', 'Saving changes...', 'info')
@@ -401,6 +402,19 @@ export default function EditEventForm({ event }: { event: any }) {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* External Registration Link */}
+        <div className="mt-4 p-5 bg-black/30 border border-white/5 rounded-xl">
+          <h4 className="text-xs font-bold text-white mb-2 uppercase tracking-wider flex items-center gap-2">
+            <i className="fas fa-external-link-alt text-blue-400"></i> External Registration Link <span className="text-white/20 lowercase font-normal">(optional)</span>
+          </h4>
+          <div className="flex flex-col gap-2">
+            <input type="url" name="external_registration_link" defaultValue={event.form_requirements?.external_registration_link || ''} placeholder="e.g. https://lu.ma/event-name" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
+            <span className="text-[10px] text-yellow-500/80 mt-1">
+              <i className="fas fa-info-circle mr-1"></i> Note: If provided, all internal "Public Registration Form Setup" and "Registration Fee" settings above/below will be ignored since registrations will be handled externally.
+            </span>
           </div>
         </div>
 
