@@ -7,8 +7,8 @@ serve(async (req) => {
     const { record, old_record, type } = payload
 
     // 1. Structural Guardrail: Only broadcast if looking_for_members changes to TRUE
-    const becameAvailable = (type === 'INSERT' && record.looking_for_members === true) || 
-                            (type === 'UPDATE' && record.looking_for_members === true && old_record?.looking_for_members !== true);
+    const becameAvailable = (type === 'INSERT' && record.looking_for_members === true) ||
+      (type === 'UPDATE' && record.looking_for_members === true && old_record?.looking_for_members !== true);
 
     if (!becameAvailable) {
       return new Response(JSON.stringify({ message: "Skipping broadcast: Team is not actively seeking members." }), {
@@ -31,7 +31,7 @@ serve(async (req) => {
         {
           title: `New Team Forming: ${record.team_name}`,
           description: "A team is looking for more members! Check out the Team Lead's details below and jump in.",
-          url: "https://mscsrmap.edu.in/events", // Change to your production URL
+          url: "https://mscsrmap.vercel.app//events", // Change to your production URL
           color: 30932, // Microsoft Blue hex (#0078D4) converted to Integer
           fields: [
             {
@@ -54,7 +54,7 @@ serve(async (req) => {
               type: 2,
               style: 5,
               label: "View All Events",
-              url: "https://mscsrmap.edu.in/events", // Change to your production URL
+              url: "https://mscsrmap.vercel.app//events", // Change to your production URL
             }
           ]
         }
