@@ -184,12 +184,6 @@ export default function Home() {
       <section id="home" className="hero hero-pro">
         <div className="hero-container">
           <div className="hero-content-left">
-            <div className="hero-status-pill">
-              <span className="live-beacon"></span>
-              <span className="hero-status-text">
-                MSC // SRM UNIVERSITY AP CHAPTER
-              </span>
-            </div>
             <h1 className="hero-title-v2">
               <span className="sr-only">
                 Microsoft Student Community ΓÇö SRM University AP:{" "}
