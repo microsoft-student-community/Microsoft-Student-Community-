@@ -28,6 +28,7 @@ export default function CSVImportBlock({ eventId }: { eventId: string }) {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
       complete: async (results) => {
         setProgress(30); // Parsed
 
