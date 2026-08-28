@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import CircularGallery from "@/components/CircularGallery";
 
 export default function GalleryClientWrapper({ items: galleryData }) {
   const videoRef = useRef(null);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState("grid");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState(new Set());
@@ -316,6 +318,22 @@ export default function GalleryClientWrapper({ items: galleryData }) {
             </div>
 
             <div className="gallery-actions">
+              <div className="view-toggle" style={{ display: 'flex', gap: '8px', marginRight: '16px' }}>
+                <button
+                  className={`filter-pill ${viewMode === "grid" ? "active" : ""}`}
+                  onClick={() => setViewMode("grid")}
+                  style={{ padding: '0.5rem 1rem' }}
+                >
+                  <i className="fa-solid fa-border-all"></i> Grid
+                </button>
+                <button
+                  className={`filter-pill ${viewMode === "circular" ? "active" : ""}`}
+                  onClick={() => setViewMode("circular")}
+                  style={{ padding: '0.5rem 1rem' }}
+                >
+                  <i className="fa-solid fa-circle-notch"></i> 3D
+                </button>
+              </div>
               <div className="gallery-search-box">
                 <i className="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
@@ -334,8 +352,26 @@ export default function GalleryClientWrapper({ items: galleryData }) {
 
       <section className="gallery-grid-section">
         <div className="container">
-          <div className="gallery-bento-grid" id="galleryBento">
-            {filteredItems.length === 0 ? (
+          {viewMode === "circular" ? (
+            <div style={{ height: '600px', position: 'relative', width: '100%', borderRadius: '24px', overflow: 'hidden', background: 'rgba(15, 15, 20, 0.6)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              {filteredItems.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(255,255,255,0.5)" }}>
+                  <i className="fa-solid fa-photo-film" style={{ fontSize: "2.5rem", marginBottom: "12px", color: "rgba(0,120,212,0.5)" }}></i>
+                  <h3 style={{ fontFamily: "var(--font-sans)", color: "#fff", marginBottom: "8px" }}>No frames match your search</h3>
+                </div>
+              ) : (
+                <CircularGallery
+                  items={filteredItems.map(item => ({ image: item.image, text: item.title }))}
+                  bend={3}
+                  textColor="#ffffff"
+                  borderRadius={0.05}
+                  scrollEase={0.02}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="gallery-bento-grid" id="galleryBento">
+              {filteredItems.length === 0 ? (
               <div
                 style={{
                   gridColumn: "1 / -1",
@@ -410,7 +446,8 @@ export default function GalleryClientWrapper({ items: galleryData }) {
                 </article>
               ))
             )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
