@@ -10,7 +10,7 @@ interface RateLimitResult {
 }
 
 class RateLimiterMemory {
-  private store = new Map<string, number[]>();
+  private store = new Map<string, { count: number; resetAt: number }>();
   private windowMs: number;
   private max: number;
 
@@ -21,41 +21,25 @@ class RateLimiterMemory {
 
   public check(key: string): RateLimitResult {
     const now = Date.now();
-    
-    // Memory Optimization: Prune older entries if size gets large
+    let record = this.store.get(key);
+
+    if (!record || now > record.resetAt) {
+      record = { count: 0, resetAt: now + this.windowMs };
+    }
+
+    record.count++;
+    this.store.set(key, record);
+
+    // Simple naive pruning for memory safety
     if (this.store.size > 5000) {
-      for (const [k, timestamps] of this.store.entries()) {
-        const filtered = timestamps.filter(t => now - t < this.windowMs);
-        if (filtered.length === 0) {
-          this.store.delete(k);
-        } else {
-          this.store.set(k, filtered);
-        }
-      }
+      this.store.clear();
     }
-
-    const timestamps = this.store.get(key) || [];
-    const valid = timestamps.filter(t => now - t < this.windowMs);
-
-    if (valid.length >= this.max) {
-      const oldest = valid[0];
-      const reset = Math.ceil((oldest + this.windowMs) / 1000); // Reset time as Unix timestamp (seconds)
-      return {
-        success: false,
-        limit: this.max,
-        remaining: 0,
-        reset
-      };
-    }
-
-    valid.push(now);
-    this.store.set(key, valid);
 
     return {
-      success: true,
+      success: record.count <= this.max,
       limit: this.max,
-      remaining: this.max - valid.length,
-      reset: Math.ceil((now + this.windowMs) / 1000)
+      remaining: Math.max(0, this.max - record.count),
+      reset: Math.ceil(record.resetAt / 1000),
     };
   }
 }
