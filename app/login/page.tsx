@@ -11,7 +11,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from "react";
-import { cn } from "@/lib/utils";
+
 import { createClient } from "@/utils/supabase/client";
 
 type BlobData = {
@@ -139,11 +139,9 @@ export default function LoginPage() {
     }
   }
 
-  const inputClassName = cn(
-    "mercury-input w-full rounded-none bg-transparent px-0 py-3 text-[18px] text-white outline-none placeholder:text-white/35",
-    "focus-visible:outline-none",
-  );
-  const passwordInputClassName = cn(inputClassName, "pr-11");
+  const inputClassName =
+    "mercury-input w-full rounded-none bg-transparent px-0 py-3 text-[18px] text-white outline-none placeholder:text-white/35 focus-visible:outline-none";
+  const passwordInputClassName = `${inputClassName} pr-11`;
 
   return (
     <main className="mercury-shell">
@@ -919,7 +917,7 @@ function FormField({
   return (
     <div className="form-group">
       <label htmlFor={htmlFor}>{label}</label>
-      <div className={cn("field-shell", icon ? "field-shell--icon" : "")}>
+      <div className={`field-shell ${icon ? "field-shell--icon" : ""}`}>
         {icon ? (
           <i className={`fa-solid ${icon} field-icon`} aria-hidden="true" />
         ) : null}

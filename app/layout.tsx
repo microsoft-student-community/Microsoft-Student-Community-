@@ -92,8 +92,8 @@ export default function RootLayout({
           speed={0.5} 
           squareSize={40}
           direction='diagonal'
-          borderColor='rgba(255, 255, 255, 0.1)'
-          hoverFillColor='rgba(14, 123, 242, 0.5)'
+          borderColor='rgba(255, 255, 255, 0.25)'
+          hoverFillColor='rgba(14, 123, 242, 0.9)'
           shape='square'
           hoverTrailAmount={5}
         />
