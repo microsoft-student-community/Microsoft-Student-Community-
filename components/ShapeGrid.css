@@ -1,0 +1,11 @@
+.shapegrid-canvas {
+  width: 100vw;
+  height: 100vh;
+  border: none;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  pointer-events: auto; /* Required for mouse hover to work */
+}

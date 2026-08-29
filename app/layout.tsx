@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import ShapeGrid from "@/components/ShapeGrid";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -87,6 +88,15 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
+        <ShapeGrid 
+          speed={0.5} 
+          squareSize={40}
+          direction='diagonal'
+          borderColor='rgba(255, 255, 255, 0.1)'
+          hoverFillColor='rgba(14, 123, 242, 0.5)'
+          shape='square'
+          hoverTrailAmount={5}
+        />
         {children}
       </body>
     </html>
