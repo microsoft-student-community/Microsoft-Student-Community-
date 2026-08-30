@@ -33,7 +33,7 @@ export default function Home() {
           setTimeout(() => {
             if (loadingScreen) loadingScreen.classList.add("fade-out");
             document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch((e) => function () {});
+            if (bgVideo) bgVideo.play().catch((e) => function () { });
           }, 400);
         }
         if (loaderRingFill) {
@@ -46,7 +46,7 @@ export default function Home() {
 
     if (document.documentElement.classList.contains("skip-loader")) {
       if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch((e) => function () {});
+      if (bgVideo) bgVideo.play().catch((e) => function () { });
     } else {
       startLoader();
     }
@@ -187,7 +187,7 @@ export default function Home() {
           <div className="hero-content-left">
             <h1 className="hero-title-v2">
               <span className="sr-only">
-                Microsoft Student Community ΓÇö SRM University AP:{" "}
+                Microsoft Student Community SRM University AP:{" "}
               </span>
               Architecting the{" "}
               <span className="hero-italic-highlight">next standard</span> of
@@ -255,7 +255,7 @@ export default function Home() {
       {/* Ecosystem Pillars Bento Section */}
       <section id="ecosystem" className="home-pillars-section">
         <div className="container">
-          
+
           <h2 className="section-title">
             Built for serious student developers.
           </h2>
@@ -309,7 +309,7 @@ export default function Home() {
       {/* Upcoming Events Section */}
       <section id="upcoming" className="upcoming">
         <div className="container">
-         
+
           <h2 className="section-title">Upcoming Events</h2>
           <div className="upcoming-list">
             <article className="event-cassette glow-card">
@@ -337,9 +337,9 @@ export default function Home() {
               </div>
             </article>
 
-            
 
-            
+
+
           </div>
         </div>
       </section>
@@ -347,7 +347,7 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="contact">
         <div className="container">
-         
+
           <h2 className="section-title">Get In Touch</h2>
           <div className="contact-content">
             <div className="contact-info">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ParticleBackground from "@/components/ParticleBackground";
+import FuzzyText from "@/components/FuzzyText";
 
 export default function NotFound() {
   return (
@@ -32,17 +33,18 @@ export default function NotFound() {
           width: "90%",
         }}
       >
-        <div
-          style={{
-            fontSize: "5rem",
-            marginBottom: "0.5rem",
-            color: "#0078d4",
-            fontFamily: "Syne, sans-serif",
-            fontWeight: 800,
-            lineHeight: 1,
-          }}
-        >
-          404
+        <div style={{ marginBottom: "0.5rem", display: "flex", justifyContent: "center" }}>
+          <FuzzyText 
+            baseIntensity={0.2} 
+            hoverIntensity={0.5} 
+            enableHover={true}
+            fontSize="5rem"
+            fontWeight={800}
+            fontFamily="Syne, sans-serif"
+            color="#0078d4"
+          >
+            404
+          </FuzzyText>
         </div>
         <h1
           style={{

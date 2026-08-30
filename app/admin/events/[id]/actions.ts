@@ -159,52 +159,20 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
   let errors: string[] = [];
 
   for (const row of rows) {
-    const email = row['Email Address'] || row['Email'] || row['email'];
-    const name = row['Name'] || row['Full Name'] || row['name'] || row['First Name'];
+    const email = row['Email Address'] || row['Email'] || row['email'] || row["Candidate's Email"];
+    const name = row['Name'] || row['Full Name'] || row['name'] || row['First Name'] || row["Candidate's Name"];
     const teamName = row['Team Name'] || row['Team'] || row['team_name'];
     const regNum = row['Registration Number'] || row['Registration No'] || row['Roll Number'] || row['reg_num'];
-    const collegeName = row['College Name'] || row['College'] || row['Institution Name'];
-    const year = row['Year of Study'] || row['Year'] || 'Unknown';
+    const collegeName = row['College Name'] || row['College'] || row['Institution Name'] || row["Candidate's Organisation"];
+    const year = row['Year of Study'] || row['Year'] || row['Year of Graduation'] || 'Unknown';
 
     if (!email) {
+      errors.push(`Row ${skipCount + successCount + 1}: Missing email address. Expected column name 'Email', 'Email Address', 'email', or 'Candidate\\'s Email'. Actual columns: ${Object.keys(row).join(', ')}`);
       skipCount++;
       continue;
     }
 
     try {
-      // 1. Ensure user profile exists
-      const { data: existingUser } = await supabaseAdmin.from('member_profiles').select('id').eq('email', email).single();
-      
-      let userId = existingUser?.id;
-
-      if (!existingUser) {
-        // Create an auth user first
-        const randomPassword = crypto.randomUUID();
-        const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-          email: email,
-          password: randomPassword,
-          email_confirm: true
-        });
-
-        if (authError || !authUser.user) {
-          errors.push(`Failed to create auth user for ${email}: ${authError?.message}`);
-          skipCount++;
-          continue;
-        }
-        
-        userId = authUser.user.id;
-
-        // Create profile
-        await supabaseAdmin.from('member_profiles').insert({
-          id: userId,
-          email: email,
-          full_name: name || email.split('@')[0],
-          role: 'user',
-          registration_number: regNum || null
-        });
-      }
-
-      // 2. Insert Registration
       // We will create individual registrations for now, or if Team Name exists, group them? 
       // Unstop usually provides one row per team OR one row per member. 
       // If it's one row per team, Unstop will have "Member 1 Email", "Member 2 Email".
