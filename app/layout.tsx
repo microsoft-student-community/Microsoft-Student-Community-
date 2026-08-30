@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mscsrmap.edu.in"),
+  metadataBase: new URL("https://mscsrmap.vercel.app/"),
   title: "Microsoft Student Community - SRM University AP",
   description:
     "Microsoft Student Community at SRM University AP - A vibrant student-led tech community focused on Azure, AI, and cloud computing.",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Microsoft Student Community - SRM University AP",
     description:
       "Bridge the gap between classroom theory and production-grade code. Join the most active engineering community at SRMAP.",
-    url: "https://mscsrmap.edu.in",
+    url: "https://mscsrmap.vercel.app/",
     siteName: "MSC SRMAP",
     images: [
       {

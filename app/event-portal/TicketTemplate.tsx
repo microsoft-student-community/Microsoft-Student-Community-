@@ -46,7 +46,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
     : "TBD");
   const eventVenue = props.eventVenue || props.event?.location || "TBD";
   const eventType = props.eventType || props.event?.type || "Offline Event";
-  const posterUrl = props.posterUrl || props.event?.image_url || props.event?.banner_url;
+  const posterUrl = props.posterUrl || props.event?.image_url || props.event?.banner_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg";
 
   const formData = props.registration?.form_data || {};
   const teamData = props.registration?.team_data;

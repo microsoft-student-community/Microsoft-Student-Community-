@@ -41,14 +41,14 @@ export default function EventPortalClient({
           className="event-portal-hero"
         >
           <div className="event-portal-hero-media">
-            {selectedEvent.image_url ? (
+            {selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg" ? (
               <>
                 <div 
                   className="event-portal-hero-media-blur" 
-                  style={{ backgroundImage: `url(${selectedEvent.image_url})` }}
+                  style={{ backgroundImage: `url(${selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"})` }}
                 />
                 <img
-                  src={selectedEvent.image_url}
+                  src={selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"}
                   alt={selectedEvent.title}
                   loading="eager"
                   decoding="async"

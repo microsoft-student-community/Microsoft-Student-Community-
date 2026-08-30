@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/", "/about", "/events", "/gallery", "/team"],
       disallow: ["/admin", "/login", "/onboarding", "/ticket", "/event-portal", "/api"],
     },
-    sitemap: "https://mscsrmap.edu.in/sitemap.xml",
+    sitemap: "https://mscsrmap.vercel.app//sitemap.xml",
   };
 }

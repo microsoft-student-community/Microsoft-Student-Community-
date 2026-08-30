@@ -28,24 +28,41 @@ export default function CSVImportBlock({ eventId }: { eventId: string }) {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
       complete: async (results) => {
         setProgress(30); // Parsed
 
         if (results.data && results.data.length > 0) {
           try {
-            // We process all at once for simplicity, but could chunk if the file is massive
-            const res = await importExternalRegistrations(eventId, results.data)
+            const chunkSize = 50;
+            const totalChunks = Math.ceil(results.data.length / chunkSize);
+            let totalSuccess = 0;
+            let totalSkip = 0;
+            let allErrors: string[] = [];
+
+            for (let i = 0; i < totalChunks; i++) {
+              const chunk = results.data.slice(i * chunkSize, (i + 1) * chunkSize);
+              const res = await importExternalRegistrations(eventId, chunk);
+              
+              if (res.error) {
+                allErrors.push(res.error);
+                break; // Stop on critical access error
+              }
+
+              totalSuccess += res.successCount || 0;
+              totalSkip += res.skipCount || 0;
+              if (res.errors) allErrors = [...allErrors, ...res.errors];
+
+              setProgress(30 + Math.round(((i + 1) / totalChunks) * 70));
+            }
+
             setProgress(100);
             
-            if (res.error) {
-              setResult({ successCount: 0, skipCount: 0, errors: [res.error] });
-            } else {
-              setResult({
-                successCount: res.successCount || 0,
-                skipCount: res.skipCount || 0,
-                errors: res.errors || []
-              });
-            }
+            setResult({
+              successCount: totalSuccess,
+              skipCount: totalSkip,
+              errors: allErrors
+            });
           } catch (err: any) {
             setResult({ successCount: 0, skipCount: 0, errors: [err.message] });
             setProgress(0);
