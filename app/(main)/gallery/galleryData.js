@@ -25,7 +25,7 @@ export const galleryData = [
     "id": "ba3377f5-b860-4317-992f-b3a64f13326b",
     "title": "Quantum Computing Workshop",
     "category": "workshops",
-    "image_url": "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Events/20251031_151613.heic",
+    "image_url": "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Events/converted%20(1).webp",
     "created_at": "2026-08-02T15:45:29.94592+00:00"
   },
   {
