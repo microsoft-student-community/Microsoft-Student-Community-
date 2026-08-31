@@ -28,11 +28,11 @@ export const galleryData = [
     "image_url": "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Events/converted%20(1).webp",
     "created_at": "2026-08-02T15:45:29.94592+00:00"
   },
-  {
+  /* {
     "id": "b57dbd95-8c14-4bed-b5fc-19f96bcf54a4",
     "title": "Zero Jam Hackathon",
     "category": "hackathons",
     "image_url": "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg",
     "created_at": "2026-08-02T15:45:29.94592+00:00"
-  }
+  } */
 ];
