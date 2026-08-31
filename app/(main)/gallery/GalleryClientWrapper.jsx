@@ -14,16 +14,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
 
   // Map Supabase rows to UI shape
   const INITIAL_GALLERY_DATA = galleryData.map((e, idx) => {
-    // Generate a variant pattern for layout (standard, wide, tall, featured)
-    const variants = [
-      "standard",
-      "wide",
-      "standard",
-      "standard",
-      "tall",
-      "wide",
-    ];
-    const variant = variants[idx % variants.length];
+    const variant = "standard";
 
     // Format date
     const d = new Date(e.created_at);
