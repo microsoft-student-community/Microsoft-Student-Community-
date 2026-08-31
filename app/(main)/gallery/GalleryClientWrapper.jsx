@@ -7,10 +7,8 @@ export default function GalleryClientWrapper({ items: galleryData }) {
   const videoRef = useRef(null);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [visibleItems, setVisibleItems] = useState(new Set());
 
   // Map Supabase rows to UI shape
   const INITIAL_GALLERY_DATA = galleryData.map((e, idx) => {
@@ -131,53 +129,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
     };
   }, []);
 
-  useEffect(() => {
-    // Scroll reveal logic
-    const cards = document.querySelectorAll(".msc-scroll-reveal");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.dataset.id;
-            setVisibleItems((prev) => new Set(prev).add(id));
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.05 },
-    );
 
-    cards.forEach((card) => observer.observe(card));
-
-    return () => observer.disconnect();
-  }, [filteredItems]);
-
-  const handleMouseMove = (e, target) => {
-    const rect = target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    const imageBox = target.querySelector(".msc-image-box");
-    if (imageBox) {
-      imageBox.style.setProperty("--mouse-x", `${(x / rect.width) * 100}%`);
-      imageBox.style.setProperty("--mouse-y", `${(y / rect.height) * 100}%`);
-      imageBox.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-    }
-  };
-
-  const handleMouseLeave = (target) => {
-    const imageBox = target.querySelector(".msc-image-box");
-    if (imageBox) {
-      imageBox.style.transform =
-        "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-    }
-  };
 
   const activeItem = filteredItems[lightboxIndex];
 
@@ -309,22 +261,6 @@ export default function GalleryClientWrapper({ items: galleryData }) {
             </div>
 
             <div className="gallery-actions">
-              <div className="view-toggle" style={{ display: 'flex', gap: '8px', marginRight: '16px' }}>
-                <button
-                  className={`filter-pill ${viewMode === "grid" ? "active" : ""}`}
-                  onClick={() => setViewMode("grid")}
-                  style={{ padding: '0.5rem 1rem' }}
-                >
-                  <i className="fa-solid fa-border-all"></i> Grid
-                </button>
-                <button
-                  className={`filter-pill ${viewMode === "circular" ? "active" : ""}`}
-                  onClick={() => setViewMode("circular")}
-                  style={{ padding: '0.5rem 1rem' }}
-                >
-                  <i className="fa-solid fa-circle-notch"></i> 3D
-                </button>
-              </div>
               <div className="gallery-search-box">
                 <i className="fa-solid fa-magnifying-glass search-icon"></i>
                 <input
@@ -343,102 +279,22 @@ export default function GalleryClientWrapper({ items: galleryData }) {
 
       <section className="gallery-grid-section">
         <div className="container">
-          {viewMode === "circular" ? (
-            <div style={{ height: '600px', position: 'relative', width: '100%', borderRadius: '24px', overflow: 'hidden', background: 'rgba(15, 15, 20, 0.6)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              {filteredItems.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(255,255,255,0.5)" }}>
-                  <i className="fa-solid fa-photo-film" style={{ fontSize: "2.5rem", marginBottom: "12px", color: "rgba(0,120,212,0.5)" }}></i>
-                  <h3 style={{ fontFamily: "var(--font-sans)", color: "#fff", marginBottom: "8px" }}>No frames match your search</h3>
-                </div>
-              ) : (
-                <CircularGallery
-                  items={filteredItems.map(item => ({ image: item.image, text: item.title }))}
-                  bend={3}
-                  textColor="#ffffff"
-                  borderRadius={0.05}
-                  scrollEase={0.02}
-                />
-              )}
-            </div>
-          ) : (
-            <div className="gallery-bento-grid" id="galleryBento">
-              {filteredItems.length === 0 ? (
-              <div
-                style={{
-                  gridColumn: "1 / -1",
-                  textAlign: "center",
-                  padding: "60px 20px",
-                  color: "rgba(255,255,255,0.5)",
-                }}
-              >
-                <i
-                  className="fa-solid fa-photo-film"
-                  style={{
-                    fontSize: "2.5rem",
-                    marginBottom: "12px",
-                    color: "rgba(0,120,212,0.5)",
-                  }}
-                ></i>
-                <h3
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    color: "#fff",
-                    marginBottom: "8px",
-                  }}
-                >
-                  No frames match your search
-                </h3>
-                <p style={{ fontSize: "0.9rem" }}>
-                  Try selecting a different filter or clearing your search term.
-                </p>
+          <div style={{ height: '600px', position: 'relative', width: '100%', borderRadius: '24px', overflow: 'hidden', background: 'rgba(15, 15, 20, 0.6)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            {filteredItems.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(255,255,255,0.5)" }}>
+                <i className="fa-solid fa-photo-film" style={{ fontSize: "2.5rem", marginBottom: "12px", color: "rgba(0,120,212,0.5)" }}></i>
+                <h3 style={{ fontFamily: "var(--font-sans)", color: "#fff", marginBottom: "8px" }}>No frames match your search</h3>
               </div>
             ) : (
-              filteredItems.map((item, index) => (
-                <article
-                  key={item.id}
-                  className={`bento-card ${item.variant || "standard"} msc-scroll-reveal ${
-                    visibleItems.has(item.id) ? "is-visible" : ""
-                  }`}
-                  data-id={item.id}
-                  onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
-                  onMouseLeave={(e) => handleMouseLeave(e.currentTarget)}
-                  onClick={() => openLightbox(index)}
-                >
-                  <div className="msc-image-box">
-                    <div className="msc-image-box__media">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                    <div className="msc-image-box__glare"></div>
-
-                    <div className="msc-image-box__hud">
-                      <div className="msc-hud-top">
-                        <span className="msc-hud-mark">
-                          {item.category.toUpperCase()}
-                        </span>
-                        <div className="msc-hud-crosshair"></div>
-                      </div>
-                      <div className="msc-hud-bottom">
-                        <span className="msc-hud-mark">MSC_RAW</span>
-                        <span className="msc-hud-mark">REC ●</span>
-                      </div>
-                    </div>
-
-                    <div className="bento-card-overlay">
-                      <span className="bento-meta-badge">{item.category}</span>
-                      <h3 className="bento-title">{item.title}</h3>
-                      <span className="bento-date">{item.date}</span>
-                    </div>
-                  </div>
-                </article>
-              ))
+              <CircularGallery
+                items={filteredItems.map(item => ({ image: item.image, text: item.title }))}
+                bend={3}
+                textColor="#ffffff"
+                borderRadius={0.05}
+                scrollEase={0.02}
+              />
             )}
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
