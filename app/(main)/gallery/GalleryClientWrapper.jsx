@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import CircularGallery from "@/components/CircularGallery";
 
 export default function GalleryClientWrapper({ items: galleryData }) {
@@ -36,16 +36,22 @@ export default function GalleryClientWrapper({ items: galleryData }) {
     };
   });
 
-  const filteredItems = INITIAL_GALLERY_DATA.filter((item) => {
-    const matchesFilter =
-      filter === "all" || item.category.toLowerCase() === filter.toLowerCase();
-    const matchesSearch =
-      !searchQuery ||
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  const filteredItems = React.useMemo(() => {
+    return INITIAL_GALLERY_DATA.filter((item) => {
+      const matchesFilter =
+        filter === "all" || item.category.toLowerCase() === filter.toLowerCase();
+      const matchesSearch =
+        !searchQuery ||
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesFilter && matchesSearch;
+    });
+  }, [filter, searchQuery]);
+
+  const circularGalleryItems = React.useMemo(() => {
+    return filteredItems.map(item => ({ image: item.image, text: item.title }));
+  }, [filteredItems]);
 
   const openLightbox = (index) => {
     setLightboxIndex(index);
@@ -234,21 +240,21 @@ export default function GalleryClientWrapper({ items: galleryData }) {
               </button>
               <button
                 className={`filter-pill ${
-                  filter === "hackathon" ? "active" : ""
+                  filter === "hackathons" ? "active" : ""
                 }`}
-                onClick={() => setFilter("hackathon")}
+                onClick={() => setFilter("hackathons")}
               >
                 Hackathons
               </button>
               <button
-                className={`filter-pill ${filter === "workshop" ? "active" : ""}`}
-                onClick={() => setFilter("workshop")}
+                className={`filter-pill ${filter === "workshops" ? "active" : ""}`}
+                onClick={() => setFilter("workshops")}
               >
                 Workshops
               </button>
               <button
-                className={`filter-pill ${filter === "festival" ? "active" : ""}`}
-                onClick={() => setFilter("festival")}
+                className={`filter-pill ${filter === "festivals" ? "active" : ""}`}
+                onClick={() => setFilter("festivals")}
               >
                 Festivals
               </button>
@@ -287,7 +293,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
               </div>
             ) : (
               <CircularGallery
-                items={filteredItems.map(item => ({ image: item.image, text: item.title }))}
+                items={circularGalleryItems}
                 bend={3}
                 textColor="#ffffff"
                 borderRadius={0.05}
