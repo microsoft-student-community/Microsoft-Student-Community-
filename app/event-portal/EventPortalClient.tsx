@@ -30,6 +30,8 @@ export default function EventPortalClient({
     ? selectedEvent.form_requirements.speakers.filter((item: any) => item.name)
     : [];
 
+  const bannerImage = selectedEvent.banner_url || selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg";
+
   return (
     <main className="event-portal-shell min-h-screen" style={{ fontFamily: "var(--font-sans)" }}>
       <div className="event-portal-frame">
@@ -41,14 +43,14 @@ export default function EventPortalClient({
           className="event-portal-hero"
         >
           <div className="event-portal-hero-media">
-            {selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg" ? (
+            {bannerImage ? (
               <>
                 <div 
                   className="event-portal-hero-media-blur" 
-                  style={{ backgroundImage: `url(${selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"})` }}
+                  style={{ backgroundImage: `url(${bannerImage})` }}
                 />
                 <img
-                  src={selectedEvent.image_url || "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"}
+                  src={bannerImage}
                   alt={selectedEvent.title}
                   loading="eager"
                   decoding="async"
