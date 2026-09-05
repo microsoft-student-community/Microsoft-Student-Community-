@@ -469,49 +469,41 @@ export default function EventPortalTabs({
   }
 
   async function downloadCertificate(memberId: string, memberName: string) {
-    const certEl = document.getElementById(`certificate-node-${memberId}`);
-    if (!certEl) return;
+    const certEl = document.getElementById(`certificate-node-${memberId}`) as HTMLIFrameElement;
+    if (!certEl || !certEl.contentDocument || !certEl.contentDocument.body) return;
 
-    let targetNode = certEl;
-    let targetDoc = document;
-    if (certEl.tagName.toLowerCase() === "iframe") {
-      const iframeDoc = (certEl as HTMLIFrameElement).contentDocument;
-      if (iframeDoc && iframeDoc.body) {
-        targetNode = iframeDoc.body;
-        targetDoc = iframeDoc;
-      }
-    }
+    const iframeDoc = certEl.contentDocument;
 
-    // Temporarily remove offending cross-origin stylesheets
-    const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
-    const cleanDoc = (doc: Document) => {
-      doc.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
-        try {
-          // @ts-ignore
-          const rules = (node as any).sheet?.cssRules;
-        } catch (e: any) {
-          if (e.name === 'SecurityError' && node.parentNode) {
-            problematicNodes.push({ node, parent: node.parentNode, nextSibling: node.nextSibling });
-            node.parentNode.removeChild(node);
-          }
-        }
-      });
-    };
+    // Create a temporary hidden container in the main document
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.top = "-9999px";
+    container.style.left = "-9999px";
+    
+    // Enforce the certificate dimensions
+    container.style.width = certEl.style.width || "1122px";
+    container.style.height = certEl.style.height || "794px";
+    
+    // Copy the certificate body
+    container.innerHTML = iframeDoc.body.innerHTML;
+    
+    // Copy the styles from the iframe head
+    iframeDoc.head.querySelectorAll("style, link[rel='stylesheet']").forEach((node) => {
+      container.appendChild(node.cloneNode(true));
+    });
 
-    cleanDoc(document);
-    if (targetDoc !== document) {
-      cleanDoc(targetDoc);
-    }
+    document.body.appendChild(container);
 
     try {
       const htmlToImage = await import("html-to-image");
 
-
-      const dataUrl = await htmlToImage.toPng(targetNode, {
+      const dataUrl = await htmlToImage.toPng(container, {
         backgroundColor: "#0a0a0b",
         pixelRatio: 2,
-        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+        imagePlaceholder:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
       });
+      
       const link = document.createElement("a");
       link.download = `${memberName.replace(/[^a-zA-Z0-9]/g, "_")}-Certificate.png`;
       link.href = dataUrl;
@@ -519,14 +511,7 @@ export default function EventPortalTabs({
     } catch (err) {
       console.error("Failed to generate certificate image:", err);
     } finally {
-      // Restore the removed nodes
-      problematicNodes.forEach(({ node, parent, nextSibling }) => {
-        if (nextSibling) {
-          parent.insertBefore(node, nextSibling);
-        } else {
-          parent.appendChild(node);
-        }
-      });
+      document.body.removeChild(container);
     }
   }
 
