@@ -469,64 +469,64 @@ export default function EventPortalTabs({
   }
 
   async function downloadCertificate(memberId: string, memberName: string) {
-    const certEl = document.getElementById(`certificate-node-${memberId}`);
-    if (!certEl) return;
-
-    let targetNode = certEl;
-    let targetDoc = document;
-    if (certEl.tagName.toLowerCase() === "iframe") {
-      const iframeDoc = (certEl as HTMLIFrameElement).contentDocument;
-      if (iframeDoc && iframeDoc.body) {
-        targetNode = iframeDoc.body;
-        targetDoc = iframeDoc;
-      }
+    const certEl = document.getElementById(`certificate-node-${memberId}`) as HTMLIFrameElement;
+    if (!certEl) {
+      alert(`Certificate element not found for member ${memberId}`);
+      return;
+    }
+    if (!certEl.contentDocument) {
+      alert(`Certificate content not accessible. This is likely a browser security restriction on the iframe.`);
+      return;
+    }
+    if (!certEl.contentDocument.body) {
+      alert(`Certificate body is empty.`);
+      return;
     }
 
-    // Temporarily remove offending cross-origin stylesheets
-    const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
-    const cleanDoc = (doc: Document) => {
-      doc.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
-        try {
-          // @ts-ignore
-          const rules = (node as any).sheet?.cssRules;
-        } catch (e: any) {
-          if (e.name === 'SecurityError' && node.parentNode) {
-            problematicNodes.push({ node, parent: node.parentNode, nextSibling: node.nextSibling });
-            node.parentNode.removeChild(node);
-          }
-        }
-      });
-    };
+    const iframeDoc = certEl.contentDocument;
 
-    cleanDoc(document);
-    if (targetDoc !== document) {
-      cleanDoc(targetDoc);
-    }
+    // Create a temporary hidden container in the main document
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.top = "-9999px";
+    container.style.left = "-9999px";
+    
+    // Enforce the certificate dimensions
+    container.style.width = certEl.style.width || "1122px";
+    container.style.height = certEl.style.height || "794px";
+    
+    // Copy the certificate body
+    container.innerHTML = iframeDoc.body.innerHTML;
+    
+    // Copy the styles from the iframe head
+    iframeDoc.head.querySelectorAll("style, link[rel='stylesheet']").forEach((node) => {
+      container.appendChild(node.cloneNode(true));
+    });
+
+    document.body.appendChild(container);
 
     try {
       const htmlToImage = await import("html-to-image");
 
-
-      const dataUrl = await htmlToImage.toPng(targetNode, {
-        backgroundColor: "#0a0a0b",
-        pixelRatio: 2,
-        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-      });
+      const dataUrl = (await Promise.race([
+        htmlToImage.toPng(container, {
+          backgroundColor: "#0a0a0b",
+          pixelRatio: 2,
+          imagePlaceholder:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("html-to-image timed out after 5 seconds")), 5000))
+      ])) as string;
+      
       const link = document.createElement("a");
       link.download = `${memberName.replace(/[^a-zA-Z0-9]/g, "_")}-Certificate.png`;
       link.href = dataUrl;
       link.click();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to generate certificate image:", err);
+      alert(`Failed to generate certificate: ${err.message || err.toString()}`);
     } finally {
-      // Restore the removed nodes
-      problematicNodes.forEach(({ node, parent, nextSibling }) => {
-        if (nextSibling) {
-          parent.insertBefore(node, nextSibling);
-        } else {
-          parent.appendChild(node);
-        }
-      });
+      document.body.removeChild(container);
     }
   }
 
