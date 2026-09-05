@@ -469,9 +469,19 @@ export default function EventPortalTabs({
     const certEl = document.getElementById(`certificate-node-${memberId}`);
     if (!certEl) return;
 
+    let targetNode = certEl;
+    let targetDoc = document;
+    if (certEl.tagName.toLowerCase() === "iframe") {
+      const iframeDoc = (certEl as HTMLIFrameElement).contentDocument;
+      if (iframeDoc && iframeDoc.body) {
+        targetNode = iframeDoc.body;
+        targetDoc = iframeDoc;
+      }
+    }
+
     // Temporarily remove offending cross-origin stylesheets
     const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
-    document.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+    targetDoc.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
       try {
         // @ts-ignore
         const rules = (node as any).sheet?.cssRules;
@@ -486,13 +496,6 @@ export default function EventPortalTabs({
     try {
       const htmlToImage = await import("html-to-image");
 
-      let targetNode = certEl;
-      if (certEl.tagName.toLowerCase() === "iframe") {
-        const iframeDoc = (certEl as HTMLIFrameElement).contentDocument;
-        if (iframeDoc && iframeDoc.body) {
-          targetNode = iframeDoc.body;
-        }
-      }
 
       const dataUrl = await htmlToImage.toPng(targetNode, {
         backgroundColor: "#0a0a0b",
