@@ -60,8 +60,12 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
     if (selectedIds.size === 0) return
     setIsAssigning(true)
     const idsArray = Array.from(selectedIds)
-    await assignCertificates(eventId, idsArray, certType)
+    const res = await assignCertificates(eventId, idsArray, certType)
     setIsAssigning(false)
+    if (res?.error) {
+      alert(`Error assigning certificates: ${res.error}`)
+      return
+    }
     setSelectedIds(new Set())
     alert('Certificates Assigned Successfully!')
   }
