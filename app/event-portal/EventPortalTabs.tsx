@@ -481,17 +481,24 @@ export default function EventPortalTabs({
 
     // Temporarily remove offending cross-origin stylesheets
     const problematicNodes: { node: Element, parent: Node, nextSibling: Node | null }[] = [];
-    targetDoc.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
-      try {
-        // @ts-ignore
-        const rules = (node as any).sheet?.cssRules;
-      } catch (e: any) {
-        if (e.name === 'SecurityError' && node.parentNode) {
-          problematicNodes.push({ node, parent: node.parentNode, nextSibling: node.nextSibling });
-          node.parentNode.removeChild(node);
+    const cleanDoc = (doc: Document) => {
+      doc.querySelectorAll('link[rel="stylesheet"], style').forEach(node => {
+        try {
+          // @ts-ignore
+          const rules = (node as any).sheet?.cssRules;
+        } catch (e: any) {
+          if (e.name === 'SecurityError' && node.parentNode) {
+            problematicNodes.push({ node, parent: node.parentNode, nextSibling: node.nextSibling });
+            node.parentNode.removeChild(node);
+          }
         }
-      }
-    });
+      });
+    };
+
+    cleanDoc(document);
+    if (targetDoc !== document) {
+      cleanDoc(targetDoc);
+    }
 
     try {
       const htmlToImage = await import("html-to-image");
