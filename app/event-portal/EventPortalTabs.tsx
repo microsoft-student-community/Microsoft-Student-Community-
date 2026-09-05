@@ -470,7 +470,18 @@ export default function EventPortalTabs({
 
   async function downloadCertificate(memberId: string, memberName: string) {
     const certEl = document.getElementById(`certificate-node-${memberId}`) as HTMLIFrameElement;
-    if (!certEl || !certEl.contentDocument || !certEl.contentDocument.body) return;
+    if (!certEl) {
+      alert(`Certificate element not found for member ${memberId}`);
+      return;
+    }
+    if (!certEl.contentDocument) {
+      alert(`Certificate content not accessible. This is likely a browser security restriction on the iframe.`);
+      return;
+    }
+    if (!certEl.contentDocument.body) {
+      alert(`Certificate body is empty.`);
+      return;
+    }
 
     const iframeDoc = certEl.contentDocument;
 
@@ -497,19 +508,23 @@ export default function EventPortalTabs({
     try {
       const htmlToImage = await import("html-to-image");
 
-      const dataUrl = await htmlToImage.toPng(container, {
-        backgroundColor: "#0a0a0b",
-        pixelRatio: 2,
-        imagePlaceholder:
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-      });
+      const dataUrl = (await Promise.race([
+        htmlToImage.toPng(container, {
+          backgroundColor: "#0a0a0b",
+          pixelRatio: 2,
+          imagePlaceholder:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("html-to-image timed out after 5 seconds")), 5000))
+      ])) as string;
       
       const link = document.createElement("a");
       link.download = `${memberName.replace(/[^a-zA-Z0-9]/g, "_")}-Certificate.png`;
       link.href = dataUrl;
       link.click();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to generate certificate image:", err);
+      alert(`Failed to generate certificate: ${err.message || err.toString()}`);
     } finally {
       document.body.removeChild(container);
     }
