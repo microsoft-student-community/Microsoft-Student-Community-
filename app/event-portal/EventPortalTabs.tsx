@@ -55,6 +55,9 @@ function CertificatePreview({ member, reqs, event, currentReg }: any) {
         return match;
       },
     )
+    .replace(/<img\s+(?![^>]*crossorigin)[^>]*>/gi, (match: string) => {
+      return match.replace("<img", '<img crossorigin="anonymous"');
+    })
     .replace(/\{\{NAME\}\}/g, member.name)
     .replace(/\{\{EVENT_TITLE\}\}/g, event.title || "")
     .replace(
