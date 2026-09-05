@@ -23,6 +23,7 @@ export async function assignCertificates(eventId: string, registrationIds: strin
   }
 
   const supabaseAdmin = createAdminClient();
+  console.log(`assignCertificates: Fetching regs for ids: ${registrationIds.join(', ')}`);
 
   // Fetch all target registrations to update their form_data
   const { data: regs, error: fetchError } = await supabaseAdmin
@@ -31,13 +32,16 @@ export async function assignCertificates(eventId: string, registrationIds: strin
     .in('id', registrationIds)
 
   if (fetchError || !regs) return { error: fetchError?.message || 'Failed to fetch registrations' }
+  console.log(`assignCertificates: Fetched ${regs.length} registrations. Updating with type: ${type}`);
 
   // Update each registration's form_data individually to inject certificate_type
   for (const reg of regs) {
+    const parsedFormData = typeof reg.form_data === 'string' ? JSON.parse(reg.form_data) : reg.form_data;
     const updatedFormData = {
-      ...(reg.form_data as Record<string, any> || {}),
+      ...(parsedFormData as Record<string, any> || {}),
       certificate_type: type
     }
+    console.log(`assignCertificates: Updating reg ${reg.id} with new form_data`, updatedFormData);
 
     const { error: updateError } = await supabaseAdmin
       .from('registrations')
