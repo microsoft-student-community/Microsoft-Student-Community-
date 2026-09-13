@@ -57,6 +57,9 @@ export const metadata: Metadata = {
       "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png",
     ],
   },
+  verification: {
+    google: "SpjmQzFTFMgeRlZr-kOaB9aG-dh-VEPDX4fSdulrdJY",
+  },
   alternates: { canonical: "/" },
 };
 
