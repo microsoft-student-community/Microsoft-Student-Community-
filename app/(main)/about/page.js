@@ -32,7 +32,7 @@ export default function About() {
           setTimeout(() => {
             if (loadingScreen) loadingScreen.classList.add("fade-out");
             document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch((e) => function () {});
+            if (bgVideo) bgVideo.play().catch((e) => function () { });
           }, 400);
         }
         if (loaderRingFill) {
@@ -45,7 +45,7 @@ export default function About() {
 
     if (document.documentElement.classList.contains("skip-loader")) {
       if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch((e) => function () {});
+      if (bgVideo) bgVideo.play().catch((e) => function () { });
     } else {
       startLoader();
     }
@@ -225,83 +225,122 @@ export default function About() {
       <div className="background-overlay" suppressHydrationWarning></div>
       <ParticleBackground particleColor="rgba(0, 120, 212, alpha)" />
 
-      {/* Cinematic Hero */}
-      <section className="ab-hero-premium">
+      {/* Architectural HUD Hero Stage */}
+      <section className="ab-stage-hero">
         <div className="container">
-          <div className="ab-hero-grid">
-            <div className="ab-hero-left">
-              <div className="ab-eyebrow-wrap">
-                <span className="ab-eyebrow-accent"></span>
-                <span className="ab-eyebrow-tag">About the Community</span>
+          <div className="ab-stage-content">
+
+            {/* Architectural Signal Eyebrow */}
+            <div className="ab-stage-signal">
+              <div className="ms-quad-emblem mini">
+                <span className="ms-quad q-red"></span>
+                <span className="ms-quad q-green"></span>
+                <span className="ms-quad q-blue"></span>
+                <span className="ms-quad q-yellow"></span>
               </div>
-              <h1 className="ab-heading-hero">
+              <span className="signal-label">ABOUT THE COMMUNITY</span>
+              <span className="signal-dot">•</span>
+              <span className="signal-sub">SRM UNIVERSITY AP</span>
+              <div className="signal-live-pill">
+                <span className="live-pulse-dot"></span>
+                <span>ACTIVE CHAPTER &apos;26</span>
+              </div>
+            </div>
+
+            {/* Monumental Kinetic Headline */}
+            <h1 className="ab-stage-title">
+              <span className="title-row">
                 <span className="editorial-word">We</span>{" "}
                 <span className="editorial-word">don&apos;t</span>{" "}
                 <span className="editorial-word">just</span>{" "}
-                <span className="editorial-word ab-heading-accent">learn</span>{" "}
+                <span className="editorial-word title-italic-learn">learn</span>{" "}
                 <span className="editorial-word">tech.</span>
-                <br />
+              </span>
+              <span className="title-row">
                 <span className="editorial-word">We</span>{" "}
-                <span className="editorial-word ab-heading-accent">build</span>{" "}
+                <span className="editorial-word title-gradient-build">build</span>{" "}
                 <span className="editorial-word">with</span>{" "}
                 <span className="editorial-word">it.</span>
-              </h1>
-              <p className="ab-desc-hero">
-                A student-led space at SRM University AP where engineers,
-                designers, and thinkers come together to ship real products with
-                Microsoft technologies.
-              </p>
-            </div>
-            <div className="ab-hero-right">
-              <div className="stats-console-widget">
-                <div className="console-header">
-                  <div className="console-dots">
-                    <span className="console-dot"></span>
-                    <span className="console-dot"></span>
-                    <span className="console-dot"></span>
-                  </div>
-                  <span className="console-title">msc-stats.json</span>
+              </span>
+            </h1>
+
+            {/* Editorial Manifesto Description */}
+            <p className="ab-stage-desc">
+              A student-led space at SRM University AP where engineers, designers,
+              and thinkers come together to ship real products with Microsoft technologies.
+            </p>
+
+            {/* Integrated Architectural HUD Telemetry Array (Unboxed & Free) */}
+            <div className="ab-hud-array">
+              {/* Telemetry Datum Header with Embedded Terminal Prompt */}
+              <div className="hud-datum-header">
+                <div className="hud-datum-left">
+                  <span className="hud-corner-cross">+</span>
+                  <span className="hud-cli-prompt">$</span>
+                  <span className="hud-cli-cmd">cat msc-stats.json</span>
+                  <span className="hud-cli-cursor"></span>
                 </div>
-                <div className="console-body">
-                  <div className="console-line">
-                    <span className="console-cmd">cat msc-stats.json</span>
-                  </div>
-                  <div className="console-metric-row">
-                    <span className="metric-lbl">Active Builders</span>
-                    <span className="metric-val stat-counter" data-target="150">
-                      0
-                    </span>
-                  </div>
-                  <div className="console-metric-row">
-                    <span className="metric-lbl">Repositories</span>
-                    <span className="metric-val stat-counter" data-target="12">
-                      0
-                    </span>
-                  </div>
-                  <div className="console-metric-row">
-                    <span className="metric-lbl">Bootcamps Held</span>
-                    <span className="metric-val stat-counter" data-target="8">
-                      0
-                    </span>
-                  </div>
-                  <div className="console-metric-row">
-                    <span className="metric-lbl">Lines Written</span>
-                    <span
-                      className="metric-val stat-counter"
-                      data-target="50000"
-                    >
-                      0
-                    </span>
-                  </div>
-                  <div className="console-line" style={{ marginTop: "1.5rem" }}>
-                    <span>
-                      system: status initialized{" "}
-                      <span className="console-cursor"></span>
-                    </span>
-                  </div>
+                <div className="hud-datum-center">
+                  <span className="hud-coord">16.46°N 80.50°E // MSC-SRMAP</span>
+                </div>
+                <div className="hud-datum-right">
+                  <span className="hud-sys-status">system: status initialized</span>
+                  <span className="hud-status-led"></span>
+                  <span className="hud-corner-cross">+</span>
                 </div>
               </div>
+
+              {/* 4 Unboxed Architectural Metric Columns */}
+              <div className="hud-metrics-horizon">
+                <div className="hud-col">
+                  <div className="hud-col-meta">
+                    <span className="hud-col-num">01</span>
+                    <span className="hud-col-cat">GUILD</span>
+                  </div>
+                  <div className="hud-col-value stat-counter" data-target="50">0</div>
+                  <div className="hud-col-label">Active Builders</div>
+                  <div className="hud-col-accent-bar"></div>
+                </div>
+
+                <div className="hud-col">
+                  <div className="hud-col-meta">
+                    <span className="hud-col-num">02</span>
+                    <span className="hud-col-cat">OPEN SOURCE</span>
+                  </div>
+                  <div className="hud-col-value stat-counter" data-target="12">0</div>
+                  <div className="hud-col-label">Repositories</div>
+                  <div className="hud-col-accent-bar"></div>
+                </div>
+
+                <div className="hud-col">
+                  <div className="hud-col-meta">
+                    <span className="hud-col-num">03</span>
+                    <span className="hud-col-cat">HANDS-ON</span>
+                  </div>
+                  <div className="hud-col-value stat-counter" data-target="8">0</div>
+                  <div className="hud-col-label">Bootcamps Held</div>
+                  <div className="hud-col-accent-bar"></div>
+                </div>
+
+                <div className="hud-col">
+                  <div className="hud-col-meta">
+                    <span className="hud-col-num">04</span>
+                    <span className="hud-col-cat">PRODUCTION</span>
+                  </div>
+                  <div className="hud-col-value stat-counter" data-target="50000">0</div>
+                  <div className="hud-col-label">Lines Written</div>
+                  <div className="hud-col-accent-bar"></div>
+                </div>
+              </div>
+
+              {/* Telemetry Datum Footer Line */}
+              <div className="hud-datum-footer">
+                <span className="hud-corner-cross">+</span>
+                <div className="hud-datum-line"></div>
+                <span className="hud-corner-cross">+</span>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -348,205 +387,317 @@ export default function About() {
         </div>
       </div>
 
-      {/* Origin / Credits */}
+      {/* Origin / Genesis Section */}
       <section className="ab-origin-premium">
         <div className="container">
-          <div className="editorial-origin-grid">
-            <div className="editorial-origin-left">
-              <span
-                className="ab-eyebrow-tag"
-                style={{ marginBottom: "1.5rem", display: "block" }}
-              >
-                Our Origin
-              </span>
-              <h2 className="editorial-quote">
+          <div className="origin-architectural-grid">
+
+            {/* Left Narrative Column */}
+            <div className="origin-narrative-col">
+
+              {/* Tactical Eyebrow */}
+              <div className="origin-eyebrow-line">
+                <span className="origin-beacon-dot"></span>
+                <span className="origin-eyebrow-main">OUR ORIGIN</span>
+                <span className="origin-eyebrow-sep">{"//"}</span>
+                <span className="origin-eyebrow-tag">GENESIS ARCHIVE</span>
+              </div>
+
+              {/* Monumental Stardom Serif Heading */}
+              <h2 className="origin-monumental-title">
                 Founded on a<br />
-                shared ambition.
+                <span className="origin-italic-accent">shared ambition.</span>
               </h2>
-              <p className="editorial-desc">
+
+              {/* Refined Narrative Story */}
+              <p className="origin-story-text">
                 What started as a handful of students sharing notes on Azure
                 turned into SRM AP&apos;s most active engineering community. MSC
                 isn&apos;t a club — it&apos;s a launchpad for future creators.
               </p>
-              <div className="blueprint-credits-table">
-                <div className="credit-row">
-                  <span className="credit-row-label">Founded by</span>
-                  <span className="credit-row-value">Jayanth Ramakrishnan</span>
-                </div>
-                  <div className="credit-row">
-                    <span className="credit-row-label">Guided by</span>
-                    <span className="credit-row-value">Dr. Murali Krishna Enduri Sir and Dr. CV Tomy Sir</span>
+
+              {/* Architectural Provenance Deck (Free & Unboxed) */}
+              <div className="origin-provenance-deck">
+                <div className="provenance-entry">
+                  <div className="provenance-header">
+                    <span className="provenance-num">01</span>
+                    <span className="provenance-label">FOUNDED BY</span>
                   </div>
-                <div className="credit-row">
-                  <span className="credit-row-label">Established</span>
-                  <span className="credit-row-value">SRM University AP</span>
+                  <div className="provenance-name">Jayanth Ramakrishnan</div>
+                  <div className="provenance-line-indicator"></div>
+                </div>
+
+                <div className="provenance-entry">
+                  <div className="provenance-header">
+                    <span className="provenance-num">02</span>
+                    <span className="provenance-label">GUIDED BY</span>
+                  </div>
+                  <div className="provenance-name">Dr. Murali Krishna Enduri Sir and Dr. CV Tomy Sir</div>
+                  <div className="provenance-line-indicator"></div>
+                </div>
+
+                <div className="provenance-entry">
+                  <div className="provenance-header">
+                    <span className="provenance-num">03</span>
+                    <span className="provenance-label">ESTABLISHED</span>
+                  </div>
+                  <div className="provenance-name">SRM University AP</div>
+                  <div className="provenance-line-indicator"></div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Optical Artwork Stage (Unboxed, Atmospheric, Floating) */}
+            <div className="origin-visual-col">
+              <div className="origin-visual-stage">
+                <div className="visual-stage-backdrop"></div>
+
+                {/* Precision HUD Coordinate Anchors */}
+                <span className="visual-hud-marker marker-tl">+</span>
+                <span className="visual-hud-marker marker-tr">MSC // ARCHIVE</span>
+                <span className="visual-hud-marker marker-bl">LAT 16.46°N LON 80.50°E</span>
+                <span className="visual-hud-marker marker-br">+</span>
+
+                {/* Floating Luminous Artwork */}
+                <div className="visual-artwork-glow-wrap">
+                  <img
+                    src="/about_visual.png"
+                    alt="MSC Innovation Artwork"
+                    className="origin-free-artwork"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="visual-glass-sheen"></div>
                 </div>
               </div>
             </div>
-            <div className="editorial-origin-right">
-              <div className="artwork-frame">
-                <img
-                  src="/about_visual.png"
-                  alt="MSC Innovation Artwork"
-                  className="artwork-img"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
 
-      {/* Manifesto */}
+      {/* Manifesto / Philosophy Section (Unboxed Tri-Pillar Horizon) */}
       <section className="ab-manifesto-premium">
         <div className="container">
-          <div
-            className="ab-eyebrow-wrap"
-            style={{ justifyContent: "center", marginBottom: "1rem" }}
-          >
-            <span className="ab-eyebrow-accent"></span>
-            <span className="ab-eyebrow-tag">Our Philosophy</span>
-          </div>
-          <h2
-            className="section-title"
-            style={{ textAlign: "center", marginBottom: "2rem" }}
-          >
-            The Manifesto
-          </h2>
 
-          <div className="manifesto-bento-grid">
-            <article className="bento-card large-vision glow-card">
-              <div className="bento-card-content">
-                <div className="bento-top-group">
-                  <div className="bento-idx">01</div>
-                    <div>
-                      <h3 className="bento-card-title">The Vision</h3>
-                      <p className="bento-card-desc">
-                        To position ourselves as a student focused community and create visionaries of tomorrow
-                      </p>
-                    </div>
-                </div>
-                <div className="bento-badge-cloud">
-                  <span className="bento-badge">Impact</span>
-                  <span className="bento-badge">Innovation</span>
-                  <span className="bento-badge">Scale</span>
-                </div>
-              </div>
-            </article>
-
-            <article className="bento-card mission-block glow-card">
-              <div className="bento-card-content">
-                <div className="bento-top-group">
-                  <div className="bento-idx">02</div>
-                    <div>
-                      <h3 className="bento-card-title">The Mission</h3>
-                      <p className="bento-card-desc">
-                        To provide a student led and student focused platform for interaction and ideas. Committed towards bringing diversity in people and domains.
-                      </p>
-                    </div>
-                </div>
-              </div>
-            </article>
-
-            <article className="bento-card pillars-block glow-card">
-              <div className="bento-card-content">
-                <div className="bento-top-group">
-                  <div className="bento-idx">03</div>
-                  <div>
-                    <h3 className="bento-card-title">Core Technologies</h3>
-                    <p
-                      className="bento-card-desc"
-                      style={{ marginBottom: "1rem" }}
-                    >
-                      We utilize industry-standard ecosystems to architect
-                      scalable student applications.
-                    </p>
-                  </div>
-                </div>
-                <div className="bento-badge-cloud">
-                  <span className="bento-badge">Azure Cloud</span>
-                  <span className="bento-badge">Open Source</span>
-                  <span className="bento-badge">AI Integration</span>
-                  <span className="bento-badge">Web Dev</span>
-                  <span className="bento-badge">System Design</span>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="ab-journey-premium">
-        <div className="container">
-          <div className="timeline-editorial-header">
-            <span
-              className="ab-eyebrow-tag"
-              style={{ marginBottom: "1.5rem", display: "inline-block" }}
-            >
-              Our Journey
-            </span>
-            <h2 className="section-title">
-              Three chapters,
-              <br />
-              one trajectory.
+          {/* Editorial Section Header */}
+          <div className="manifesto-editorial-header">
+            <div className="manifesto-eyebrow-line">
+              <span className="manifesto-pulse-beacon"></span>
+              <span className="manifesto-eyebrow-main">OUR PHILOSOPHY</span>
+              <span className="manifesto-eyebrow-sep">{"//"}</span>
+              <span className="manifesto-eyebrow-sub">THE FOUNDATIONAL PRINCIPLES</span>
+            </div>
+            <h2 className="manifesto-monumental-title">
+              The <span className="manifesto-italic-gradient">Manifesto.</span>
             </h2>
           </div>
 
-          <div className="timeline-container-premium">
-            <div className="timeline-vertical-bar">
+          {/* Architectural Tri-Pillar Horizon (Completely Free & Unboxed) */}
+          <div className="manifesto-horizon-stage">
+
+            {/* Top Datum Line with Corner Crosshairs */}
+            <div className="manifesto-datum-header">
+              <div className="datum-header-left">
+                <span className="manifesto-cross">+</span>
+                <span className="manifesto-datum-tag">DOCTRINE // 01-03</span>
+              </div>
+              <div className="datum-header-center">
+                <span className="manifesto-datum-coord">SRM-AP // GUIDING FRAMEWORK</span>
+              </div>
+              <div className="datum-header-right">
+                <span className="manifesto-datum-status">STATUS: RATIFIED</span>
+                <span className="manifesto-cross">+</span>
+              </div>
+            </div>
+
+            {/* 3 Open Architectural Doctrine Columns */}
+            <div className="manifesto-columns-grid">
+
+              {/* Pillar 01: The Vision */}
+              <div className="manifesto-col">
+                <div className="manifesto-col-header">
+                  <span className="manifesto-col-index">01</span>
+                  <span className="manifesto-col-type">ASPIRATION</span>
+                </div>
+                <h3 className="manifesto-col-title">The Vision</h3>
+                <p className="manifesto-col-desc">
+                  To position ourselves as a student focused community and create visionaries of tomorrow
+                </p>
+                <div className="manifesto-telemetry-stream">
+                  <span className="stream-tag">Impact</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Innovation</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Scale</span>
+                </div>
+                <div className="manifesto-col-laser-line"></div>
+              </div>
+
+              {/* Pillar 02: The Mission */}
+              <div className="manifesto-col">
+                <div className="manifesto-col-header">
+                  <span className="manifesto-col-index">02</span>
+                  <span className="manifesto-col-type">PURPOSE</span>
+                </div>
+                <h3 className="manifesto-col-title">The Mission</h3>
+                <p className="manifesto-col-desc">
+                  To provide a student led and student focused platform for interaction and ideas. Committed towards bringing diversity in people and domains.
+                </p>
+                <div className="manifesto-telemetry-stream">
+                  <span className="stream-tag">Interaction</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Ideas</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Diversity</span>
+                </div>
+                <div className="manifesto-col-laser-line"></div>
+              </div>
+
+              {/* Pillar 03: Core Technologies */}
+              <div className="manifesto-col">
+                <div className="manifesto-col-header">
+                  <span className="manifesto-col-index">03</span>
+                  <span className="manifesto-col-type">STACK</span>
+                </div>
+                <h3 className="manifesto-col-title">Core Technologies</h3>
+                <p className="manifesto-col-desc">
+                  We utilize industry-standard ecosystems to architect scalable student applications.
+                </p>
+                <div className="manifesto-telemetry-stream wrap">
+                  <span className="stream-tag">Azure Cloud</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Open Source</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">AI Integration</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">Web Dev</span>
+                  <span className="stream-dot">•</span>
+                  <span className="stream-tag">System Design</span>
+                </div>
+                <div className="manifesto-col-laser-line"></div>
+              </div>
+
+            </div>
+
+            {/* Bottom Datum Line */}
+            <div className="manifesto-datum-footer">
+              <span className="manifesto-cross">+</span>
+              <div className="manifesto-datum-line"></div>
+              <span className="manifesto-cross">+</span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* Journey / Trajectory Section (Unboxed Architectural Chrono-Spine) */}
+      <section className="ab-journey-premium">
+        <div className="container">
+
+          {/* Editorial Section Header */}
+          <div className="journey-editorial-header">
+            <div className="journey-eyebrow-line">
+              <span className="journey-beacon-dot"></span>
+              <span className="journey-eyebrow-main">OUR JOURNEY</span>
+              <span className="journey-eyebrow-sep">{"//"}</span>
+              <span className="journey-eyebrow-sub">THE EXPANSION CHRONICLE</span>
+            </div>
+            <h2 className="journey-monumental-title">
+              Three chapters,<br />
+              <span className="journey-italic-accent">one trajectory.</span>
+            </h2>
+          </div>
+
+          {/* Unboxed Chrono-Spine Stage */}
+          <div className="journey-chrono-stage">
+
+            {/* Vertical Laser Spine */}
+            <div className="journey-spine-track">
               <div className="timeline-progress-fill"></div>
             </div>
 
-            <div className="timeline-phase">
-              <div className="timeline-node">
-                <div className="timeline-node-inner"></div>
-              </div>
-              <article className="timeline-blueprint-card">
-                  <div className="timeline-phase-meta">
-                    <span className="phase-number">Phase I</span>
-                    <span className="phase-year">The Past</span>
-                  </div>
-                  <h4>Foundations</h4>
-                  <p>
-                    The community has successfully led major events providing student focused opportunities with events like HackMSC and Zero Jam which have formed a major part of the community's legacy and strengthen our vision for tomorrow.
-                  </p>
-              </article>
-            </div>
+            {/* Timeline Phases (Free, Unboxed, Architectural) */}
+            <div className="journey-phases-list">
 
-            <div className="timeline-phase">
-              <div className="timeline-node">
-                <div className="timeline-node-inner"></div>
-              </div>
-              <article className="timeline-blueprint-card">
-                  <div className="timeline-phase-meta">
-                    <span className="phase-number">Phase II</span>
-                    <span className="phase-year">The Present</span>
+              {/* Phase I */}
+              <div className="timeline-phase journey-phase-station">
+                <div className="journey-node-anchor">
+                  <span className="journey-node-cross">+</span>
+                  <div className="journey-node-beacon"></div>
+                </div>
+
+                <div className="journey-phase-content">
+                  <div className="journey-phase-header">
+                    <span className="phase-index-tag">PHASE I</span>
+                    <span className="phase-sep">•</span>
+                    <span className="phase-temporal-tag">THE PAST</span>
                   </div>
-                  <h4>Execution</h4>
-                  <p>
+
+                  <h3 className="journey-phase-title">Foundations</h3>
+
+                  <p className="journey-phase-desc">
+                    The community has successfully led major events providing student focused opportunities with events like HackMSC and Zero Jam which have formed a major part of the community&apos;s legacy and strengthen our vision for tomorrow.
+                  </p>
+
+                  <div className="journey-datum-hairline"></div>
+                </div>
+              </div>
+
+              {/* Phase II */}
+              <div className="timeline-phase journey-phase-station">
+                <div className="journey-node-anchor">
+                  <span className="journey-node-cross">+</span>
+                  <div className="journey-node-beacon"></div>
+                </div>
+
+                <div className="journey-phase-content">
+                  <div className="journey-phase-header">
+                    <span className="phase-index-tag">PHASE II</span>
+                    <span className="phase-sep">•</span>
+                    <span className="phase-temporal-tag">THE PRESENT</span>
+                  </div>
+
+                  <h3 className="journey-phase-title">Execution</h3>
+
+                  <p className="journey-phase-desc">
                     The community continues in the tradition of the star events while bringing new ideas to diversify student outreach to different courses and specializations. Thus fulfilling the student first commitment.
                   </p>
-              </article>
-            </div>
 
-            <div className="timeline-phase">
-              <div className="timeline-node">
-                <div className="timeline-node-inner"></div>
+                  <div className="journey-datum-hairline"></div>
+                </div>
               </div>
-              <article className="timeline-blueprint-card">
-                  <div className="timeline-phase-meta">
-                    <span className="phase-number">Phase III</span>
-                    <span className="phase-year">The Future</span>
+
+              {/* Phase III */}
+              <div className="timeline-phase journey-phase-station">
+                <div className="journey-node-anchor">
+                  <span className="journey-node-cross">+</span>
+                  <div className="journey-node-beacon"></div>
+                </div>
+
+                <div className="journey-phase-content">
+                  <div className="journey-phase-header">
+                    <span className="phase-index-tag">PHASE III</span>
+                    <span className="phase-sep">•</span>
+                    <span className="phase-temporal-tag">THE FUTURE</span>
                   </div>
-                  <h4>Evolution</h4>
-                  <p>
+
+                  <h3 className="journey-phase-title">Evolution</h3>
+
+                  <p className="journey-phase-desc">
                     The community aims to be the forerunner in student led communities in providing students with opportunities while being transparent in its objective of working for all students and providing support.
                   </p>
-              </article>
+
+                  <div className="journey-datum-hairline"></div>
+                </div>
+              </div>
+
             </div>
+
           </div>
+
         </div>
       </section>
     </main>

@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mscsrmap.xyz/"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz/"),
   title: "Microsoft Student Community - SRM University AP",
   description:
     "Microsoft Student Community at SRM University AP - A vibrant student-led tech community focused on Azure, AI, and cloud computing.",
@@ -92,13 +92,8 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <ShapeGrid 
-          speed={0.5} 
-          squareSize={40}
-          direction='diagonal'
-          borderColor='rgba(255, 255, 255, 0.25)'
-          hoverFillColor='rgba(14, 123, 242, 0.9)'
-          shape='square'
-          hoverTrailAmount={5}
+          interactiveRadius={240}
+          spotlightOpacity={0.045}
         />
         {children}
       </body>
