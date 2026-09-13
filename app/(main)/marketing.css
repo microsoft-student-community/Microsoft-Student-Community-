@@ -1,6 +1,6 @@
-/* ===== STARDOM & ICELAND TYPOGRAPHY SYSTEM ===== */
-@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
+/* ===== STARDOM & ICELAND & SATOSHI TYPOGRAPHY SYSTEM ===== */
+@import url('https://fonts.googleapis.com/css2?family=Iceland&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&f[]=satoshi@300,400,500,600,700&display=swap');
 
 @font-face {
   font-family: 'Stardom';
@@ -34,6 +34,11 @@ body {
 }
 
 :root {
+  --font-stardom: "Stardom", "Playfair Display", Georgia, serif;
+  --font-iceland: "Iceland", monospace, sans-serif;
+  --font-details: "Iceland", monospace, sans-serif;
+  --font-mono: "Iceland", monospace, sans-serif;
+  --font-narrative: "Satoshi", var(--font-narrative), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   --bg: #080809;
   --bg-2: #0d0d0f;
   --blue: #0078d4;
@@ -1546,11 +1551,13 @@ body.board-page .board {
 
 /* Balanced Editorial Subtitle */
 .kinetic-hero-subtext {
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-family: var(--font-narrative);
+  font-size: clamp(1.02rem, 1.45vw, 1.22rem);
   line-height: 1.7;
-  color: var(--w70);
-  max-width: 700px;
-  font-weight: 300;
+  letter-spacing: -0.008em;
+  color: var(--w80);
+  max-width: 720px;
+  font-weight: 350;
   margin-bottom: 2.8rem;
   text-wrap: balance;
   animation: fadeUpIn 1s var(--ease) 0.25s both;
@@ -2168,10 +2175,11 @@ body.board-page .board {
 }
 
 .pillar-free-body {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative);
   font-size: 0.98rem;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.68);
   font-weight: 350;
   margin: 0;
   transition: color 0.3s ease;
@@ -2309,10 +2317,11 @@ body.board-page .board {
 }
 
 .event-free-description {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative);
   font-size: 1.08rem;
   line-height: 1.78;
-  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.74);
   font-weight: 350;
   margin: 0;
 }
@@ -3136,10 +3145,11 @@ body.board-page .board {
 }
 
 .contact-free-desc {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative);
   font-size: 1.02rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.72;
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.68);
   font-weight: 350;
   margin: 0;
   max-width: 440px;

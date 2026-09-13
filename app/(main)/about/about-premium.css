@@ -2,14 +2,15 @@
    ABOUT PAGE PREMIUM DESIGN SYSTEM
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Iceland&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&f[]=satoshi@300,400,500,600,700&display=swap');
 
 :root {
   --font-stardom: "Stardom", "Playfair Display", Georgia, serif;
   --font-iceland: "Iceland", monospace, sans-serif;
   --font-details: "Iceland", monospace, sans-serif;
   --font-mono: "Iceland", monospace, sans-serif;
+  --font-narrative: "Satoshi", var(--font-narrative), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Particle Background Canvas */
@@ -194,11 +195,12 @@
 
 /* 3. Balanced Editorial Narrative */
 .ab-stage-desc {
-  font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.35vw, 1.15rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.68);
-  max-width: 650px;
+  font-family: var(--font-narrative);
+  font-size: clamp(1.02rem, 1.4vw, 1.18rem);
+  line-height: 1.72;
+  letter-spacing: -0.006em;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 660px;
   font-weight: 350;
   margin: 0 auto 2.8rem auto;
   text-align: center;
@@ -601,10 +603,11 @@
 }
 
 .manifesto-col-desc {
-  font-family: var(--font-sans);
-  font-size: 0.96rem;
+  font-family: var(--font-narrative);
+  font-size: 0.98rem;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.68);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 350;
   margin-bottom: 2rem;
   flex-grow: 1;
@@ -759,10 +762,11 @@
 
 /* Narrative Text */
 .origin-story-text {
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-narrative);
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.78;
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 350;
   margin-bottom: 2.8rem;
   max-width: 580px;
@@ -1173,10 +1177,11 @@
 }
 
 .journey-phase-desc {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative);
   font-size: 1.05rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.74);
   font-weight: 350;
   max-width: 700px;
   margin-bottom: 2.2rem;
