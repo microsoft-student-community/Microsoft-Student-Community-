@@ -32,7 +32,7 @@ export default function Home() {
           setTimeout(() => {
             if (loadingScreen) loadingScreen.classList.add("fade-out");
             document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch(() => {});
+            if (bgVideo) bgVideo.play().catch(() => { });
           }, 400);
         }
         if (loaderRingFill) {
@@ -45,7 +45,7 @@ export default function Home() {
 
     if (document.documentElement.classList.contains("skip-loader")) {
       if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch(() => {});
+      if (bgVideo) bgVideo.play().catch(() => { });
     } else {
       startLoader();
     }
@@ -262,7 +262,7 @@ export default function Home() {
             </a>
           </div>
 
-          {/* Architectural Telemetry Stream Marquee (Non-AI, 100% Unboxed & Free) */}
+          {/* Telemetry Stream Marquee */}
           <div className="kinetic-ticker-viewport" aria-label="Community Highlights Marquee">
             <div className="kinetic-ticker-track">
               {/* Loop Batch 1 */}
@@ -307,7 +307,7 @@ export default function Home() {
                 <div className="telemetry-node">
                   <span className="telemetry-idx">05</span>
                   <i className="fa-solid fa-trophy telemetry-ico text-yellow-400"></i>
-                  <span className="telemetry-title">₹1,00,000+</span>
+                  <span className="telemetry-title">₹30,000+</span>
                   <span className="telemetry-sep">{"//"}</span>
                   <span className="telemetry-desc">Hackathon Prize Pool</span>
                 </div>
@@ -374,7 +374,7 @@ export default function Home() {
                 <div className="telemetry-node">
                   <span className="telemetry-idx">05</span>
                   <i className="fa-solid fa-trophy telemetry-ico text-yellow-400"></i>
-                  <span className="telemetry-title">₹1,00,000+</span>
+                  <span className="telemetry-title">₹30,000+</span>
                   <span className="telemetry-sep">{"//"}</span>
                   <span className="telemetry-desc">Hackathon Prize Pool</span>
                 </div>
@@ -412,7 +412,7 @@ export default function Home() {
               <span className="laser-stem-line"></span>
               <span className="laser-traveling-bead"></span>
               <svg className="scroll-vector-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </a>
@@ -546,7 +546,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right: Unboxed Message Form */}
+            {/* Contact Form */}
             <div className="contact-free-form-wrap">
               <div className="contact-free-form-intro">
                 <h3 className="contact-free-heading">Send Us a Message</h3>

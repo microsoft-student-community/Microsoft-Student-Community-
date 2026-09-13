@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import ParticleBackground from "@/components/ParticleBackground";
 
@@ -9,49 +9,62 @@ export default function EventsClientWrapper({ events: initialEvents }) {
   const [filter, setFilter] = useState("all");
   const [expandedCard, setExpandedCard] = useState(null);
 
-  // Map Supabase event rows to the shape the UI expects
-  const events = (initialEvents || []).map((e) => {
-    const startDate = new Date(e.date_start);
-    const month = startDate
-      .toLocaleString("en-IN", { month: "short", timeZone: "Asia/Kolkata" })
-      .toUpperCase();
-    let dayStr = startDate.toLocaleString("en-IN", {
-      day: "numeric",
-      timeZone: "Asia/Kolkata",
-    });
-
-    if (e.date_end && e.date_end !== e.date_start) {
-      const endDate = new Date(e.date_end);
-      const endDay = endDate.toLocaleString("en-IN", {
+  const events = useMemo(() => {
+    return (initialEvents || []).map((e) => {
+      const startDate = new Date(e.date_start);
+      const month = startDate
+        .toLocaleString("en-IN", { month: "short", timeZone: "Asia/Kolkata" })
+        .toUpperCase();
+      let dayStr = startDate.toLocaleString("en-IN", {
         day: "numeric",
         timeZone: "Asia/Kolkata",
       });
-      dayStr = `${dayStr}-${endDay}`;
-    }
 
-    return {
-      id: e.slug || e.id,
-      category: e.type || "workshop",
-      month,
-      day: dayStr,
-      title: e.title,
-      tag: e.type ? e.type.charAt(0).toUpperCase() + e.type.slice(1) : "Event",
-      desc: e.description || "",
-      status: e.status === "completed" ? "Completed" : "Upcoming",
-      img: e.image_url || null,
-      summary: e.long_description || e.description || "Join us for this event!",
-      galleryLink: `/gallery#gallery-${e.slug || e.id}`,
-      portalLink: `/event-portal?event=${e.slug || e.id}`,
-      stats: [
-        {
-          label: "Status:",
-          val: e.status === "completed" ? "Archived" : "Active",
-        },
-        { label: "Category:", val: e.type || "General" },
-        ...(e.location ? [{ label: "Location:", val: e.location }] : []),
-      ],
-    };
-  });
+      if (e.date_end && e.date_end !== e.date_start) {
+        const endDate = new Date(e.date_end);
+        const endDay = endDate.toLocaleString("en-IN", {
+          day: "numeric",
+          timeZone: "Asia/Kolkata",
+        });
+        dayStr = `${dayStr}-${endDay}`;
+      }
+
+      return {
+        id: e.slug || e.id,
+        category: e.type || "workshop",
+        month,
+        day: dayStr,
+        dateStart: e.date_start,
+        title: e.title,
+        tag: e.type ? e.type.charAt(0).toUpperCase() + e.type.slice(1) : "Event",
+        desc: e.description || "",
+        status: e.status === "completed" ? "Completed" : "Upcoming",
+        img: e.image_url || null,
+        summary: e.long_description || e.description || "Join us for this event!",
+        galleryLink: `/gallery#gallery-${e.slug || e.id}`,
+        portalLink: `/event-portal?event=${e.slug || e.id}`,
+        stats: [
+          {
+            label: "Status",
+            val: e.status === "completed" ? "Archived" : "Active",
+          },
+          { label: "Category", val: e.type || "General" },
+          ...(e.location ? [{ label: "Location", val: e.location }] : []),
+        ],
+      };
+    });
+  }, [initialEvents]);
+
+  const featuredEvent = useMemo(() => {
+    const upcomingWithImg = events.filter((e) => e.status === "Upcoming" && e.img);
+    if (upcomingWithImg.length > 0) return upcomingWithImg[upcomingWithImg.length - 1];
+    const completedWithImg = events.filter((e) => e.status === "Completed" && e.img);
+    return completedWithImg.length > 0 ? completedWithImg[0] : null;
+  }, [events]);
+
+  const filteredEvents = useMemo(() => {
+    return filter === "all" ? events : events.filter((e) => e.category === filter);
+  }, [events, filter]);
 
   useEffect(() => {
     document.body.classList.add("events-page");
@@ -76,7 +89,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
           setTimeout(() => {
             if (loadingScreen) loadingScreen.classList.add("fade-out");
             document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch((e) => function () { });
+            if (bgVideo) bgVideo.play().catch(() => {});
           }, 400);
         }
         if (loaderRingFill) {
@@ -89,7 +102,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
 
     if (document.documentElement.classList.contains("skip-loader")) {
       if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch((e) => function () { });
+      if (bgVideo) bgVideo.play().catch(() => {});
     } else {
       startLoader();
     }
@@ -102,68 +115,61 @@ export default function EventsClientWrapper({ events: initialEvents }) {
 
   useEffect(() => {
     const cards = document.querySelectorAll(".glow-card");
-    const handleMouseMove = (e, card) => {
+    const handleMouseMove = (e) => {
+      const card = e.currentTarget;
       const rect = card.getBoundingClientRect();
       card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
       card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
     };
-    const mouseMoveListeners = new Map();
-    cards.forEach((card) => {
-      const listener = (e) => handleMouseMove(e, card);
-      mouseMoveListeners.set(card, listener);
-      card.addEventListener("mousemove", listener);
-    });
 
-    const eventCards = document.querySelectorAll(".event-cassette");
-    eventCards.forEach((card) => card.classList.add("animatable"));
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-    );
-
-    eventCards.forEach((card) => observer.observe(card));
-
-    const hero = document.querySelector(".featured-event-hero");
-    if (hero) {
-      hero.style.opacity = "0";
-      hero.style.transform = "translateY(20px)";
-      hero.style.transition =
-        "opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)";
-      setTimeout(() => {
-        hero.style.opacity = "1";
-        hero.style.transform = "translateY(0)";
-      }, 120);
-    }
-
+    cards.forEach((card) => card.addEventListener("mousemove", handleMouseMove));
     return () => {
-      cards.forEach((card) => {
-        const listener = mouseMoveListeners.get(card);
-        if (listener) card.removeEventListener("mousemove", listener);
-      });
-      observer.disconnect();
+      cards.forEach((card) => card.removeEventListener("mousemove", handleMouseMove));
     };
-  }, [filter]);
+  }, [filteredEvents]);
+
+  const [timeLeft, setTimeLeft] = useState({
+    days: "00",
+    hours: "00",
+    minutes: "00",
+    seconds: "00",
+  });
+
+  useEffect(() => {
+    const targetDate = featuredEvent?.dateStart
+      ? new Date(featuredEvent.dateStart).getTime()
+      : new Date("2026-09-17T09:00:00+05:30").getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        setTimeLeft({ days: "00", hours: "00", minutes: "00", seconds: "00" });
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setTimeLeft({
+        days: String(days).padStart(2, "0"),
+        hours: String(hours).padStart(2, "0"),
+        minutes: String(minutes).padStart(2, "0"),
+        seconds: String(seconds).padStart(2, "0"),
+      });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [featuredEvent?.dateStart]);
 
   const handleCardClick = (id) => {
-    setExpandedCard(expandedCard === id ? null : id);
+    setExpandedCard((prev) => (prev === id ? null : id));
   };
-
-  const upcomingEventsWithImg = events.filter((e) => e.status === "Upcoming" && e.img);
-  const completedEventsWithImg = events.filter((e) => e.status === "Completed" && e.img);
-  const featuredEvent = upcomingEventsWithImg.length > 0 
-    ? upcomingEventsWithImg[upcomingEventsWithImg.length - 1] 
-    : (completedEventsWithImg.length > 0 ? completedEventsWithImg[0] : null);
-
-  const filteredEvents =
-    filter === "all" ? events : events.filter((e) => e.category === filter);
 
   return (
     <main>
@@ -236,269 +242,368 @@ export default function EventsClientWrapper({ events: initialEvents }) {
       <section className="events-header-section">
         <div className="container">
           <div className="events-eyebrow-wrap">
-            <span className="events-eyebrow-accent"></span>
+            <span className="events-eyebrow-dot"></span>
             <span className="events-eyebrow-tag">MSC SRMAP ARCHIVE</span>
           </div>
           <h1 className="events-main-title">
             The <span className="title-serif-italic">Chronicles</span> of Build
           </h1>
           <p className="events-intro-text">
-            A premium record of our technical coding bootcamps, developer
-            hackathons, and open source workshops.
+            A premium record of our technical coding bootcamps, developer hackathons, and open source workshops.
           </p>
         </div>
       </section>
 
-      <section
-        id="events"
-        style={{ position: "relative", padding: "2rem 0 6rem" }}
-      >
+      <section className="editorial-showcase-section">
         <div className="container">
           {featuredEvent ? (
-            <div className="featured-event-hero glow-card">
-              <div className="featured-hero-visual">
-                <img
-                  src={featuredEvent.img}
-                  alt={featuredEvent.title}
-                  className="featured-hero-img"
-                  loading="eager"
-                  decoding="async"
-                  fetchPriority="high"
-                />
-                <div className="featured-overlay-grad"></div>
-                <div
-                  className="featured-status-badge"
-                  style={{
-                    borderColor: "rgba(0, 120, 212, 0.4)",
-                    color: "var(--blue)",
-                  }}
-                >
-                  {featuredEvent.status === "Upcoming" ? (
-                    <div
-                      className="pulse-dot"
-                      style={{
-                        background: "var(--blue)",
-                        boxShadow: "0 0 10px var(--blue-glow)",
-                        animation: "pulseBlue 2s infinite",
-                      }}
-                    ></div>
-                  ) : null}{" "}
-                  {featuredEvent.status === "Upcoming" ? "UPCOMING EVENT" : "PAST EVENT"}
+            <div className="editorial-showcase-layout">
+              <div className="editorial-content-column">
+                <div className="editorial-kicker">
+                  <span className="kicker-dot"></span>
+                  <span className="kicker-text">Upcoming Flagship Sprint</span>
+                  <span className="kicker-sep">/</span>
+                  <span className="kicker-date">{featuredEvent.day} {featuredEvent.month}</span>
+                  <span className="kicker-sep">/</span>
+                  <span className="kicker-venue">SRM University AP</span>
                 </div>
-              </div>
-              <div className="featured-hero-content">
-                <div className="featured-meta">
-                  <span className="featured-date">{featuredEvent.day} {featuredEvent.month}</span>
-                  <span className="featured-type">{featuredEvent.tag}</span>
-                </div>
-                <h3 className="featured-title">{featuredEvent.title}</h3>
-                <p className="featured-desc">
+
+                <h2 className="editorial-monument-title">
+                  {featuredEvent.title}
+                </h2>
+
+                <p className="editorial-hook">
+                  18 hours of hands-on workshops, real-world engineering challenges, and continuous builder momentum.
+                </p>
+
+                <p className="editorial-story">
                   {featuredEvent.desc}
                 </p>
-                <a href={featuredEvent.portalLink} className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
-                  Open Event Portal <i className="fa-solid fa-arrow-right btn-arrow"></i>
-                </a>
+
+                <div className="editorial-metrics-strip">
+                  <div className="metric-item">
+                    <span className="metric-figure gold">₹30,000+</span>
+                    <span className="metric-caption">Prize Bounty</span>
+                  </div>
+                  <div className="metric-divider"></div>
+                  <div className="metric-item">
+                    <span className="metric-figure">18 Hours</span>
+                    <span className="metric-caption">Non-Stop Sprint</span>
+                  </div>
+                  <div className="metric-divider"></div>
+                  <div className="metric-item">
+                    <span className="metric-figure">3–5</span>
+                    <span className="metric-caption">Team Size</span>
+                  </div>
+                  <div className="metric-divider"></div>
+                  <div className="metric-item">
+                    <span className="metric-figure">All Freshers</span>
+                    <span className="metric-caption">Open To</span>
+                  </div>
+                </div>
+
+                <div className="editorial-action-row">
+                  <a
+                    href={featuredEvent.portalLink}
+                    className="editorial-primary-action"
+                  >
+                    <span>Register for Synora</span>
+                    <i className="fa-solid fa-arrow-right"></i>
+                  </a>
+
+                  <div className="editorial-countdown-inline">
+                    <span className="countdown-prefix">Starts in</span>
+                    <span className="countdown-value">
+                      {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m : <strong className="sec-glow">{timeLeft.seconds}s</strong>
+                    </span>
+                  </div>
+
+                  <a
+                    href="https://discord.gg/K5NC5wAhg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="editorial-subtle-link"
+                  >
+                    <i className="fab fa-discord"></i>
+                    <span>Join Discord Guild</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="editorial-visual-column">
+                <div className="editorial-poster-stage">
+                  <div className="poster-ambient-aura"></div>
+                  <img
+                    src={featuredEvent.img}
+                    alt={featuredEvent.title}
+                    className="editorial-poster-image"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
               </div>
             </div>
           ) : (
-            <div className="featured-event-hero glow-card">
-              <div className="featured-hero-visual">
-                <img
-                  src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"
-                  alt="Event Portal Banner"
-                  className="featured-hero-img"
-                  loading="eager"
-                  decoding="async"
-                  fetchPriority="high"
-                />
-                <div className="featured-overlay-grad"></div>
-                <div
-                  className="featured-status-badge"
-                  style={{
-                    borderColor: "rgba(0, 120, 212, 0.4)",
-                    color: "var(--blue)",
-                  }}
-                >
-                  <div
-                    className="pulse-dot"
-                    style={{
-                      background: "var(--blue)",
-                      boxShadow: "0 0 10px var(--blue-glow)",
-                      animation: "pulseBlue 2s infinite",
-                    }}
-                  ></div>{" "}
-                  COMMUNITY NETWORK
+            <div className="editorial-showcase-layout">
+              <div className="editorial-content-column">
+                <div className="editorial-kicker">
+                  <span className="kicker-dot"></span>
+                  <span className="kicker-text">Community Network</span>
+                  <span className="kicker-sep">/</span>
+                  <span className="kicker-venue">SRM University AP</span>
+                </div>
+
+                <h2 className="editorial-monument-title">
+                  Build with MSC
+                </h2>
+
+                <p className="editorial-hook">
+                  The central hub for hackathons, engineering sprints, and technical workshops at SRM University AP.
+                </p>
+
+                <p className="editorial-story">
+                  Connect with fellow student builders, find project teammates, and get real-time notifications for every upcoming event on campus.
+                </p>
+
+                <div className="editorial-action-row">
+                  <a
+                    href="https://discord.gg/K5NC5wAhg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="editorial-primary-action"
+                  >
+                    <i className="fab fa-discord"></i>
+                    <span>Join Community Discord</span>
+                    <i className="fa-solid fa-arrow-right"></i>
+                  </a>
                 </div>
               </div>
-              <div className="featured-hero-content">
-                <div className="featured-meta">
-                  <span className="featured-date">LIVE</span>
-                  <span className="featured-type">Meet. Build. Ship.</span>
+
+              <div className="editorial-visual-column">
+                <div className="editorial-poster-stage">
+                  <div className="poster-ambient-aura"></div>
+                  <img
+                    src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/hackmsc1.jpg"
+                    alt="MSC Community"
+                    className="editorial-poster-image"
+                    loading="eager"
+                    decoding="async"
+                  />
                 </div>
-                <h3 className="featured-title">Build with the community</h3>
-                <p className="featured-desc">
-                  Join the MSC SRMAP Discord to meet builders, get event updates,
-                  find teammates, and stay close to every workshop and hackathon.
-                </p>
-                <a href="https://discord.gg/K5NC5wAhg" target="_blank" rel="noopener noreferrer" className="hero-btn-primary mt-4" style={{ width: 'fit-content' }}>
-                  <i className="fab fa-discord"></i> Join Discord <i className="fa-solid fa-arrow-right btn-arrow"></i>
-                </a>
               </div>
             </div>
           )}
+        </div>
+      </section>
 
-          <div className="events-filter-bar">
-            <button
-              className={`filter-btn ${filter === "all" ? "active" : ""}`}
-              onClick={() => {
-                setFilter("all");
-                setExpandedCard(null);
-              }}
-            >
-              All Events
-            </button>
-            <button
-              className={`filter-btn ${filter === "hackathon" ? "active" : ""}`}
-              onClick={() => {
-                setFilter("hackathon");
-                setExpandedCard(null);
-              }}
-            >
-              Hackathons
-            </button>
-            <button
-              className={`filter-btn ${filter === "workshop" ? "active" : ""}`}
-              onClick={() => {
-                setFilter("workshop");
-                setExpandedCard(null);
-              }}
-            >
-              Workshops
-            </button>
-          </div>
+      <section className="events-archive-section">
+        <div className="container">
+          <div className="schedule-ledger-header">
+            <div className="ledger-header-info">
+              <span className="ledger-eyebrow">CHRONOLOGY {"//"} SPRINT ARCHIVE</span>
+              <h2 className="ledger-section-title">
+                The Sprints <span className="title-serif-italic">Archive</span>
+              </h2>
+            </div>
 
-          <div className="events-list-container">
-            {filteredEvents.length === 0 ? (
-              <p
-                style={{
-                  textAlign: "center",
-                  color: "rgba(255,255,255,0.4)",
-                  padding: "4rem 0",
+            <div className="schedule-tabs-horizon">
+              <button
+                className={`schedule-tab-item ${filter === "all" ? "active" : ""}`}
+                onClick={() => {
+                  setFilter("all");
+                  setExpandedCard(null);
                 }}
               >
-                No events found for this category.
-              </p>
-            ) : (
-              filteredEvents.map((evt) => (
-                <div
-                  key={evt.id}
-                  className={`event-cassette glow-card ${expandedCard === evt.id ? "expanded" : ""
-                    }`}
-                  onClick={(e) => {
-                    if (
-                      e.target.closest(".event-summary-drawer") ||
-                      e.target.closest("a")
-                    )
-                      return;
-                    handleCardClick(evt.id);
-                  }}
-                >
-                  <div className="event-cassette-row">
-                    <div className="event-date-col">
-                      <span className="event-month-lbl">{evt.month}</span>
-                      <span
-                        className={`event-day-lbl ${evt.day.includes("-") ? "range" : ""
-                          }`}
-                      >
-                        {evt.day}
-                      </span>
-                    </div>
-                    <div className="event-info-col">
-                      <div className="event-info-header">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                          {evt.img && (
-                            <div className="event-row-thumbnail">
-                              <img src={evt.img} alt={evt.title} />
-                            </div>
-                          )}
-                          <h3>{evt.title}</h3>
-                        </div>
-                        <span className="event-cat-tag">{evt.tag}</span>
-                      </div>
-                      <p className="event-lead-desc">{evt.desc}</p>
-                      <div className="event-meta-strip">
-                        <span className="event-meta-item">
-                          <i className="fas fa-calendar-check"></i> {evt.status}
-                        </span>
-                        {evt.location && (
-                          <span className="event-meta-item">
-                            <i className="fas fa-map-marker-alt"></i>{" "}
-                            {evt.location}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="event-toggle-col">
-                      <span className="indicator-arrow">
-                        <i className="fas fa-chevron-down"></i>
-                      </span>
-                    </div>
-                  </div>
+                <span className="tab-index">01</span>
+                <span className="tab-name">All Sprints</span>
+                <span className="tab-badge">{events.length}</span>
+              </button>
+              <button
+                className={`schedule-tab-item ${filter === "hackathon" ? "active" : ""}`}
+                onClick={() => {
+                  setFilter("hackathon");
+                  setExpandedCard(null);
+                }}
+              >
+                <span className="tab-index">02</span>
+                <span className="tab-name">Hackathons</span>
+                <span className="tab-badge">
+                  {events.filter((e) => e.category === "hackathon").length}
+                </span>
+              </button>
+              <button
+                className={`schedule-tab-item ${filter === "workshop" ? "active" : ""}`}
+                onClick={() => {
+                  setFilter("workshop");
+                  setExpandedCard(null);
+                }}
+              >
+                <span className="tab-index">03</span>
+                <span className="tab-name">Workshops</span>
+                <span className="tab-badge">
+                  {events.filter((e) => e.category === "workshop").length}
+                </span>
+              </button>
+            </div>
+          </div>
 
+          <div className="schedule-ledger-stream">
+            {filteredEvents.length === 0 ? (
+              <div className="ledger-empty-state">
+                <p>No sprint records found matching this filter.</p>
+              </div>
+            ) : (
+              filteredEvents.map((evt, idx) => {
+                const isExpanded = expandedCard === evt.id;
+                const isUpcoming = evt.status === "Upcoming";
+                const indexStr = String(idx + 1).padStart(2, "0");
+
+                return (
                   <div
-                    className="event-summary-drawer"
-                    style={{
-                      maxHeight: expandedCard === evt.id ? "1000px" : null,
+                    key={evt.id}
+                    className={`ledger-entry-row glow-card ${isExpanded ? "is-expanded" : ""}`}
+                    onClick={(e) => {
+                      if (
+                        e.target.closest(".ledger-expanded-pane") ||
+                        e.target.closest("a")
+                      )
+                        return;
+                      handleCardClick(evt.id);
                     }}
                   >
-                    <div className={`event-drawer-content ${!evt.img ? 'event-drawer-content--no-image' : ''}`}>
-                      {evt.img && (
-                        <div className="drawer-poster-frame">
+                    <div className="ledger-row-main">
+                      <span className="ledger-num">/{indexStr}</span>
+
+                      <div className="ledger-date-anchor">
+                        <span className="ledger-month">{evt.month}</span>
+                        <span className="ledger-day">{evt.day}</span>
+                      </div>
+
+                      <div className="ledger-visual-anchor">
+                        {evt.img ? (
                           <img
                             src={evt.img}
-                            alt={`${evt.title} visual`}
+                            alt={evt.title}
+                            className="ledger-thumb-img"
                             loading="lazy"
                             decoding="async"
                           />
-                        </div>
-                      )}
-                      <div className="event-summary-left">
-                        <h4>Event Summary</h4>
-                        <p>{evt.summary}</p>
-                        <div className="event-actions-row">
-                          <Link href={evt.galleryLink} className="gallery-link">
-                            View Event Photos{" "}
-                            <i className="fa-solid fa-arrow-right"></i>
-                          </Link>
-                          <a
-                            href={evt.portalLink || "/event-portal"}
-                            className="event-portal-link"
-                          >
-                            Open Event Portal{" "}
-                            <i className="fa-solid fa-up-right-from-square"></i>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="event-summary-right">
-                        <div className="blueprint-console">
-                          <div className="blueprint-console-header">
-                            <span>SYS_BLUEPRINT_LOG</span>
-                            <span className="console-green-val">ONLINE</span>
+                        ) : (
+                          <div className="ledger-thumb-placeholder">
+                            <i className="fa-solid fa-code"></i>
                           </div>
-                          {evt.stats.map((stat, i) => (
-                            <div className="blueprint-row" key={i}>
-                              <span className="blueprint-lbl">
-                                {stat.label}
+                        )}
+                      </div>
+
+                      <div className="ledger-info-block">
+                        <div className="ledger-meta-line">
+                          <span className={`ledger-discipline-tag ${evt.category}`}>
+                            {evt.tag}
+                          </span>
+                          <span className="ledger-meta-sep">/</span>
+                          <span className={`ledger-status-indicator ${isUpcoming ? "status-live" : "status-archived"}`}>
+                            <span className="status-dot"></span>
+                            <span>{isUpcoming ? "Upcoming Sprint" : "Archived Session"}</span>
+                          </span>
+                          {evt.location && (
+                            <>
+                              <span className="ledger-meta-sep">/</span>
+                              <span className="ledger-location-text">
+                                <i className="fa-solid fa-location-dot"></i> {evt.location}
                               </span>
-                              <span className="blueprint-val">{stat.val}</span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="ledger-entry-title">
+                          {evt.title}
+                        </h3>
+
+                        <p className="ledger-entry-desc">
+                          {evt.desc}
+                        </p>
+                      </div>
+
+                      <div className="ledger-toggle-anchor">
+                        <span className="ledger-toggle-btn" aria-label="Toggle Details">
+                          <i className="fa-solid fa-plus"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      className="ledger-expanded-pane"
+                      style={{
+                        maxHeight: isExpanded ? "1200px" : "0px",
+                      }}
+                    >
+                      <div className={`ledger-dossier-inner ${!evt.img ? "no-image" : ""}`}>
+                        {evt.img && (
+                          <div className="dossier-poster-wrap">
+                            <img
+                              src={evt.img}
+                              alt={`${evt.title} Poster`}
+                              className="dossier-poster-img"
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </div>
+                        )}
+
+                        <div className="dossier-narrative-col">
+                          <div className="dossier-kicker">
+                            <span>SESSION OVERVIEW</span>
+                          </div>
+                          <p className="dossier-body-text">{evt.summary}</p>
+
+                          <div className="dossier-actions-strip">
+                            <Link href={evt.galleryLink} className="dossier-gallery-btn">
+                              <span>View Gallery Photos</span>
+                              <i className="fa-solid fa-arrow-right"></i>
+                            </Link>
+
+                            <a
+                              href={evt.portalLink || "/event-portal"}
+                              className="dossier-portal-btn"
+                            >
+                              <span>Open Event Portal</span>
+                              <i className="fa-solid fa-up-right-from-square"></i>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="dossier-specs-col">
+                          <div className="dossier-kicker">
+                            <span>SPECIFICATIONS</span>
+                          </div>
+                          <div className="dossier-specs-table">
+                            <div className="spec-row">
+                              <span className="spec-label">Discipline</span>
+                              <span className="spec-value">{evt.tag}</span>
                             </div>
-                          ))}
+                            <div className="spec-row">
+                              <span className="spec-label">Cycle</span>
+                              <span className="spec-value">{isUpcoming ? "Active Upcoming" : "Completed / Archived"}</span>
+                            </div>
+                            {evt.location && (
+                              <div className="spec-row">
+                                <span className="spec-label">Location</span>
+                                <span className="spec-value">{evt.location}</span>
+                              </div>
+                            )}
+                            {evt.stats && evt.stats.map((st, i) => (
+                              <div className="spec-row" key={i}>
+                                <span className="spec-label">{st.label.replace(':', '')}</span>
+                                <span className="spec-value">{st.val}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>

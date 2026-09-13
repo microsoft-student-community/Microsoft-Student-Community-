@@ -1,4 +1,5 @@
-/* ===== STARDOM EDITORIAL LUXURY DISPLAY FONT ===== */
+/* ===== STARDOM & ICELAND TYPOGRAPHY SYSTEM ===== */
+@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=stardom@400&display=swap');
 
 @font-face {
@@ -68,7 +69,9 @@ body {
   --glass-outer-glow: rgba(0, 120, 212, 0.08);
   --glass-hover-glow: rgba(0, 120, 212, 0.15);
   --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "Iceland", monospace, sans-serif;
+  --font-iceland: "Iceland", monospace, sans-serif;
+  --font-details: "Iceland", monospace, sans-serif;
   --font-stardom: "Stardom", "Playfair Display", Georgia, serif;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-io: cubic-bezier(0.45, 0, 0.55, 1);
@@ -949,10 +952,10 @@ body.board-page .board {
 }
 
 .nav-link {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
+  font-family: var(--font-iceland);
+  font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   color: var(--w70);
   text-decoration: none;
   text-transform: capitalize;
@@ -985,8 +988,8 @@ body.board-page .board {
   border-radius: 100px;
   color: var(--w100);
   text-decoration: none;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-family: var(--font-iceland);
+  font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1444,8 +1447,8 @@ body.board-page .board {
 }
 
 .eyebrow-text {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
   letter-spacing: 0.14em;
   color: var(--w85);
   font-weight: 500;
@@ -1457,15 +1460,15 @@ body.board-page .board {
 }
 
 .eyebrow-location {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
   letter-spacing: 0.1em;
   color: var(--w60);
 }
 
 .eyebrow-status {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-family: var(--font-iceland);
+  font-size: 0.78rem;
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0.06);
   border: none;
@@ -1623,8 +1626,10 @@ body.board-page .board {
   background: linear-gradient(135deg, #0078d4, #005a9e);
   color: #ffffff;
   text-decoration: none;
-  font-size: 0.94rem;
-  font-weight: 600;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -1639,8 +1644,9 @@ body.board-page .board {
 }
 
 .btn-counter-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-family: var(--font-iceland);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
   background: rgba(255, 255, 255, 0.22);
   padding: 2px 8px;
   border-radius: 6px;
@@ -1656,7 +1662,9 @@ body.board-page .board {
   background: transparent;
   color: #ffffff;
   text-decoration: none;
-  font-size: 0.94rem;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
   font-weight: 500;
   border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(20px);
@@ -1689,8 +1697,9 @@ body.board-page .board {
 }
 
 .btn-tag-pill {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-family: var(--font-iceland);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1706,9 +1715,7 @@ body.board-page .board {
   color: #08080a;
 }
 
-/* ==========================================================================
-   ARCHITECTURAL TELEMETRY STREAM MARQUEE (100% UNBOXED & NON-AI)
-   ========================================================================== */
+/* Telemetry Stream Marquee */
 .kinetic-ticker-viewport {
   width: 100vw;
   max-width: 100%;
@@ -1751,7 +1758,7 @@ body.board-page .board {
   flex-shrink: 0;
 }
 
-/* Unboxed Telemetry Station Nodes */
+/* Telemetry Station Nodes */
 .telemetry-node {
   display: inline-flex;
   align-items: center;
@@ -1764,12 +1771,12 @@ body.board-page .board {
 }
 
 .telemetry-idx {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
   font-weight: 700;
   color: #38bdf8;
   opacity: 0.85;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
 .telemetry-ico {
@@ -1780,25 +1787,25 @@ body.board-page .board {
 }
 
 .telemetry-title {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
+  font-weight: 500;
   color: #ffffff;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
 .telemetry-sep {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-iceland);
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.25);
 }
 
 .telemetry-desc {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.52);
   white-space: nowrap;
@@ -1847,10 +1854,10 @@ body.board-page .board {
 }
 
 .telemetry-status-tag {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-family: var(--font-iceland);
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: #4ade80;
   background: rgba(34, 197, 94, 0.1);
   border: 1px solid rgba(34, 197, 94, 0.25);
@@ -1860,8 +1867,8 @@ body.board-page .board {
 
 /* Crosshair Divider */
 .telemetry-divider {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
   font-weight: 600;
   color: rgba(56, 189, 248, 0.5);
   padding: 0 8px;
@@ -1879,9 +1886,7 @@ body.board-page .board {
   white-space: nowrap;
 }
 
-/* ==========================================================================
-   ARCHITECTURAL LASER GLIDE SCROLL ANCHOR (NON-AI BESPOKE TRIGGER)
-   ========================================================================== */
+/* Laser Scroll Anchor */
 .architectural-scroll-anchor {
   display: inline-flex;
   flex-direction: column;
@@ -1899,9 +1904,9 @@ body.board-page .board {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
   transition: color 0.3s ease, letter-spacing 0.3s ease;
@@ -2139,8 +2144,8 @@ body.board-page .board {
 }
 
 .pillar-free-num {
-  font-family: var(--font-stardom);
-  font-size: 2.5rem;
+  font-family: var(--font-iceland);
+  font-size: 3rem;
   line-height: 1;
   color: rgba(255, 255, 255, 0.35);
   font-weight: 400;
@@ -2153,9 +2158,9 @@ body.board-page .board {
 }
 
 .pillar-free-title {
-  font-family: var(--font-sans);
-  font-size: 1.55rem;
-  font-weight: 600;
+  font-family: var(--font-stardom);
+  font-size: 1.75rem;
+  font-weight: 400;
   color: #ffffff;
   letter-spacing: -0.015em;
   line-height: 1.25;
@@ -2192,10 +2197,10 @@ body.board-page .board {
     gap: 0.85rem;
   }
   .pillar-free-num {
-    font-size: 2rem;
+    font-size: 2.4rem;
   }
   .pillar-free-title {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     line-height: 1.25;
   }
   .pillar-free-body {
@@ -2269,8 +2274,8 @@ body.board-page .board {
 }
 
 .event-free-month {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   color: #38bdf8;
@@ -2278,12 +2283,12 @@ body.board-page .board {
 }
 
 .event-free-day {
-  font-family: var(--font-stardom);
-  font-size: clamp(4.5rem, 8vw, 7.5rem);
+  font-family: var(--font-iceland);
+  font-size: clamp(4.8rem, 8.5vw, 8rem);
   font-weight: 400;
   color: #ffffff;
   line-height: 0.95;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 
 .event-free-details {
@@ -2326,8 +2331,9 @@ body.board-page .board {
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: #ffffff;
   text-decoration: none;
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
   font-weight: 500;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -3102,7 +3108,7 @@ body.board-page .board {
   }
 }
 
-/* Free Layout - Unboxed, Open Editorial Studio */
+/* Contact Studio Layout */
 .contact-free-layout {
   display: grid;
   grid-template-columns: 1fr 1.25fr;
@@ -3189,22 +3195,23 @@ body.board-page .board {
 }
 
 .channel-line-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .channel-line-val {
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
+  font-family: var(--font-iceland);
+  font-size: 1.12rem;
+  letter-spacing: 0.04em;
   color: #ffffff;
   font-weight: 450;
   word-break: break-word;
 }
 
-/* Unboxed Message Form */
+/* Contact Message Form */
 .contact-free-form-wrap {
   display: flex;
   flex-direction: column;
@@ -3234,9 +3241,9 @@ body.board-page .board {
 }
 
 .form-free-label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
@@ -3291,8 +3298,9 @@ body.board-page .board {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
+  font-family: var(--font-iceland);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
   font-weight: 600;
   cursor: pointer;
   backdrop-filter: blur(20px) saturate(180%);
@@ -3979,8 +3987,9 @@ body.board-page .board {
 
 /* ===== GLOBAL TYPOGRAPHY & ALIGNMENT ENHANCEMENTS ===== */
 .section-title {
-  letter-spacing: 0.02em;
-  font-weight: 800;
+  font-family: var(--font-stardom);
+  letter-spacing: -0.02em;
+  font-weight: 400;
 }
 
 .nav-link {

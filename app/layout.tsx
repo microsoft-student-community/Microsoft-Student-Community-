@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Iceland, Inter, JetBrains_Mono } from "next/font/google";
 import ShapeGrid from "@/components/ShapeGrid";
 
 const inter = Inter({
@@ -14,6 +14,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
+  display: "swap",
+});
+
+const iceland = Iceland({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-iceland",
   display: "swap",
 });
 
@@ -71,7 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${iceland.variable}`}
     >
       <head>
         <link
