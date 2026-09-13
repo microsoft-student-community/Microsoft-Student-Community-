@@ -7,8 +7,9 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
   : [
     'http://localhost:3000',
+    'http://127.0.0.1:30000',
+    'https://mscsrmap.xyz',
     'http://localhost:3001',
-    'https://mscsrmap.vercel.app',
     'https://mscsrmap.xyz',
     'https://www.mscsrmap.xyz',
     process.env.NEXT_PUBLIC_APP_URL || ''
