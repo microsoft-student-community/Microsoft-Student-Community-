@@ -52,6 +52,51 @@ export default function EventsClientWrapper({ events: initialEvents }) {
       ],
     };
   });
+      if (e.date_end && e.date_end !== e.date_start) {
+        const endDate = new Date(e.date_end);
+        const endDay = endDate.toLocaleString("en-IN", {
+          day: "numeric",
+          timeZone: "Asia/Kolkata",
+        });
+        dayStr = `${dayStr}-${endDay}`;
+      }
+
+      return {
+        id: e.slug || e.id,
+        category: e.type || "workshop",
+        month,
+        day: dayStr,
+        dateStart: e.date_start,
+        title: e.title,
+        tag: e.type ? e.type.charAt(0).toUpperCase() + e.type.slice(1) : "Event",
+        desc: e.description || "",
+        status: e.status === "completed" ? "Completed" : "Upcoming",
+        img: e.image_url || null,
+        summary: e.long_description || e.description || "Join us for this event!",
+        galleryLink: `/gallery#gallery-${e.slug || e.id}`,
+        portalLink: `/events/${e.slug || e.id}`,
+        stats: [
+          {
+            label: "Status",
+            val: e.status === "completed" ? "Archived" : "Active",
+          },
+          { label: "Category", val: e.type || "General" },
+          ...(e.location ? [{ label: "Location", val: e.location }] : []),
+        ],
+      };
+    });
+  }, [initialEvents]);
+
+  const featuredEvent = useMemo(() => {
+    const upcomingWithImg = events.filter((e) => e.status === "Upcoming" && e.img);
+    if (upcomingWithImg.length > 0) return upcomingWithImg[upcomingWithImg.length - 1];
+    const completedWithImg = events.filter((e) => e.status === "Completed" && e.img);
+    return completedWithImg.length > 0 ? completedWithImg[0] : null;
+  }, [events]);
+
+  const filteredEvents = useMemo(() => {
+    return filter === "all" ? events : events.filter((e) => e.category === filter);
+  }, [events, filter]);
 
   useEffect(() => {
     document.body.classList.add("events-page");
