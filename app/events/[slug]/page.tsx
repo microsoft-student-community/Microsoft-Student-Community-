@@ -52,10 +52,10 @@ export default async function EventPortalPage({
             // Bust browser cache during development by appending a timestamp
             const timestamp = new Date().getTime();
             return (
-                <div className="w-full h-screen m-0 p-0 overflow-hidden relative z-50">
+                <div className="w-full h-screen m-0 p-0 overflow-hidden relative z-50 bg-[#101010]">
                     <iframe 
                         src={`/custom-events/synora-pitstop-01/index.html?v=${timestamp}`}
-                        className="w-full h-full border-none"
+                        className="w-full h-full border-none block bg-[#101010]"
                         title="Synora Pitstop Event"
                     />
                 </div>

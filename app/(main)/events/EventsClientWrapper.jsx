@@ -263,7 +263,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                   <span className="kicker-dot"></span>
                   <span className="kicker-text">Upcoming Flagship Sprint</span>
                   <span className="kicker-sep">/</span>
-                  <span className="kicker-date">{featuredEvent.day} {featuredEvent.month}</span>
+                  <span className="kicker-date" suppressHydrationWarning>{featuredEvent.day} {featuredEvent.month}</span>
                   <span className="kicker-sep">/</span>
                   <span className="kicker-venue">SRM University AP</span>
                 </div>
@@ -311,7 +311,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                     <i className="fa-solid fa-arrow-right"></i>
                   </a>
 
-                  <div className="editorial-countdown-inline">
+                  <div className="editorial-countdown-inline" suppressHydrationWarning>
                     <span className="countdown-prefix">Starts in</span>
                     <span className="countdown-value">
                       {timeLeft.days}d : {timeLeft.hours}h : {timeLeft.minutes}m : <strong className="sec-glow">{timeLeft.seconds}s</strong>
@@ -475,8 +475,8 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                       <span className="ledger-num">/{indexStr}</span>
 
                       <div className="ledger-date-anchor">
-                        <span className="ledger-month">{evt.month}</span>
-                        <span className="ledger-day">{evt.day}</span>
+                        <span className="ledger-month" suppressHydrationWarning>{evt.month}</span>
+                        <span className="ledger-day" suppressHydrationWarning>{evt.day}</span>
                       </div>
 
                       <div className="ledger-visual-anchor">
