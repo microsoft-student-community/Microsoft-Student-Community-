@@ -13,16 +13,16 @@ export default function EventsClientWrapper({ events: initialEvents }) {
     return (initialEvents || []).map((e) => {
       const startDate = new Date(e.date_start);
       const month = startDate
-        .toLocaleString("en-IN", { month: "short", timeZone: "Asia/Kolkata" })
+        .toLocaleString("en-US", { month: "short", timeZone: "Asia/Kolkata" })
         .toUpperCase();
-      let dayStr = startDate.toLocaleString("en-IN", {
+      let dayStr = startDate.toLocaleString("en-US", {
         day: "numeric",
         timeZone: "Asia/Kolkata",
       });
 
       if (e.date_end && e.date_end !== e.date_start) {
         const endDate = new Date(e.date_end);
-        const endDay = endDate.toLocaleString("en-IN", {
+        const endDay = endDate.toLocaleString("en-US", {
           day: "numeric",
           timeZone: "Asia/Kolkata",
         });
