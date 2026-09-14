@@ -42,7 +42,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
         img: e.image_url || null,
         summary: e.long_description || e.description || "Join us for this event!",
         galleryLink: `/gallery#gallery-${e.slug || e.id}`,
-        portalLink: `/event-portal?event=${e.slug || e.id}`,
+        portalLink: `/events/${e.slug || e.id}`,
         stats: [
           {
             label: "Status",
@@ -563,7 +563,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                             </Link>
 
                             <a
-                              href={evt.portalLink || "/event-portal"}
+                              href={evt.portalLink || "/events"}
                               className="dossier-portal-btn"
                             >
                               <span>Open Event Portal</span>
