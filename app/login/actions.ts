@@ -19,7 +19,7 @@ export async function login(formData: FormData) {
   }
 
   // Next.js redirection after successful login
-  redirect("/event-portal");
+  redirect("/events");
 }
 
 

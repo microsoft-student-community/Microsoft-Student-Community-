@@ -321,7 +321,7 @@ export async function updateEventDetails(eventId: string, updateData: any) {
 
   revalidatePath('/admin', 'layout')
   revalidatePath('/events', 'layout')
-  revalidatePath('/event-portal', 'layout')
+  revalidatePath('/events', 'layout')
   revalidatePath(`/admin/events/${eventId}`, 'page')
   return { success: true }
 }

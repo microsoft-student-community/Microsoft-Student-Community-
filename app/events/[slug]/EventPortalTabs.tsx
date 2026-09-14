@@ -8,7 +8,7 @@ import {
   submitPublicRegistration,
   lookupTeamRegistration,
   joinMatchmakingTeam,
-} from "../(main)/events/actions";
+} from "@/app/(main)/events/actions";
 import { createClient } from "@/utils/supabase/client";
 import { X, Download } from "lucide-react";
 
@@ -707,7 +707,7 @@ export default function EventPortalTabs({
                     {currentTeamId && (
                       <button
                         onClick={async () => {
-                          const inviteUrl = `${window.location.origin}/event-portal?event=${event.slug || event.id}&invite=${currentTeamId}`;
+                          const inviteUrl = `${window.location.origin}/events/${event.slug || event.id}?invite=${currentTeamId}`;
                           try {
                             await navigator.clipboard.writeText(inviteUrl);
                             alert("Invite link copied to clipboard!");
