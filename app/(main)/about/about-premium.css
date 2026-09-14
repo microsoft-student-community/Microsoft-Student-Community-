@@ -2,6 +2,17 @@
    ABOUT PAGE PREMIUM DESIGN SYSTEM
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Iceland&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&f[]=satoshi@300,400,500,600,700&display=swap');
+
+:root {
+  --font-stardom: "Stardom", "Playfair Display", Georgia, serif;
+  --font-iceland: "Iceland", monospace, sans-serif;
+  --font-details: "Iceland", monospace, sans-serif;
+  --font-mono: "Iceland", monospace, sans-serif;
+  --font-narrative: "Satoshi", var(--font-narrative), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* Particle Background Canvas */
 #canvas-particles {
   position: fixed;
@@ -40,9 +51,7 @@
   color: var(--w100);
 }
 
-/* ==========================================================================
-   ARCHITECTURAL HUD HERO STAGE (INNOVATIVE, UNBOXED, PURE FREEDOM)
-   ========================================================================== */
+/* Hero Section */
 .ab-stage-hero {
   min-height: 84vh;
   display: flex;
@@ -85,9 +94,9 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 1.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   user-select: none;
 }
@@ -104,7 +113,7 @@
 
 .signal-sub {
   color: rgba(255, 255, 255, 0.45);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
 }
 
 .signal-live-pill {
@@ -116,9 +125,10 @@
   padding: 3px 9px;
   border-radius: 999px;
   color: #4ade80;
-  font-size: 0.62rem;
+  font-family: var(--font-iceland);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
 .live-pulse-dot {
@@ -185,19 +195,18 @@
 
 /* 3. Balanced Editorial Narrative */
 .ab-stage-desc {
-  font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.35vw, 1.15rem);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.68);
-  max-width: 650px;
+  font-family: var(--font-narrative);
+  font-size: clamp(1.02rem, 1.4vw, 1.18rem);
+  line-height: 1.72;
+  letter-spacing: -0.006em;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 660px;
   font-weight: 350;
   margin: 0 auto 2.8rem auto;
   text-align: center;
 }
 
-/* ==========================================================================
-   4. ARCHITECTURAL HUD ARRAY (UNBOXED, CROSSHAIR-ANCHORED, DYNAMIC)
-   ========================================================================== */
+/* Telemetry Array */
 .ab-hud-array {
   width: 100%;
   max-width: 1080px;
@@ -213,8 +222,8 @@
   justify-content: space-between;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-family: var(--font-iceland);
+  font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.5);
   position: relative;
 }
@@ -253,8 +262,8 @@
 }
 
 .hud-datum-center {
-  font-size: 0.68rem;
-  letter-spacing: 0.15em;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.35);
   text-transform: uppercase;
 }
@@ -267,7 +276,7 @@
 
 .hud-sys-status {
   color: #4ade80;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   letter-spacing: 0.06em;
   font-weight: 500;
 }
@@ -280,7 +289,7 @@
   box-shadow: 0 0 8px #4ade80;
 }
 
-/* 4 Unboxed Metric Columns */
+/* Metrics Columns */
 .hud-metrics-horizon {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -313,9 +322,9 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
 }
 
 .hud-col-num {
@@ -327,16 +336,16 @@
 .hud-col-cat {
   color: rgba(255, 255, 255, 0.35);
   font-weight: 500;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
 }
 
 .hud-col-value {
-  font-family: var(--font-stardom);
-  font-size: clamp(2.6rem, 3.8vw, 3.8rem);
+  font-family: var(--font-iceland);
+  font-size: clamp(2.8rem, 4.2vw, 4rem);
   line-height: 1;
   color: #ffffff;
   font-weight: 400;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.04em;
   margin-bottom: 0.55rem;
   transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
 }
@@ -348,9 +357,9 @@
 }
 
 .hud-col-label {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-iceland);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.52);
   font-weight: 500;
@@ -397,7 +406,7 @@
 
 
 /* ==========================================================================
-   THE MANIFESTO / PHILOSOPHY (UNBOXED ARCHITECTURAL TRI-PILLAR HORIZON)
+   Manifesto Section
    ========================================================================== */
 .ab-manifesto-premium {
   padding: 120px 0;
@@ -416,9 +425,9 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   user-select: none;
@@ -444,7 +453,7 @@
 
 .manifesto-eyebrow-sub {
   color: rgba(255, 255, 255, 0.42);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
 }
 
 .manifesto-monumental-title {
@@ -484,8 +493,8 @@
   justify-content: space-between;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-iceland);
+  font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.45);
 }
 
@@ -505,12 +514,12 @@
 .manifesto-datum-tag {
   color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 
 .datum-header-center {
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.32);
 }
 
@@ -522,8 +531,8 @@
 
 .manifesto-datum-status {
   color: #38bdf8;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
   font-weight: 600;
 }
 
@@ -560,21 +569,22 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
 }
 
 .manifesto-col-index {
   color: #38bdf8;
   font-weight: 700;
   opacity: 0.9;
+  font-size: 1.15rem;
 }
 
 .manifesto-col-type {
   color: rgba(255, 255, 255, 0.35);
   font-weight: 500;
-  font-size: 0.62rem;
+  font-size: 0.82rem;
 }
 
 .manifesto-col-title {
@@ -593,24 +603,25 @@
 }
 
 .manifesto-col-desc {
-  font-family: var(--font-sans);
-  font-size: 0.96rem;
+  font-family: var(--font-narrative);
+  font-size: 0.98rem;
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.68);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 350;
   margin-bottom: 2rem;
   flex-grow: 1;
 }
 
-/* Telemetry Stream (Zero Pills, Pure Fluid Line) */
+/* Telemetry Stream */
 .manifesto-telemetry-stream {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.45);
   padding-top: 1.2rem;
@@ -669,7 +680,7 @@
 
 
 /* ==========================================================================
-   EDITORIAL ORIGIN / GENESIS ARCHIVE (UNBOXED, ATMOSPHERIC, HIGH-CRAFT)
+   Origin Section
    ========================================================================== */
 .ab-origin-premium {
   padding: 120px 0;
@@ -695,9 +706,9 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 1.8rem;
   user-select: none;
@@ -723,7 +734,7 @@
 
 .origin-eyebrow-tag {
   color: rgba(255, 255, 255, 0.42);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
 }
 
 /* Monumental Heading */
@@ -751,10 +762,11 @@
 
 /* Narrative Text */
 .origin-story-text {
-  font-family: var(--font-sans);
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-narrative);
+  font-size: clamp(1.02rem, 1.3vw, 1.12rem);
+  line-height: 1.78;
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 350;
   margin-bottom: 2.8rem;
   max-width: 580px;
@@ -790,20 +802,20 @@
 }
 
 .provenance-num {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.15em;
+  font-family: var(--font-iceland);
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
   color: #38bdf8;
   font-weight: 700;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .provenance-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.45);
   font-weight: 500;
 }
 
@@ -837,9 +849,7 @@
   width: 60px;
 }
 
-/* ==========================================================================
-   RIGHT OPTICAL ARTWORK STAGE (UNBOXED, SPATIAL, BESPOKE)
-   ========================================================================== */
+/* Visual Artwork Stage */
 .origin-visual-col {
   display: flex;
   justify-content: center;
@@ -866,10 +876,10 @@
 /* Architectural HUD Markers */
 .visual-hud-marker {
   position: absolute;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  color: rgba(56, 189, 248, 0.65);
+  font-family: var(--font-iceland);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: rgba(56, 189, 248, 0.75);
   pointer-events: none;
   z-index: 2;
   user-select: none;
@@ -945,7 +955,7 @@
 
 
 /* ==========================================================================
-   BLUEPRINT PROGRESSIVE TIMELINE (UNBOXED ARCHITECTURAL CHRONO-SPINE)
+   Timeline Section
    ========================================================================== */
 .ab-journey-premium {
   padding: 130px 0 160px;
@@ -964,9 +974,9 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   user-select: none;
@@ -992,7 +1002,7 @@
 
 .journey-eyebrow-sub {
   color: rgba(255, 255, 255, 0.42);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
 }
 
 .journey-monumental-title {
@@ -1045,7 +1055,7 @@
   transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Phase Station (100% Free & Unboxed) */
+/* Phase Station */
 .journey-phase-station {
   position: relative;
   margin-bottom: 4.5rem;
@@ -1079,8 +1089,8 @@
 }
 
 .journey-node-cross {
-  font-family: var(--font-mono);
-  font-size: 1rem;
+  font-family: var(--font-iceland);
+  font-size: 1.15rem;
   color: rgba(255, 255, 255, 0.3);
   font-weight: 700;
   transition: color 0.5s ease, transform 0.5s ease, text-shadow 0.5s ease;
@@ -1109,7 +1119,7 @@
   animation: beaconPulse 2.5s infinite;
 }
 
-/* Content (Unboxed, Transparent, Free) */
+/* Phase Content */
 .journey-phase-content {
   display: flex;
   flex-direction: column;
@@ -1122,9 +1132,9 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-iceland);
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 0.9rem;
 }
@@ -1132,6 +1142,7 @@
 .phase-index-tag {
   color: #38bdf8;
   font-weight: 700;
+  font-size: 0.92rem;
 }
 
 .phase-sep {
@@ -1142,7 +1153,7 @@
 .phase-temporal-tag {
   color: rgba(255, 255, 255, 0.45);
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
 }
 
 .journey-phase-title {
@@ -1166,10 +1177,11 @@
 }
 
 .journey-phase-desc {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative);
   font-size: 1.05rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.005em;
+  color: rgba(255, 255, 255, 0.74);
   font-weight: 350;
   max-width: 700px;
   margin-bottom: 2.2rem;
@@ -1233,11 +1245,11 @@
 }
 
 .ab-marquee-item {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-iceland);
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--w40);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
@@ -1400,7 +1412,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    font-size: 0.68rem;
+    font-size: 0.82rem;
   }
   .provenance-entry {
     flex-direction: column;
@@ -1459,10 +1471,10 @@
     padding-bottom: 0.75rem;
   }
   .hud-datum-left {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
   }
   .hud-datum-right {
-    font-size: 0.68rem;
+    font-size: 0.82rem;
   }
 
   /* Metrics Stack in Mobile */
@@ -1486,8 +1498,8 @@
     padding: 0.9rem 0;
   }
   .ab-marquee-item {
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
   }
   .ab-marquee-dot {
     margin: 0 1.25rem;

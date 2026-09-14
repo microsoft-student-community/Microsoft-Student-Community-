@@ -40,6 +40,7 @@
     "node_modules",
     "supabase",
     "mscsrmap",
-    "UI for Admin"
+    "UI for Admin",
+    "scripts"
   ]
 }

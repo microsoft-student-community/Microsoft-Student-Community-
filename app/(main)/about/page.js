@@ -270,7 +270,7 @@ export default function About() {
               and thinkers come together to ship real products with Microsoft technologies.
             </p>
 
-            {/* Integrated Architectural HUD Telemetry Array (Unboxed & Free) */}
+            {/* Telemetry Array */}
             <div className="ab-hud-array">
               {/* Telemetry Datum Header with Embedded Terminal Prompt */}
               <div className="hud-datum-header">
@@ -290,7 +290,7 @@ export default function About() {
                 </div>
               </div>
 
-              {/* 4 Unboxed Architectural Metric Columns */}
+              {/* Metric Columns */}
               <div className="hud-metrics-horizon">
                 <div className="hud-col">
                   <div className="hud-col-meta">
@@ -416,7 +416,7 @@ export default function About() {
                 isn&apos;t a club — it&apos;s a launchpad for future creators.
               </p>
 
-              {/* Architectural Provenance Deck (Free & Unboxed) */}
+              {/* Provenance Deck */}
               <div className="origin-provenance-deck">
                 <div className="provenance-entry">
                   <div className="provenance-header">
@@ -448,7 +448,7 @@ export default function About() {
 
             </div>
 
-            {/* Right Optical Artwork Stage (Unboxed, Atmospheric, Floating) */}
+            {/* Visual Artwork */}
             <div className="origin-visual-col">
               <div className="origin-visual-stage">
                 <div className="visual-stage-backdrop"></div>
@@ -477,7 +477,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Manifesto / Philosophy Section (Unboxed Tri-Pillar Horizon) */}
+      {/* Manifesto Section */}
       <section className="ab-manifesto-premium">
         <div className="container">
 
@@ -494,7 +494,7 @@ export default function About() {
             </h2>
           </div>
 
-          {/* Architectural Tri-Pillar Horizon (Completely Free & Unboxed) */}
+          {/* Tri-Pillar Horizon */}
           <div className="manifesto-horizon-stage">
 
             {/* Top Datum Line with Corner Crosshairs */}
@@ -593,7 +593,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Journey / Trajectory Section (Unboxed Architectural Chrono-Spine) */}
+      {/* Journey Section */}
       <section className="ab-journey-premium">
         <div className="container">
 
@@ -611,7 +611,7 @@ export default function About() {
             </h2>
           </div>
 
-          {/* Unboxed Chrono-Spine Stage */}
+          {/* Chrono-Spine Timeline */}
           <div className="journey-chrono-stage">
 
             {/* Vertical Laser Spine */}
@@ -619,7 +619,7 @@ export default function About() {
               <div className="timeline-progress-fill"></div>
             </div>
 
-            {/* Timeline Phases (Free, Unboxed, Architectural) */}
+            {/* Timeline Phases */}
             <div className="journey-phases-list">
 
               {/* Phase I */}

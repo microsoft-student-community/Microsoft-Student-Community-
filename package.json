@@ -8,7 +8,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "admin:make": "node scripts/admin/make_admin.mjs",
+    "admin:delete-user": "node scripts/admin/delete_user.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
