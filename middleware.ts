@@ -218,7 +218,7 @@ export async function middleware(request: NextRequest) {
 
     supabaseResponse.headers.set('Content-Security-Policy', csp);
     supabaseResponse.headers.set('X-Content-Type-Options', 'nosniff');
-    supabaseResponse.headers.set('X-Frame-Options', 'DENY');
+    supabaseResponse.headers.set('X-Frame-Options', 'SAMEORIGIN');
     supabaseResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     supabaseResponse.headers.set('Permissions-Policy', 'camera=(self), microphone=(), geolocation=(), payment=(self), usb=()');
     supabaseResponse.headers.set('Cross-Origin-Opener-Policy', 'same-origin');

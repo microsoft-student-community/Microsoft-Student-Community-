@@ -41,7 +41,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
       img: e.image_url || null,
       summary: e.long_description || e.description || "Join us for this event!",
       galleryLink: `/gallery#gallery-${e.slug || e.id}`,
-      portalLink: `/event-portal?event=${e.slug || e.id}`,
+      portalLink: `/events/${e.slug || e.id}`,
       stats: [
         {
           label: "Status:",
@@ -288,7 +288,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
               </div>
               <div className="featured-hero-content">
                 <div className="featured-meta">
-                  <span className="featured-date">{featuredEvent.day} {featuredEvent.month}</span>
+                  <span className="featured-date" suppressHydrationWarning>{featuredEvent.day} {featuredEvent.month}</span>
                   <span className="featured-type">{featuredEvent.tag}</span>
                 </div>
                 <h3 className="featured-title">{featuredEvent.title}</h3>
@@ -405,10 +405,11 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                 >
                   <div className="event-cassette-row">
                     <div className="event-date-col">
-                      <span className="event-month-lbl">{evt.month}</span>
+                      <span className="event-month-lbl" suppressHydrationWarning>{evt.month}</span>
                       <span
                         className={`event-day-lbl ${evt.day.includes("-") ? "range" : ""
                           }`}
+                        suppressHydrationWarning
                       >
                         {evt.day}
                       </span>
@@ -471,7 +472,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                             <i className="fa-solid fa-arrow-right"></i>
                           </Link>
                           <a
-                            href={evt.portalLink || "/event-portal"}
+                            href={evt.portalLink || "/events"}
                             className="event-portal-link"
                           >
                             Open Event Portal{" "}

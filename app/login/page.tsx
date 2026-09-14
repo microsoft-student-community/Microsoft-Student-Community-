@@ -91,7 +91,7 @@ export default function LoginPage() {
         if (profile?.role === 'admin' || profile?.role === 'core_member' || profile?.role === 'coremember') {
           window.location.href = "/admin";
         } else {
-          window.location.href = "/event-portal";
+          window.location.href = "/events";
         }
       }
     } finally {
