@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
-    "@supabase/supabase-js": "^2.111.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
     "dotenv-cli": "^11.0.0",
@@ -33,15 +32,19 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@supabase/supabase-js": "^2.116.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "csv-parse": "^7.0.2",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "^15.1.0",
     "postcss": "^8.5.25",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }

@@ -25,6 +25,9 @@ function openRazorpayCheckout(options: any): Promise<any> {
       });
       rzp.open();
     };
+    script.onerror = () => {
+      resolve(null); // Return null so the app doesn't crash on AdBlocker or network failure
+    };
     document.body.appendChild(script);
   });
 }
@@ -454,8 +457,8 @@ export default function EventPortalTabs({
       link.download = `Event-Ticket-${currentHash?.substring(0, 8)}.png`;
       link.href = dataUrl;
       link.click();
-    } catch (err) {
-      console.error("Failed to generate ticket image:", err);
+    } catch (err: any) {
+      console.error("Failed to generate ticket image:", err instanceof Event ? "DOM Event Error (likely an image failed to load)" : err);
     } finally {
       // Restore the removed nodes
       problematicNodes.forEach(({ node, parent, nextSibling }) => {
@@ -523,8 +526,8 @@ export default function EventPortalTabs({
       link.href = dataUrl;
       link.click();
     } catch (err: any) {
-      console.error("Failed to generate certificate image:", err);
-      alert(`Failed to generate certificate: ${err.message || err.toString()}`);
+      console.error("Failed to generate certificate image:", err instanceof Event ? "DOM Event Error (likely an image failed to load)" : err);
+      alert(`Failed to generate certificate: ${err instanceof Event ? "Image load error or CORS issue" : (err.message || err.toString())}`);
     } finally {
       document.body.removeChild(container);
     }

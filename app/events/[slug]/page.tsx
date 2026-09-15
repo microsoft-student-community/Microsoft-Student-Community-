@@ -16,10 +16,10 @@ export default async function EventPortalPage({
     searchParams,
 }: {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ invite?: string }>;
+    searchParams: Promise<{ invite?: string; view?: string }>;
 }) {
     const { slug } = await params;
-    const { invite } = await searchParams;
+    const { invite, view } = await searchParams;
     const supabase = createPublicClient();
 
     let selectedEvent = null;
@@ -48,7 +48,7 @@ export default async function EventPortalPage({
                               (selectedEvent.slug && selectedEvent.slug.toLowerCase().includes('synora-pitstop')) || 
                               (selectedEvent.title && selectedEvent.title.toLowerCase().includes('synora'));
                               
-        if (isSynoraEvent) {
+        if (isSynoraEvent && view !== "portal") {
             // Bust browser cache during development by appending a timestamp
             const timestamp = new Date().getTime();
             return (

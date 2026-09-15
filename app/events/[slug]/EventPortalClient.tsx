@@ -69,7 +69,7 @@ export default function EventPortalClient({
             <h1>{selectedEvent.title}</h1>
             <p>{selectedEvent.description || "Join the Microsoft Student Community for a focused session of learning, collaboration, and building."}</p>
             <div className="event-portal-meta-grid">
-               <div><Calendar size={16} /><small>Date</small><strong>{startDate}</strong></div>
+               <div><Calendar size={16} /><small>Date</small><strong suppressHydrationWarning>{startDate}</strong></div>
               <div><MapPin size={16} /><small>Venue</small><strong>{selectedEvent.location || "TBA"}</strong></div>
               <div><Users size={16} /><small>Capacity</small><strong>{selectedEvent.max_capacity ? `${selectedEvent.max_capacity} seats` : "Unlimited"}</strong></div>
             </div>
