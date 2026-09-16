@@ -51,6 +51,101 @@
         max-width: 100vw !important;
         box-sizing: border-box !important;
       }
+
+      /* Floating Team Details & Certificate Button */
+      .synora-team-portal-btn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(12, 16, 14, 0.94);
+        border: 1.5px solid rgba(0, 230, 118, 0.45);
+        color: #00e676 !important;
+        padding: 12px 22px;
+        border-radius: 9999px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1;
+        text-decoration: none !important;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 18px rgba(0, 230, 118, 0.2);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .synora-team-portal-btn:hover {
+        background: rgba(0, 230, 118, 0.18);
+        border-color: #00e676;
+        color: #ffffff !important;
+        transform: translateY(-3px);
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 230, 118, 0.4);
+      }
+
+      .synora-team-portal-btn svg {
+        color: #00e676;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .synora-team-portal-btn:hover svg {
+        transform: scale(1.15);
+        color: #ffffff;
+      }
+
+      .synora-portal-pulse {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #00e676;
+        box-shadow: 0 0 8px #00e676;
+        animation: portalPulse 1.8s infinite alternate;
+        flex-shrink: 0;
+      }
+
+      @keyframes portalPulse {
+        0% { opacity: 0.4; transform: scale(0.85); }
+        100% { opacity: 1; transform: scale(1.2); }
+      }
+
+      /* Mobile placement: float safely ABOVE the mobile-register bottom bar (which is 64px) */
+      @media (max-width: 768px) {
+        .synora-team-portal-btn {
+          bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+          left: 50% !important;
+          right: auto !important;
+          transform: translateX(-50%) !important;
+          width: auto !important;
+          max-width: calc(100vw - 32px) !important;
+          padding: 10px 18px !important;
+          font-size: 12.5px !important;
+          letter-spacing: 0.8px !important;
+          gap: 8px !important;
+          border-radius: 50px !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 230, 118, 0.3) !important;
+        }
+
+        .synora-team-portal-btn:hover {
+          transform: translateX(-50%) translateY(-2px) !important;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .synora-team-portal-btn {
+          font-size: 11.5px !important;
+          padding: 8px 14px !important;
+          gap: 6px !important;
+          max-width: calc(100vw - 20px) !important;
+          bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -70,11 +165,18 @@
     <a 
       href="#" 
       onclick="window.parent.location.href = window.parent.location.pathname + '?view=portal'; return false;"
-      style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); color: #00e676; padding: 12px 24px; border-radius: 8px; font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 16px; text-decoration: none; backdrop-filter: blur(4px); transition: all 0.2s ease-in-out; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);"
-      onmouseover="this.style.background='rgba(0, 230, 118, 0.2)'; this.style.transform='translateY(-2px)';"
-      onmouseout="this.style.background='rgba(0, 230, 118, 0.1)'; this.style.transform='translateY(0)';"
+      class="synora-team-portal-btn"
+      id="synoraTeamPortalBtn"
+      title="Open Synora Team Portal & Certificate"
     >
-      [ View Team Details & Certificate ]
+      <span class="synora-portal-pulse" aria-hidden="true"></span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>View Team Details &amp; Certificate</span>
     </a>
   </body>
 </html>

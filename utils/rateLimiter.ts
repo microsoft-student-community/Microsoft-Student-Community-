@@ -102,7 +102,7 @@ export async function checkRateLimit(
         globalForLimiter.upstashLimiters[cacheKey] = new Ratelimit({
           redis: redisClient,
           limiter: Ratelimit.slidingWindow(max, `${Math.max(1, Math.ceil(windowMs / 1000))} s`),
-          analytics: true,
+          analytics: false,
           prefix: `@upstash/ratelimit:${name}`,
         });
       }

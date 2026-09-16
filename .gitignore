@@ -83,4 +83,8 @@ mscsrmap/
 ehthumbs.db
 Thumbs.db
 
+# Documents & temporary assets
+*.pdf
+
+
 

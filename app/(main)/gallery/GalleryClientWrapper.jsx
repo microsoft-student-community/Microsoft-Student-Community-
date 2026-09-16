@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import CircularGallery from "@/components/CircularGallery";
+import { FocusCards } from "@/components/ui/focus-cards";
 
 export default function GalleryClientWrapper({ items: galleryData }) {
   const videoRef = useRef(null);
@@ -10,33 +10,36 @@ export default function GalleryClientWrapper({ items: galleryData }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  // Map Supabase rows to UI shape
-  const INITIAL_GALLERY_DATA = galleryData.map((e, idx) => {
-    const variant = "standard";
+  // Map Supabase / static rows to UI shape
+  const INITIAL_GALLERY_DATA = useMemo(() => {
+    return (galleryData || []).map((e, idx) => {
+      // Format date
+      const d = e.created_at ? new Date(e.created_at) : new Date();
+      const dateStr = d
+        .toLocaleString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        })
+        .toUpperCase();
 
-    // Format date
-    const d = new Date(e.created_at);
-    const dateStr = d
-      .toLocaleString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      })
-      .toUpperCase();
+      const imageSrc = e.src || e.image_url || e.image || "";
 
-    return {
-      id: e.id,
-      title: e.title || "Untitled",
-      category: e.category || "misc",
-      date: dateStr,
-      image: e.image_url || "",
-      variant: variant,
-      desc: e.alt_text || "Community Archive Frame",
-      stats: [],
-    };
-  });
+      return {
+        id: e.id || `gallery-card-${idx}`,
+        title: e.title || "Untitled Frame",
+        category: e.category || "community",
+        date: dateStr,
+        src: imageSrc,
+        image: imageSrc,
+        variant: "standard",
+        desc: e.desc || e.alt_text || "Community Archive Frame",
+        stats: e.stats || [],
+      };
+    });
+  }, [galleryData]);
 
-  const filteredItems = React.useMemo(() => {
+  const filteredItems = useMemo(() => {
     return INITIAL_GALLERY_DATA.filter((item) => {
       const matchesFilter =
         filter === "all" || item.category.toLowerCase() === filter.toLowerCase();
@@ -47,11 +50,7 @@ export default function GalleryClientWrapper({ items: galleryData }) {
         item.category.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
     });
-  }, [filter, searchQuery]);
-
-  const circularGalleryItems = React.useMemo(() => {
-    return filteredItems.map(item => ({ image: item.image, text: item.title }));
-  }, [filteredItems]);
+  }, [INITIAL_GALLERY_DATA, filter, searchQuery]);
 
   const openLightbox = (index) => {
     setLightboxIndex(index);
@@ -283,24 +282,43 @@ export default function GalleryClientWrapper({ items: galleryData }) {
         </div>
       </section>
 
-      <section className="gallery-grid-section">
+      <section className="gallery-grid-section pb-24">
         <div className="container">
-          <div style={{ height: '600px', position: 'relative', width: '100%', borderRadius: '24px', overflow: 'hidden', background: 'rgba(15, 15, 20, 0.6)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            {filteredItems.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(255,255,255,0.5)" }}>
-                <i className="fa-solid fa-photo-film" style={{ fontSize: "2.5rem", marginBottom: "12px", color: "rgba(0,120,212,0.5)" }}></i>
-                <h3 style={{ fontFamily: "var(--font-sans)", color: "#fff", marginBottom: "8px" }}>No frames match your search</h3>
-              </div>
-            ) : (
-              <CircularGallery
-                items={circularGalleryItems}
-                bend={3}
-                textColor="#ffffff"
-                borderRadius={0.05}
-                scrollEase={0.02}
-              />
-            )}
-          </div>
+          {filteredItems.length === 0 ? (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "80px 20px",
+                color: "rgba(255,255,255,0.5)",
+              }}
+            >
+              <i
+                className="fa-solid fa-photo-film"
+                style={{
+                  fontSize: "2.5rem",
+                  marginBottom: "12px",
+                  color: "rgba(0,120,212,0.5)",
+                }}
+              ></i>
+              <h3
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  color: "#fff",
+                  marginBottom: "8px",
+                }}
+              >
+                No frames match your search
+              </h3>
+              <p style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.4)" }}>
+                Try selecting a different filter pill or adjusting your search term.
+              </p>
+            </div>
+          ) : (
+            <FocusCards
+              cards={filteredItems}
+              onCardClick={(card, index) => openLightbox(index)}
+            />
+          )}
         </div>
       </section>
 
@@ -337,15 +355,15 @@ export default function GalleryClientWrapper({ items: galleryData }) {
             </button>
 
             {activeItem && (
-              <div className="vf-img-wrapper msc-image-box">
+              <div className="vf-img-wrapper">
                 <img
-                  src={activeItem.image}
+                  src={activeItem.src || activeItem.image || activeItem.image_url}
                   alt={activeItem.title}
                   id="vfImg"
                   decoding="async"
                 />
-                <div className="msc-image-box__glare"></div>
-                <div className="msc-image-box__hud">
+                <div className="msc-image-box__glare pointer-events-none"></div>
+                <div className="msc-image-box__hud pointer-events-none">
                   <div className="msc-hud-top">
                     <span className="msc-hud-mark">MSC // RAW_CAPTURE</span>
                     <div className="msc-hud-crosshair"></div>
@@ -400,29 +418,32 @@ export default function GalleryClientWrapper({ items: galleryData }) {
                       </div>
                     ))
                   ) : (
-                    <div
-                      className="vf-stat-card"
-                      style={{ gridColumn: "span 2" }}
-                    >
-                      <span className="vf-stat-label">STATUS</span>
-                      <span className="vf-stat-value">
-                        Community Archive Frame
-                      </span>
-                    </div>
+                    <>
+                      <div className="vf-stat-card">
+                        <span className="vf-stat-label">CATEGORY</span>
+                        <span className="vf-stat-value">
+                          {activeItem.category ? activeItem.category.toUpperCase() : "GENERAL"}
+                        </span>
+                      </div>
+                      <div className="vf-stat-card">
+                        <span className="vf-stat-label">COMMUNITY</span>
+                        <span className="vf-stat-value">MSC · SRMAP</span>
+                      </div>
+                    </>
                   )}
                 </div>
 
                 <div className="vf-panel-actions">
                   <a
-                    href={activeItem.image}
+                    href={activeItem.src || activeItem.image || activeItem.image_url}
                     id="vfDownloadBtn"
-                    download
+                    download={activeItem.title || "msc-gallery-photo"}
                     className="vf-action-btn primary"
                     target="_blank"
                     rel="noreferrer"
                   >
                     <i className="fa-solid fa-download"></i>{" "}
-                    <span>Download Original</span>
+                    <span>Download Full Resolution</span>
                   </a>
                 </div>
               </>

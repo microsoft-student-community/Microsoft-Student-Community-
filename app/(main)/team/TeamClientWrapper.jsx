@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function TeamClientWrapper({
   chiefBoard,
@@ -126,57 +127,23 @@ export default function TeamClientWrapper({
         ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
         : (nameParts[0] || "?")[0].toUpperCase();
 
-    const imgSrc = member.image_url || member.image || "";
+    const imgSrc =
+      member.image_url ||
+      member.image ||
+      "https://cdn.21st.dev/assets/mirror/ec/ec81be4cc810190ce4d240fcc57295965c5cebaa8751558595ade91eb62c09a4.png";
 
-    if (imgSrc) {
-      return (
-        <div className="tm-photo-slot msc-image-box">
-          <img
-            src={imgSrc}
-            alt={member.name}
-            className="tm-photo-img"
-            loading="lazy"
-            decoding="async"
-          />
-          <div className="msc-image-box__glare"></div>
-          <div className="msc-image-box__hud">
-            <div className="msc-hud-top">
-              <span className="msc-hud-mark">MSC // CORE</span>
-            </div>
-            <div className="msc-hud-bottom">
-              <div className="msc-hud-crosshair"></div>
-            </div>
-          </div>
-        </div>
-      );
-    }
     return (
-      <div className="tm-photo-slot tm-photo-placeholder msc-image-box">
-        <div className="tm-avatar-fallback">
-          <svg
-            className="tm-avatar-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span className="tm-avatar-initials">{initials}</span>
-          <span className="tm-upload-tag">
-            <i className="fa-solid fa-camera"></i> Photo Slot
-          </span>
-        </div>
-        <div className="msc-image-box__glare"></div>
-        <div className="msc-image-box__hud">
-          <div className="msc-hud-top">
-            <span className="msc-hud-mark">SLOT_OPEN</span>
-          </div>
-          <div className="msc-hud-bottom">
-            <div className="msc-hud-crosshair"></div>
-          </div>
-        </div>
+      <div className="tm-photo-slot tm-photo-avatar-box flex items-center justify-center">
+        <Avatar className="w-full h-full rounded-full bg-neutral-900 border border-white/15 overflow-hidden shadow-inner">
+          <AvatarImage
+            src={imgSrc}
+            alt={member.name || "Team Member"}
+            className="w-full h-full object-cover"
+          />
+          <AvatarFallback className="text-xs font-bold uppercase bg-neutral-900 text-white/80">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
       </div>
     );
   };

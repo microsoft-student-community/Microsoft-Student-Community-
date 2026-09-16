@@ -299,11 +299,10 @@
 }
 
 /* ==========================================================================
-   REVEALED PROBLEM STATEMENT ACCORDION & CARDS
+   REVEALED PROBLEM STATEMENT TRACK ROWS
    ========================================================================== */
 
 .track-row.is-revealed {
-  cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
@@ -312,232 +311,17 @@
   border-color: #5d665f;
 }
 
-.track-row.is-revealed.active-drawer {
-  border-bottom-color: var(--f1-red, #ff1801);
-}
-
-.track-expand-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #4a504b;
+.track-row.is-revealed .track-flag {
+  color: #ee6758;
+  opacity: 0.45;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #adb5ad;
-  font-size: 14px;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 0.25s ease;
 }
 
-.track-row:hover .track-expand-btn {
-  background: var(--f1-red, #ff1801);
-  border-color: var(--f1-red, #ff1801);
-  color: #fff;
-  transform: rotate(45deg);
-}
-
-.track-row.active-drawer .track-expand-btn {
-  background: #fff;
-  border-color: #fff;
-  color: #101010;
-  transform: rotate(45deg);
-}
-
-/* The Problem Statement Drawer */
-.problem-statement-drawer {
-  grid-column: 1 / -1;
-  background: #101211;
-  border: 1px solid #333834;
-  border-left: 3px solid var(--f1-red, #ff1801);
-  margin: 12px 0 24px 0;
-  padding: 24px;
-  animation: drawerSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  position: relative;
-  overflow: hidden;
-}
-
-@keyframes drawerSlideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    max-height: 1000px;
-  }
-}
-
-.drawer-header-strip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px dashed #2b302c;
-}
-
-.drawer-kicker {
-  font: 10px/1.2 var(--mono, monospace);
-  color: #8f968f;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.drawer-lane-tag {
-  color: #ff4738;
-  font-weight: 700;
-}
-
-.drawer-status-chip {
-  font: 600 10px/1 var(--mono, monospace);
-  letter-spacing: 1px;
-  padding: 4px 10px;
-  background: rgba(0, 230, 118, 0.12);
-  color: #00e676;
-  border: 1px solid rgba(0, 230, 118, 0.3);
-  text-transform: uppercase;
-}
-
-.drawer-mission-box {
-  margin-bottom: 20px;
-}
-
-.drawer-mission-heading {
-  font: 700 16px/1.3 var(--display, sans-serif);
-  color: #f7f6f2;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 6px 0;
-}
-
-.drawer-mission-desc {
-  font: 14px/1.6 var(--mono, monospace);
-  color: #c0c7c0;
-  margin: 0;
-}
-
-/* Problem Statement Scenarios */
-.drawer-scenarios-box {
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid #282d29;
-  padding: 16px 20px;
-  margin-bottom: 20px;
-}
-
-.scenarios-title {
-  font: 600 11px/1.2 var(--mono, monospace);
-  letter-spacing: 1.2px;
-  color: #e5e8e5;
-  text-transform: uppercase;
-  margin: 0 0 12px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.scenarios-title i {
-  color: var(--f1-red, #ff1801);
-}
-
-.scenarios-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.scenarios-list li {
-  font: 13px/1.5 var(--font-mono, monospace);
-  color: #abb3ab;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.scenarios-list li::before {
-  content: "»";
-  color: var(--f1-red, #ff1801);
-  font-weight: bold;
-}
-
-/* Specs & Stacks Strip */
-.drawer-footer-strip {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid #282d29;
-}
-
-@media (max-width: 768px) {
-  .drawer-footer-strip {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tech-stack-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.tech-stack-label {
-  font: 10px/1 var(--mono, monospace);
-  color: #8c938c;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-right: 4px;
-}
-
-.tech-chip {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid #3c423e;
-  padding: 3px 8px;
-  font: 11px/1 var(--mono, monospace);
-  color: #dbe2db;
-  border-radius: 2px;
-}
-
-.drawer-action-link {
-  justify-self: end;
-  background: var(--f1-red, #ff1801);
-  color: #fff !important;
-  font: 700 12px/1 var(--display, sans-serif);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 10px 18px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(255, 24, 1, 0.35);
-}
-
-.drawer-action-link:hover {
-  background: #ff3824;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 24, 1, 0.5);
-}
-
-@media (max-width: 768px) {
-  .drawer-action-link {
-    justify-self: start;
-    width: 100%;
-    justify-content: center;
-  }
+.track-row.is-revealed:hover .track-flag {
+  opacity: 1;
 }
 
 /* ==========================================================================
@@ -699,28 +483,573 @@ html, body, #root {
   .track-flag {
     display: none !important;
   }
+}
 
-  .problem-statement-drawer {
-    padding: 16px !important;
-    margin: 8px 0 16px 0 !important;
+/* Simulation Controls & Unlock Pulse Animation */
+.hud-simulation-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.simulation-tag {
+  font: 700 9px/1 var(--mono, monospace);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.35);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.btn-restart-simulation {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid #4a524b;
+  color: #cdd4cd;
+  font: 600 10px/1 var(--mono, monospace);
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.btn-restart-simulation:hover {
+  background: var(--f1-red, #ff1801);
+  border-color: var(--f1-red, #ff1801);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 24, 1, 0.5);
+}
+
+.track-revelation-hud.revealed .btn-restart-simulation:hover {
+  background: var(--telemetry-green, #00e676);
+  border-color: var(--telemetry-green, #00e676);
+  color: #101010;
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
+}
+
+@keyframes trackUnlockPulse {
+  0% {
+    border-color: #363a37;
+    box-shadow: 0 0 0 rgba(0, 230, 118, 0);
+  }
+  30% {
+    border-color: var(--telemetry-green, #00e676);
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.45), inset 0 0 10px rgba(0, 230, 118, 0.2);
+  }
+  100% {
+    border-color: #363a37;
+    box-shadow: 0 0 0 rgba(0, 230, 118, 0);
+  }
+}
+
+.track-row.just-unlocked {
+  animation: trackUnlockPulse 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* ==========================================================================
+   F1 CAR BUTTON — OFFICIAL PROBLEM STATEMENTS DOSSIER LAUNCHER
+   ========================================================================== */
+
+.f1-ps-container {
+  margin: 32px 0 24px 0;
+  width: 100%;
+  position: relative;
+}
+
+@keyframes f1AutoShowEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.f1-ps-container.revealed {
+  animation: f1AutoShowEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.f1-car-launch-button {
+  display: block;
+  width: 100%;
+  text-decoration: none !important;
+  color: #fff !important;
+  position: relative;
+  background: linear-gradient(135deg, rgba(22, 25, 23, 0.98), rgba(12, 14, 13, 0.99));
+  border: 1px solid #383e3a;
+  border-left: 5px solid var(--f1-red, #ff1801);
+  border-radius: 4px;
+  padding: 24px 28px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.f1-car-launch-button:hover {
+  transform: translateY(-3px);
+  border-color: #555e56;
+  border-left-color: var(--f1-red, #ff1801);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 24, 1, 0.4);
+}
+
+/* Locked state — No link to PDF, disabled cursor */
+.f1-car-launch-button.is-locked {
+  background: linear-gradient(135deg, rgba(20, 16, 16, 0.98), rgba(13, 10, 10, 0.99));
+  border-color: #3d2b29;
+  border-left-color: #a82720;
+  cursor: not-allowed !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
+
+.f1-car-launch-button.is-locked:hover {
+  transform: none !important;
+  border-color: #5c3532;
+  border-left-color: #ff1801;
+  box-shadow: 0 10px 30px rgba(255, 24, 1, 0.22);
+}
+
+.f1-car-launch-button.is-locked .f1-main-heading .f1-arrow-icon {
+  display: none;
+}
+
+/* Locked Card Shake Effect */
+@keyframes f1CardShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.f1-car-launch-button.f1-shake {
+  animation: f1CardShake 0.45s ease-in-out !important;
+}
+
+/* Aerodynamic scanline sweep */
+.f1-car-launch-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 24, 1, 0.12), transparent);
+  animation: hudScanner 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* Grid layout inside F1 Car Button */
+.f1-car-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 1fr);
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 860px) {
+  .f1-car-inner {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Left copy column */
+.f1-car-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.f1-kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.f1-pulse-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--f1-red, #ff1801);
+  box-shadow: 0 0 10px var(--f1-red-glow, rgba(255, 24, 1, 0.8));
+  animation: hudPulseRed 1.2s infinite alternate;
+}
+
+.f1-kicker-text {
+  font: 700 11px/1 var(--mono, monospace);
+  letter-spacing: 1.5px;
+  color: #aab2aa;
+  text-transform: uppercase;
+}
+
+.f1-drs-tag {
+  font: 700 10px/1 var(--mono, monospace);
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.f1-drs-tag.open {
+  background: rgba(0, 230, 118, 0.12);
+  color: #00e676;
+  border: 1px solid rgba(0, 230, 118, 0.4);
+}
+
+.f1-drs-tag.locked {
+  background: rgba(255, 24, 1, 0.12);
+  color: #ff5252;
+  border: 1px solid rgba(255, 24, 1, 0.4);
+}
+
+.f1-pulse-light.live {
+  background: #00e676;
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.8);
+}
+
+.f1-pulse-light.locked {
+  background: #ff5252;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.8);
+}
+
+.f1-main-heading {
+  font: 700 clamp(24px, 2.6vw, 34px)/1.1 var(--display, sans-serif);
+  color: #f7f6f2;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.f1-main-heading.locked-heading {
+  color: #c9d0c9;
+}
+
+.f1-main-heading .f1-arrow-icon {
+  color: var(--f1-red, #ff1801);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.f1-car-launch-button:hover .f1-main-heading .f1-arrow-icon {
+  transform: translateX(8px);
+  color: #fff;
+}
+
+.f1-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.f1-file-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 24, 1, 0.12);
+  border: 1px solid rgba(255, 24, 1, 0.4);
+  color: #ff756a;
+  font: 600 11px/1 var(--mono, monospace);
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: 0.8px;
+}
+
+.f1-file-pill.locked-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #a8b0a8;
+}
+
+.f1-hint-text.locked-hint {
+  color: #ff8a80;
+  font-weight: 600;
+}
+
+/* Live Unlock Pulse Animation */
+@keyframes f1LiveUnlockPulse {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 230, 118, 0);
+    border-color: #383e3a;
+  }
+  30% {
+    box-shadow: 0 0 35px rgba(0, 230, 118, 0.6), inset 0 0 15px rgba(0, 230, 118, 0.25);
+    border-color: #00e676;
+    border-left-color: #00e676;
+  }
+  100% {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+    border-color: #383e3a;
+    border-left-color: var(--f1-red, #ff1801);
+  }
+}
+
+.f1-car-launch-button.just-unlocked {
+  animation: f1LiveUnlockPulse 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Telemetry Locked Toast Alert */
+.f1-locked-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translate(-50%, 30px);
+  background: rgba(18, 14, 14, 0.98);
+  border: 1px solid #ff1801;
+  border-left: 5px solid #ff1801;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 4px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 24, 1, 0.35);
+  z-index: 100000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90vw;
+  width: 480px;
+}
+
+.f1-locked-toast.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.f1-toast-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.f1-toast-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.f1-toast-inner strong {
+  display: block;
+  font: 700 12px/1.2 var(--mono, monospace);
+  color: #ff5252;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.f1-toast-inner p {
+  margin: 0;
+  font: 12px/1.4 var(--mono, monospace);
+  color: #d0d6d0;
+}
+
+.f1-hint-text {
+  font: 12px/1.4 var(--mono, monospace);
+  color: #9aa19a;
+  letter-spacing: 0.4px;
+}
+
+/* Right side: The Visual F1 Car Silhouette & Craft */
+.f1-car-silhouette-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.7));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.f1-car-launch-button:hover .f1-car-silhouette-wrapper {
+  transform: scale(1.04) translateX(4px);
+}
+
+.f1-car-svg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  overflow: visible;
+}
+
+/* Strobing Red Rain Light on Rear Diffuser */
+@keyframes f1RainStrobe {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #ff1801); }
+  50% { opacity: 0.25; filter: none; }
+}
+
+.f1-rain-led {
+  animation: f1RainStrobe 0.8s ease-in-out infinite;
+}
+
+.f1-car-launch-button:hover .f1-rain-led {
+  animation-duration: 0.3s;
+}
+
+/* Ground Effect Aerodynamic Glow */
+.f1-ground-effect {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  height: 25px;
+  background: radial-gradient(ellipse at center, rgba(255, 24, 1, 0.35), transparent 70%);
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.f1-car-launch-button:hover .f1-ground-effect {
+  opacity: 1;
+  transform: scaleY(1.6);
+}
+
+@media (max-width: 640px) {
+  .f1-ps-container {
+    margin: 24px 0 18px 0;
   }
 
-  .drawer-mission-heading {
-    font-size: 14px !important;
+  .f1-car-launch-button {
+    padding: 16px 16px;
+    border-left-width: 4px;
   }
 
-  .drawer-mission-desc {
-    font-size: 12px !important;
-    line-height: 1.5 !important;
+  .f1-main-heading {
+    font-size: 20px !important;
+    gap: 8px;
   }
 
-  .scenarios-list li {
-    font-size: 11.5px !important;
-  }
-
-  .tech-chip {
+  .f1-kicker-text {
     font-size: 9.5px !important;
-    padding: 2px 6px !important;
+    letter-spacing: 1px;
+  }
+
+  .f1-sub-row {
+    gap: 8px;
+  }
+
+  .f1-file-pill {
+    font-size: 9.5px !important;
+    padding: 3px 8px;
+  }
+
+  .f1-hint-text {
+    font-size: 11px !important;
+  }
+
+  .f1-car-svg {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   FLOATING ACTION BUTTON — TEAM DETAILS & CERTIFICATE PORTAL
+   ========================================================================== */
+
+.synora-team-portal-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(12, 16, 14, 0.94);
+  border: 1.5px solid rgba(0, 230, 118, 0.45);
+  color: #00e676 !important;
+  padding: 12px 22px;
+  border-radius: 9999px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 18px rgba(0, 230, 118, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.synora-team-portal-btn:hover {
+  background: rgba(0, 230, 118, 0.18);
+  border-color: #00e676;
+  color: #ffffff !important;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 230, 118, 0.4);
+}
+
+.synora-team-portal-btn svg {
+  color: #00e676;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.synora-team-portal-btn:hover svg {
+  transform: scale(1.15);
+  color: #ffffff;
+}
+
+.synora-portal-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00e676;
+  box-shadow: 0 0 8px #00e676;
+  animation: portalPulse 1.8s infinite alternate;
+  flex-shrink: 0;
+}
+
+/* Ensure footer content has breathing room on desktop */
+.footer {
+  padding-bottom: 80px !important;
+}
+
+/* Mobile placement: float safely ABOVE the mobile-register bottom bar */
+@media (max-width: 768px) {
+  .synora-team-portal-btn {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+    padding: 10px 18px !important;
+    font-size: 12.5px !important;
+    letter-spacing: 0.8px !important;
+    gap: 8px !important;
+    border-radius: 50px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 230, 118, 0.3) !important;
+  }
+
+  .synora-team-portal-btn:hover {
+    transform: translateX(-50%) translateY(-2px) !important;
+  }
+
+  .footer {
+    padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .synora-team-portal-btn {
+    font-size: 11.5px !important;
+    padding: 8px 14px !important;
+    gap: 6px !important;
+    max-width: calc(100vw - 20px) !important;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
