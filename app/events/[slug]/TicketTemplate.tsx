@@ -108,7 +108,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ display: "inline-block", width: "6px", height: "6px", borderRadius: "50%", background: "#E10600", boxShadow: "0 0 8px #E10600" }}></span>
             <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px", color: "#E10600", textTransform: "uppercase" }}>
-              SYNORA // PITSTOP 01
+              SYNORA {"//"} PITSTOP 01
             </span>
           </div>
 
@@ -225,7 +225,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
                 textTransform: "uppercase",
               }}
             >
-              PITSTOP 01 <span style={{ color: "#E10600" }}>///</span> GRAND PRIX
+              PITSTOP 01 <span style={{ color: "#E10600" }}>{"///"}</span> GRAND PRIX
             </div>
 
             {/* Circuit & Time readout */}
@@ -478,7 +478,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
               paddingTop: "6px",
             }}
           >
-            MARSHAL TEAR-OFF STUB // TELEMETRY SCAN
+            MARSHAL TEAR-OFF STUB {"//"} TELEMETRY SCAN
           </div>
 
           {/* Right Cutout Notch */}
@@ -623,7 +623,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
               marginBottom: "12px",
             }}
           >
-            * {cleanId} // VERIFIED MARSHAL PASS *
+            * {cleanId} {"//"} VERIFIED MARSHAL PASS *
           </div>
 
           {/* Marshal Registration Notice */}
