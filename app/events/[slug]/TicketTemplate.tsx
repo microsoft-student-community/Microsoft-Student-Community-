@@ -196,6 +196,30 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
             <div style={{ color: '#5E5E5E', fontSize: '14px', fontWeight: 500 }}><span style={{ marginRight: '12px' }}>🏫</span> College</div>
             <div style={{ fontWeight: 600, fontSize: '14px', color: '#000', textAlign: 'right' }}>{collegeName}</div>
           </div>
+
+          {teamData?.members && teamData.members.length > 0 && (
+            <>
+              <div style={{ height: '1px', backgroundColor: '#E7E7E7', opacity: 0.5 }}></div>
+              <div style={{ marginTop: '16px', paddingTop: '8px' }}>
+                <div style={{ color: '#5E5E5E', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                  Team Members Roster ({teamData.members.length + 1})
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {teamData.members.map((m: any, idx: number) => (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', padding: '2px 0' }}>
+                      <span style={{ fontWeight: 500, color: '#111' }}>
+                        {m.fullName || m.name || `Member ${idx + 2}`}
+                        {m.role === 'Senior Student' ? ' (Senior)' : ''}
+                      </span>
+                      <span style={{ color: '#0078D4', fontFamily: 'monospace', fontSize: '12px', fontWeight: 600 }}>
+                        {m.regNum || (m.email ? m.email.split('@')[0] : '')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
       </div>

@@ -116,27 +116,59 @@ export default function TicketClient({ ticket }: { ticket: any }) {
  {/* Ticket Bottom (Attendee Info & QR) */}
  <div className="relative rounded-b-[32px] bg-slate-900 border-b border-x border-white/10 p-8 shadow-md overflow-hidden flex flex-col items-center">
  
- {/* Attendee Details */}
- <div className="w-full flex items-center justify-between mb-8 p-4 rounded-2xl bg-slate-800 border border-white/10">
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0078d4] to-[#a8329b] flex items-center justify-center text-white font-syne font-bold">
- {attendeeName.charAt(0).toUpperCase()}
- </div>
- <div className="flex flex-col">
- <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
- {isTeam ? 'Team Lead' : 'Attendee'}
- </span>
- <span className="text-sm font-bold text-white max-w-[140px] truncate">{attendeeName}</span>
- </div>
- </div>
- 
- {isTeam && teamData.team_name && (
- <div className="flex flex-col items-end text-right">
- <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Team</span>
- <span className="text-sm font-bold text-[#0078d4] max-w-[100px] truncate">{teamData.team_name}</span>
- </div>
- )}
- </div>
+  {/* Attendee Details */}
+  <div className="w-full flex items-center justify-between mb-4 p-4 rounded-2xl bg-slate-800 border border-white/10">
+  <div className="flex items-center gap-3">
+  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0078d4] to-[#a8329b] flex items-center justify-center text-white font-syne font-bold">
+  {attendeeName.charAt(0).toUpperCase()}
+  </div>
+  <div className="flex flex-col">
+  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+  {isTeam ? 'Team Lead' : 'Attendee'}
+  </span>
+  <span className="text-sm font-bold text-white max-w-[140px] truncate">{attendeeName}</span>
+  </div>
+  </div>
+  
+  {isTeam && (teamData.team_name || teamData.teamName) && (
+  <div className="flex flex-col items-end text-right">
+  <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Team</span>
+  <span className="text-sm font-bold text-[#0078d4] max-w-[120px] truncate">{teamData.team_name || teamData.teamName}</span>
+  </div>
+  )}
+  </div>
+
+  {/* Team Members Roster (If team) */}
+  {isTeam && teamData.members && teamData.members.length > 0 && (
+    <div className="w-full mb-6 p-4 rounded-2xl bg-slate-800/60 border border-white/5 flex flex-col gap-2">
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+          Team Members ({teamData.members.length + 1} Total)
+        </span>
+        <span className="text-[10px] font-mono text-[#0078d4] font-bold">
+          {teamData.team_name || teamData.teamName}
+        </span>
+      </div>
+      <div className="flex flex-col divide-y divide-white/5">
+        {teamData.members.map((m: any, idx: number) => (
+          <div key={idx} className="flex items-center justify-between text-xs py-1.5">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0078d4] shrink-0"></span>
+              <span className="font-semibold text-white truncate">{m.fullName || m.name || `Member ${idx + 2}`}</span>
+              {m.role === 'Senior Student' && (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono shrink-0">
+                  Senior
+                </span>
+              )}
+            </div>
+            <span className="font-mono text-slate-400 text-[11px] shrink-0 ml-2">
+              {m.regNum || (m.email ? m.email.split('@')[0] : '')}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
 
  {/* QR Code Section */}
  <div className="relative group cursor-pointer" onClick={() => setShowQR(!showQR)}>

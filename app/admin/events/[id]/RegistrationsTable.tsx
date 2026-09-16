@@ -127,28 +127,32 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
 
   const exportToCSV = () => {
     const rows = []
-    rows.push(['Ticket ID', 'Email', 'Name', 'Reg Num', 'Branch', 'Team Name', 'Team Size', 'Status', 'Registration Date'].map(escapeCSV))
+    rows.push(['Ticket ID', 'Role', 'Name', 'Email', 'Reg Num', 'Mobile', 'Branch', 'Team Name', 'Team Size', 'Status', 'Registration Date'].map(escapeCSV))
     
     liveRegs.forEach(reg => {
       const teamName = reg.team_data?.teamName || reg.team_data?.team_name || 'N/A'
-      const teamSize = reg.team_data?.members ? reg.team_data.members.length + 1 : 1
+      const isTeam = reg.team_data?.members && reg.team_data.members.length > 0
+      const teamSize = isTeam ? reg.team_data.members.length + 1 : 1
       const date = new Date(reg.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
       const ticketId = reg.hash_payload ? reg.hash_payload.substring(0, 8) : 'N/A'
       
       const exportedEmails = new Set()
 
-      // Primary member
+      // Primary member (Leader)
       const primaryEmail = reg.lead_email || 'N/A'
       const primaryName = reg.form_data?.fullName || 'N/A'
       const primaryRegNum = reg.form_data?.regNum || 'N/A'
+      const primaryPhone = reg.form_data?.phone || 'N/A'
       const primaryBranch = reg.form_data?.branch || 'N/A'
       const primaryStatus = reg.checked_in ? 'Checked In' : 'Pending'
       
       rows.push([
         ticketId,
-        primaryEmail,
+        isTeam ? 'Team Lead' : 'Individual',
         primaryName,
+        primaryEmail,
         primaryRegNum,
+        primaryPhone,
         primaryBranch,
         teamName,
         teamSize,
@@ -165,9 +169,11 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
           if (!exportedEmails.has(email.toLowerCase())) {
             rows.push([
               ticketId,
-              email,
+              member.role || 'Member',
               member.fullName || 'N/A',
+              email,
               member.regNum || 'N/A',
+              member.phone || 'N/A',
               member.branch || 'N/A',
               teamName,
               teamSize,
@@ -192,11 +198,21 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
 
   const filteredRegs = liveRegs.filter(reg => {
     const term = searchQuery.toLowerCase()
+    const memberMatch = reg.team_data?.members?.some((m: any) =>
+      (m.fullName && m.fullName.toLowerCase().includes(term)) ||
+      (m.email && m.email.toLowerCase().includes(term)) ||
+      (m.regNum && m.regNum.toLowerCase().includes(term)) ||
+      (m.phone && m.phone.toLowerCase().includes(term))
+    )
+
     return (
       reg.lead_email.toLowerCase().includes(term) ||
       (reg.team_data?.teamName && reg.team_data.teamName.toLowerCase().includes(term)) ||
       (reg.team_data?.team_name && reg.team_data.team_name.toLowerCase().includes(term)) ||
-      (reg.form_data?.fullName && reg.form_data.fullName.toLowerCase().includes(term))
+      (reg.form_data?.fullName && reg.form_data.fullName.toLowerCase().includes(term)) ||
+      (reg.form_data?.regNum && reg.form_data.regNum.toLowerCase().includes(term)) ||
+      (reg.form_data?.phone && reg.form_data.phone.toLowerCase().includes(term)) ||
+      memberMatch
     )
   })
 
@@ -393,8 +409,9 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
                                   <>
                                     <span className="font-bold text-white truncate">{reg.form_data?.fullName || 'N/A'}</span>
                                     <span className="text-xs text-white/60 truncate">{reg.lead_email}</span>
-                                    <div className="flex gap-2 mt-auto pt-2 border-t border-white/5 text-xs text-white/40">
+                                    <div className="flex gap-2 mt-auto pt-2 border-t border-white/5 text-xs text-white/40 flex-wrap">
                                       {reg.form_data?.regNum && <span>{reg.form_data.regNum}</span>}
+                                      {reg.form_data?.phone && <span>• {reg.form_data.phone}</span>}
                                       {reg.form_data?.branch && <span>• {reg.form_data.branch}</span>}
                                     </div>
                                   </>
@@ -405,7 +422,9 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
                               {(editingId === reg.id ? editForm.team_data?.members || [] : reg.team_data?.members || []).map((member: any, idx: number) => (
                                 <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden">
                                   {reg.team_data?.leadIndex === (idx + 1) && <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>}
-                                  <span className="text-[10px] uppercase text-white/40 tracking-wider">Member {idx + 1}</span>
+                                  <span className="text-[10px] uppercase text-white/40 tracking-wider">
+                                    {member.role === 'Senior Student' ? 'Senior Student' : `Member ${idx + 2}`}
+                                  </span>
                                   
                                   {editingId === reg.id ? (
                                     <>
@@ -436,9 +455,11 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
                                     <>
                                       <span className="font-bold text-white truncate">{member.fullName || 'N/A'}</span>
                                       <span className="text-xs text-white/60 truncate">{member.email}</span>
-                                      <div className="flex gap-2 mt-auto pt-2 border-t border-white/5 text-xs text-white/40">
+                                      <div className="flex gap-2 mt-auto pt-2 border-t border-white/5 text-xs text-white/40 flex-wrap">
                                         {member.regNum && <span>{member.regNum}</span>}
+                                        {member.phone && <span>• {member.phone}</span>}
                                         {member.branch && <span>• {member.branch}</span>}
+                                        {member.role === 'Senior Student' && <span className="text-purple-400 font-bold">• Senior</span>}
                                       </div>
                                     </>
                                   )}

@@ -190,6 +190,36 @@ export async function deleteBulkRegistrations(eventId: string, regIds: string[])
   return { success: true }
 }
 
+function cleanString(val: any): string {
+  if (val === null || val === undefined) return '';
+  const s = String(val).replace(/\u00A0/g, ' ').trim();
+  const lower = s.toLowerCase();
+  if (lower === 'none' || lower === 'n/a' || lower === 'null' || lower === 'undefined' || lower === '-' || lower === 'no') {
+    return '';
+  }
+  return s;
+}
+
+function getField(row: Record<string, any>, possibleKeys: string[]): string {
+  for (const key of possibleKeys) {
+    if (row[key] !== undefined && row[key] !== null) {
+      const cleaned = cleanString(row[key]);
+      if (cleaned) return cleaned;
+    }
+  }
+  // Try case-insensitive matching across actual row keys
+  const rowKeys = Object.keys(row);
+  for (const pattern of possibleKeys) {
+    const patternLower = pattern.toLowerCase().trim();
+    const matchedKey = rowKeys.find(k => k.toLowerCase().trim() === patternLower);
+    if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== null) {
+      const cleaned = cleanString(row[matchedKey]);
+      if (cleaned) return cleaned;
+    }
+  }
+  return '';
+}
+
 export async function importExternalRegistrations(eventId: string, rows: any[]) {
   const supabase = await createClient()
 
@@ -221,77 +251,265 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
   let errors: string[] = [];
 
   for (const row of rows) {
-    const email = row['Email Address'] || row['Email'] || row['email'] || row["Candidate's Email"] || row['Username'] || row['Team Member 1 SRM Official Email ID'];
-    const name = row['Name'] || row['Full Name'] || row['name'] || row['First Name'] || row["Candidate's Name"] || row['Team Member 1 Name'];
-    const teamName = row['Team Name'] || row['Team'] || row['team_name'];
-    const regNum = row['Registration Number'] || row['Registration No'] || row['Roll Number'] || row['reg_num'] || row['Team Member 1 Registration Number'];
-    const collegeName = row['College Name'] || row['College'] || row['Institution Name'] || row["Candidate's Organisation"];
-    const year = row['Year of Study'] || row['Year'] || row['Year of Graduation'] || 'Unknown';
+    // 1. Extract Team Leader (Team Member 1) and Team Name
+    const teamName = getField(row, [
+      'Team Name',
+      'Team',
+      'team_name',
+      'Team name'
+    ]);
 
-    if (!email) {
-      errors.push(`Row ${skipCount + successCount + 1}: Missing email address. Expected column name 'Email', 'Email Address', 'email', 'Candidate\\'s Email', 'Username', or 'Team Member 1 SRM Official Email ID'. Actual columns: ${Object.keys(row).join(', ')}`);
+    let leadEmail = getField(row, [
+      'Team Member 1 SRM Official Email ID',
+      'Member 1 SRM Official Email ID',
+      'Team Member 1 SRM Official Email',
+      'Team Member 1 Email ID',
+      'Team Member 1 Email',
+      'Member 1 Email',
+      'SRM Official Email ID',
+      'Email Address',
+      'Email',
+      'email',
+      "Candidate's Email"
+    ]);
+
+    const leadName = getField(row, [
+      'Team Member 1 Name',
+      'Member 1 Name',
+      'Team Leader Name',
+      'Leader Name',
+      'Name',
+      'Full Name',
+      'name',
+      'First Name',
+      "Candidate's Name"
+    ]);
+
+    // Cleanly skip empty / abandoned CSV rows (e.g. trailing blank lines)
+    if (!leadEmail && !teamName && !leadName) {
+      continue;
+    }
+
+    if (!leadEmail) {
+      errors.push(`Row ${skipCount + successCount + 1}: Missing SRM official email for Team Member 1 (Team Leader). Expected 'Team Member 1 SRM Official Email ID'.`);
       skipCount++;
       continue;
     }
 
-    try {
-      // We will create individual registrations for now, or if Team Name exists, group them? 
-      // Unstop usually provides one row per team OR one row per member. 
-      // If it's one row per team, Unstop will have "Member 1 Email", "Member 2 Email".
-      // Assuming a flattened structure for simplicity where we just make a Team Lead registration.
-      
-      // Let's check if a registration for this email already exists for this event
-      const { data: existingReg } = await supabaseAdmin.from('registrations')
-        .select('id')
-        .eq('event_id', eventId)
-        .eq('lead_email', email)
-        .single();
-        
-      if (existingReg) {
-        skipCount++;
-        continue; // Already registered
-      }
+    leadEmail = leadEmail.toLowerCase().trim();
 
-      const formData = {
-        fullName: name || email.split('@')[0],
-        email: email,
-        regNum: regNum || undefined,
-        collegeName: collegeName || undefined,
+    let leadRegNum = getField(row, [
+      'Team Member 1 Registration Number',
+      'Member 1 Registration Number',
+      'Team Member 1 Reg Number',
+      'Team Member 1 Reg No',
+      'Registration Number',
+      'Registration No',
+      'Roll Number',
+      'reg_num',
+      "Candidate's Registration Number"
+    ]);
+    if (leadRegNum) leadRegNum = leadRegNum.toUpperCase().trim();
+
+    const leadPhone = getField(row, [
+      'Team Member 1 Mobile Number',
+      'Member 1 Mobile Number',
+      'Team Member 1 Mobile',
+      'Team Member 1 Phone',
+      'Mobile Number',
+      'Phone Number',
+      'Phone',
+      'Mobile',
+      'Contact Number'
+    ]);
+
+    const collegeName = getField(row, [
+      'College Name',
+      'College',
+      'Institution Name',
+      "Candidate's Organisation"
+    ]) || 'SRM University AP';
+
+    const year = getField(row, [
+      'Year of Study',
+      'Year',
+      'Year of Graduation'
+    ]) || 'Unknown';
+
+    // 2. Extract Normal Team Members (Members 2 to 10)
+    const members: Array<{
+      fullName: string;
+      email: string;
+      regNum: string;
+      phone?: string;
+      role?: string;
+      checked_in: boolean;
+    }> = [];
+
+    for (let i = 2; i <= 10; i++) {
+      const mName = getField(row, [
+        `Team Member ${i} Name`,
+        `Member ${i} Name`,
+        `Team Member ${i}: Name`,
+        `Member ${i}: Name`
+      ]);
+
+      let mRegNum = getField(row, [
+        `Team Member ${i} Registration Number`,
+        `Member ${i} Registration Number`,
+        `Team Member ${i} Reg Number`,
+        `Team Member ${i} Reg No`,
+        `Member ${i} Reg No`
+      ]);
+      if (mRegNum) mRegNum = mRegNum.toUpperCase().trim();
+
+      let mEmail = getField(row, [
+        `Team Member ${i} SRM Official Email ID`,
+        `Member ${i} SRM Official Email ID`,
+        `Team Member ${i} SRM Official Email`,
+        `Team Member ${i} Email`,
+        `Member ${i} Email`,
+        `Team Member ${i} Email ID`,
+        `Member ${i} Email ID`
+      ]);
+      if (mEmail) mEmail = mEmail.toLowerCase().trim();
+
+      const mPhone = getField(row, [
+        `Team Member ${i} Mobile Number`,
+        `Member ${i} Mobile Number`,
+        `Team Member ${i} Mobile`,
+        `Team Member ${i} Phone`,
+        `Member ${i} Phone`
+      ]);
+
+      // If at least name, email, or registration number is provided, add as normal team member
+      if (mName || mEmail || mRegNum) {
+        members.push({
+          fullName: mName || (mEmail ? mEmail.split('@')[0] : `Member ${i}`),
+          email: mEmail,
+          regNum: mRegNum,
+          phone: mPhone || undefined,
+          role: 'Member',
+          checked_in: false
+        });
+      }
+    }
+
+    // 3. Extract Senior Student (if added) as a normal member
+    const seniorName = getField(row, [
+      'Senior Student Name',
+      'Senior Name'
+    ]);
+
+    let seniorRegNum = getField(row, [
+      'Senior Student Registration Number',
+      'Senior Registration Number',
+      'Senior Reg No'
+    ]);
+    if (seniorRegNum) seniorRegNum = seniorRegNum.toUpperCase().trim();
+
+    let seniorEmail = getField(row, [
+      'Senior Student SRM Official Email ID',
+      'Senior Student Email',
+      'Senior Email'
+    ]);
+    if (seniorEmail) seniorEmail = seniorEmail.toLowerCase().trim();
+
+    const seniorPhone = getField(row, [
+      'Senior Student Mobile Number',
+      'Senior Mobile Number',
+      'Senior Phone'
+    ]);
+
+    if (seniorName || seniorEmail || seniorRegNum) {
+      // Check if this senior student was already captured in members (deduplicate)
+      const existingMember = members.find(m => 
+        (seniorEmail && m.email && m.email.toLowerCase() === seniorEmail.toLowerCase()) ||
+        (seniorRegNum && m.regNum && m.regNum.toUpperCase() === seniorRegNum.toUpperCase())
+      );
+
+      if (existingMember) {
+        existingMember.role = 'Member';
+        if (seniorPhone && !existingMember.phone) existingMember.phone = seniorPhone;
+      } else {
+        members.push({
+          fullName: seniorName || (seniorEmail ? seniorEmail.split('@')[0] : 'Member'),
+          email: seniorEmail,
+          regNum: seniorRegNum,
+          phone: seniorPhone || undefined,
+          role: 'Member',
+          checked_in: false
+        });
+      }
+    }
+
+    try {
+      const formData: Record<string, any> = {
+        fullName: leadName,
+        email: leadEmail,
+        regNum: leadRegNum || undefined,
+        phone: leadPhone || undefined,
+        collegeName: collegeName,
         year: year
       };
-      
-      const teamData = teamName ? {
-        teamName: teamName,
+
+      const teamData = (teamName || members.length > 0) ? {
+        teamName: teamName || `${leadName}'s Team`,
+        team_name: teamName || `${leadName}'s Team`,
         leadIndex: 0,
-        members: [] // Not parsing complex nested members for now
+        team_lead_index: 0,
+        members: members
       } : null;
+
+      // Check if registration already exists for this email
+      const { data: existingReg } = await supabaseAdmin.from('registrations')
+        .select('id, team_data')
+        .eq('event_id', eventId)
+        .eq('lead_email', leadEmail)
+        .maybeSingle();
+
+      if (existingReg) {
+        // If existing registration has no team members and we now have members, enrich it!
+        const existingMembers = existingReg.team_data?.members;
+        if ((!existingMembers || existingMembers.length === 0) && teamData && teamData.members.length > 0) {
+          await supabaseAdmin.from('registrations')
+            .update({
+              team_data: teamData,
+              form_data: formData
+            })
+            .eq('id', existingReg.id);
+          successCount++;
+          continue;
+        }
+
+        skipCount++;
+        continue;
+      }
 
       const hashPayload = crypto.randomUUID();
       const { error: regError } = await supabaseAdmin.from('registrations').insert({
         event_id: eventId,
-        lead_email: email,
+        lead_email: leadEmail,
         form_data: formData,
         team_data: teamData,
-        hash_payload: hashPayload
+        hash_payload: hashPayload,
+        checked_in: false
       });
 
       if (regError) {
-        errors.push(`Failed to create registration for ${email}: ${regError.message}`);
+        errors.push(`Failed to create registration for ${leadEmail}: ${regError.message}`);
         skipCount++;
       } else {
         successCount++;
-        
-        // Email sending removed as per request
       }
 
     } catch (err: any) {
-      errors.push(`Exception for ${email}: ${err.message}`);
+      errors.push(`Exception for ${leadEmail}: ${err.message}`);
       skipCount++;
     }
   }
 
   revalidatePath(`/admin/events/${eventId}`);
-  
   return { success: true, successCount, skipCount, errors };
 }
 

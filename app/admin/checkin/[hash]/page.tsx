@@ -102,6 +102,25 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
     revalidatePath(`/admin/checkin/${hash}`)
   }
 
+  // The Server Action to check in Entire Team at once
+  async function markEntireTeamAsAttended() {
+    'use server'
+    const sb = await createClient()
+    const { data: latestReg } = await sb.from('registrations').select('team_data').eq('hash_payload', hash).single()
+    if (!latestReg) return;
+    
+    let updatedTeamData = latestReg.team_data ? { ...latestReg.team_data } : null;
+    if (updatedTeamData && updatedTeamData.members) {
+      updatedTeamData.members = updatedTeamData.members.map((m: any) => ({ ...m, checked_in: true }));
+    }
+    
+    await sb.from('registrations').update({ 
+      checked_in: true, 
+      team_data: updatedTeamData 
+    }).eq('hash_payload', hash);
+    revalidatePath(`/admin/checkin/${hash}`)
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0b] text-white p-6 md:p-12 flex flex-col items-center">
       {/* Background Glow */}
@@ -135,15 +154,26 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
         {/* Global Action Button (Only if NOT a team) */}
         {!isTeam && !primaryCheckedIn && (
           <form action={markPrimaryAsAttended} className="mb-8">
-            <button type="submit" className="w-full py-5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-2xl font-bold text-lg transition-all shadow-[0_0_30px_rgba(59,130,246,0.2)] text-white flex justify-center items-center gap-3">
+            <button type="submit" className="w-full py-5 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-2xl font-bold text-lg transition-all shadow-[0_0_30px_rgba(59,130,246,0.2)] text-white flex justify-center items-center gap-3 cursor-pointer">
               <i className="fas fa-user-check"></i> Mark as Attended
+            </button>
+          </form>
+        )}
+
+        {/* Global Action Button for Team (Check in Entire Team at once) */}
+        {isTeam && !completelyCheckedIn && (
+          <form action={markEntireTeamAsAttended} className="mb-8">
+            <button type="submit" className="w-full py-5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-2xl font-bold text-lg transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)] text-white flex justify-center items-center gap-3 cursor-pointer">
+              <i className="fas fa-users"></i> Check In Entire Team ({reg.team_data.members.length + 1} Members)
             </button>
           </form>
         )}
 
         {/* Registration Details */}
         <div className="bg-[#18181b]/60 backdrop-blur-xl border border-white/5 rounded-2xl p-8 mb-8">
-          <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-6 border-b border-white/5 pb-4">Primary Registrant Details</h3>
+          <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-6 border-b border-white/5 pb-4">
+            {isTeam ? 'Team Leader Details' : 'Primary Registrant Details'}
+          </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
             <div>
@@ -151,13 +181,19 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
               <p className="text-lg font-bold text-white">{reg.form_data?.fullName || 'N/A'}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-1">Email</p>
-              <p className="text-lg font-bold text-white">{reg.lead_email}</p>
+              <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-1">Official Email</p>
+              <p className="text-lg font-bold text-white truncate" title={reg.lead_email}>{reg.lead_email}</p>
             </div>
             {reg.form_data?.regNum && (
               <div>
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-1">Registration No.</p>
                 <p className="text-lg font-bold text-blue-400 font-mono">{reg.form_data.regNum}</p>
+              </div>
+            )}
+            {reg.form_data?.phone && (
+              <div>
+                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-1">Mobile Number</p>
+                <p className="text-lg font-bold text-white font-mono">{reg.form_data.phone}</p>
               </div>
             )}
             {reg.form_data?.branch && (
@@ -182,15 +218,15 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
           {/* Individual Check In for Primary if Team Mode */}
           {isTeam && (
             <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
-              <span className="text-sm font-bold text-white/60">Check-In Status</span>
+              <span className="text-sm font-bold text-white/60">Check-In Status (Leader)</span>
               {primaryCheckedIn ? (
                 <span className="px-4 py-2 bg-green-500/10 border border-green-500/30 text-green-500 rounded-lg text-sm font-bold flex items-center gap-2">
                   <i className="fas fa-check-circle"></i> Checked In
                 </span>
               ) : (
                 <form action={markPrimaryAsAttended}>
-                  <button type="submit" className="px-5 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl text-white font-bold transition-colors text-sm shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                    Check In Primary
+                  <button type="submit" className="px-5 py-2 bg-blue-500 hover:bg-blue-600 rounded-xl text-white font-bold transition-colors text-sm shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer">
+                    Check In Leader
                   </button>
                 </form>
               )}
@@ -204,24 +240,34 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
             <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-6 border-b border-white/5 pb-4 flex items-center justify-between">
               <span>
                 Team Members ({reg.team_data.members.length})
-                {reg.team_data.teamName && <span className="ml-3 text-purple-400 font-extrabold uppercase bg-purple-500/10 px-3 py-1 rounded-full text-xs">Team: {reg.team_data.teamName}</span>}
+                {(reg.team_data.teamName || reg.team_data.team_name) && (
+                  <span className="ml-3 text-purple-400 font-extrabold uppercase bg-purple-500/10 px-3 py-1 rounded-full text-xs">
+                    Team: {reg.team_data.teamName || reg.team_data.team_name}
+                  </span>
+                )}
               </span>
-              {reg.team_data.leadIndex === 0 && <span className="text-blue-400 text-xs px-2 py-1 bg-blue-500/10 rounded-md">Primary is Team Lead</span>}
+              <span className="text-blue-400 text-xs px-2 py-1 bg-blue-500/10 rounded-md">
+                {reg.team_data.members.length + 1} Total in Team
+              </span>
             </h3>
 
             <div className="flex flex-col gap-6">
               {reg.team_data.members.map((member: any, index: number) => {
-                const memberIndex = index + 1; // Primary is 0, members are 1, 2, 3...
-                const isLead = reg.team_data.leadIndex === memberIndex;
+                const isSenior = member.role === 'Senior Student';
                 
                 return (
                   <div key={index} className="bg-black/20 rounded-xl p-5 border border-white/5 relative">
-                    {isLead && (
-                      <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-2">
-                        <span className="bg-purple-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-lg border border-purple-400/50">Team Lead</span>
-                      </div>
-                    )}
-                    <h4 className="text-white font-bold mb-4">Member {index + 2}</h4>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-white font-bold flex items-center gap-2">
+                        <span>{member.fullName || `Member ${index + 2}`}</span>
+                        {isSenior ? (
+                          <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full">Senior Student</span>
+                        ) : (
+                          <span className="bg-white/10 text-white/60 text-[10px] font-semibold px-2 py-0.5 rounded">Member {index + 2}</span>
+                        )}
+                      </h4>
+                    </div>
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
                         <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1">Name</p>
@@ -237,16 +283,16 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
                           <p className="text-sm font-bold text-blue-400 font-mono">{member.regNum}</p>
                         </div>
                       )}
+                      {member.phone && (
+                        <div>
+                          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1">Mobile</p>
+                          <p className="text-sm font-bold text-white/90 font-mono">{member.phone}</p>
+                        </div>
+                      )}
                       {member.branch && (
                         <div>
                           <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1">Branch</p>
                           <p className="text-sm font-bold text-white/90">{member.branch}</p>
-                        </div>
-                      )}
-                      {member.specialization && (
-                        <div>
-                          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider mb-1">Spec.</p>
-                          <p className="text-sm font-bold text-white/90">{member.specialization}</p>
                         </div>
                       )}
                       {member.year && (
@@ -256,6 +302,7 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
                         </div>
                       )}
                     </div>
+
                     {/* Individual Check In for Team Member */}
                     <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
                       <span className="text-xs font-bold text-white/60">Check-In Status</span>
@@ -265,7 +312,7 @@ export default async function CheckinPage({ params, searchParams }: { params: Pr
                         </span>
                       ) : (
                         <form action={markMemberAsAttended.bind(null, index)}>
-                          <button type="submit" className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-bold transition-colors text-xs shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+                          <button type="submit" className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-bold transition-colors text-xs shadow-[0_0_10px_rgba(59,130,246,0.3)] cursor-pointer">
                             Check In Member
                           </button>
                         </form>

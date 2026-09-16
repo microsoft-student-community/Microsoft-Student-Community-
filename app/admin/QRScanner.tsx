@@ -464,7 +464,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
   }
 
   // Execute Check-in Action (Offline-First)
-  const handleCheckinAction = async (type: 'PRIMARY' | 'MEMBER', memberIndex?: number) => {
+  const handleCheckinAction = async (type: 'PRIMARY' | 'MEMBER' | 'ALL', memberIndex?: number) => {
     if (!selectedReg || !eventId) return
     playSound('click')
     triggerHaptic('light')
@@ -477,42 +477,52 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
 
       if (type === 'PRIMARY') {
         updatedReg.checked_in = true
+        await addToSyncQueue(eventId, hash, 'PRIMARY')
       } else if (type === 'MEMBER' && typeof memberIndex === 'number' && updatedReg.team_data?.members) {
         if (updatedReg.team_data.members[memberIndex]) {
           updatedReg.team_data.members[memberIndex].checked_in = true
+          await addToSyncQueue(eventId, hash, 'MEMBER', memberIndex)
+        }
+      } else if (type === 'ALL') {
+        updatedReg.checked_in = true
+        await addToSyncQueue(eventId, hash, 'PRIMARY')
+        if (updatedReg.team_data?.members) {
+          for (let i = 0; i < updatedReg.team_data.members.length; i++) {
+            updatedReg.team_data.members[i].checked_in = true
+            await addToSyncQueue(eventId, hash, 'MEMBER', i)
+          }
         }
       }
 
       // 2. Save the updated record in IndexedDB (handles new/uncached registrations correctly)
       await saveSingleRegistration(updatedReg)
       
-      // 3. Add to sync queue
-      await addToSyncQueue(eventId, hash, type, memberIndex)
-      
-      // 4. Update state with the updated registration object
+      // 3. Update state with the updated registration object
       setSelectedReg(updatedReg)
       
-      // 5. Update sync status indicator
+      // 4. Update sync status indicator
       const queue = await getSyncQueue()
       setPendingSyncCount(queue.length)
 
-      // 6. Add to Scan history Feed
+      // 5. Add to Scan history Feed
       let attendeeName = updatedReg.form_data?.fullName || updatedReg.lead_email
       if (type === 'MEMBER' && typeof memberIndex === 'number' && updatedReg.team_data?.members[memberIndex]) {
         attendeeName = updatedReg.team_data.members[memberIndex].fullName || `Member ${memberIndex + 2}`
+      } else if (type === 'ALL') {
+        attendeeName = `Entire Team (${updatedReg.team_data?.teamName || 'Roster'})`
       }
 
       const newLog: ScanLog = {
         id: Math.random().toString(),
         name: attendeeName,
-        email: type === 'PRIMARY' ? updatedReg.lead_email : (updatedReg.team_data?.members[memberIndex!]?.email || ''),
+        email: type === 'PRIMARY' ? updatedReg.lead_email : (type === 'ALL' ? updatedReg.lead_email : (updatedReg.team_data?.members[memberIndex!]?.email || '')),
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        type: type === 'PRIMARY' ? 'Primary' : 'Team Member',
+        type: type === 'PRIMARY' ? 'Primary' : (type === 'ALL' ? 'Entire Team' : 'Team Member'),
         synced: isOnline
       }
       setScanHistory(prev => [newLog, ...prev.slice(0, 4)])
 
-      // 7. Fire sync action in background if online
+      // 6. Fire sync action in background if online
       if (isOnline) {
         syncPendingQueue()
       }
@@ -852,11 +862,23 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                     </div>
                   </div>
 
+                  {/* Quick Entire Team Check-In */}
+                  {isTeam && !(selectedReg.checked_in && selectedReg.team_data.members.every((m: any) => m.checked_in)) && (
+                    <button
+                      onClick={() => handleCheckinAction('ALL')}
+                      className="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl text-white font-bold text-xs transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <i className="fas fa-users"></i> Check In Entire Team ({selectedReg.team_data.members.length + 1} Members)
+                    </button>
+                  )}
+
                   {/* Primary Registrant Info */}
                   <div className="bg-black/20 rounded-2xl p-5 border border-white/5">
                     <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-white/40">Primary Registrant</span>
-                      {isTeam && selectedReg.team_data.leadIndex === 0 && (
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-white/40">
+                        {isTeam ? 'Team Leader' : 'Primary Registrant'}
+                      </span>
+                      {isTeam && (selectedReg.team_data.leadIndex === 0 || selectedReg.team_data.team_lead_index === 0) && (
                         <span className="text-[9px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
                       )}
                     </div>
@@ -867,14 +889,20 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                         <span className="text-sm font-bold text-white">{selectedReg.form_data?.fullName || 'N/A'}</span>
                       </div>
                       <div>
-                        <span className="text-[9px] uppercase tracking-wider text-white/30 block mb-0.5">Email</span>
-                        <span className="text-xs font-bold text-white/80 font-mono">{selectedReg.lead_email}</span>
+                        <span className="text-[9px] uppercase tracking-wider text-white/30 block mb-0.5">Official Email</span>
+                        <span className="text-xs font-bold text-white/80 font-mono truncate block">{selectedReg.lead_email}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-4 pt-1">
                         {selectedReg.form_data?.regNum && (
                           <div>
                             <span className="text-[9px] uppercase tracking-wider text-white/30 block mb-0.5">Roll No.</span>
                             <span className="text-xs font-bold text-blue-400 font-mono">{selectedReg.form_data.regNum}</span>
+                          </div>
+                        )}
+                        {selectedReg.form_data?.phone && (
+                          <div>
+                            <span className="text-[9px] uppercase tracking-wider text-white/30 block mb-0.5">Mobile</span>
+                            <span className="text-xs font-bold text-white/80 font-mono">{selectedReg.form_data.phone}</span>
                           </div>
                         )}
                         {selectedReg.form_data?.branch && (
@@ -897,7 +925,7 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                           onClick={() => handleCheckinAction('PRIMARY')}
                           className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 rounded-xl text-white font-bold text-xs transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer"
                         >
-                          Check In Primary
+                          Check In Leader
                         </button>
                       )}
                     </div>
@@ -909,17 +937,24 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                       <div className="flex items-center gap-2 px-1 text-white/40">
                         <i className="fas fa-users text-xs"></i>
                         <span className="text-[10px] uppercase font-bold tracking-wider">
-                          Team: {selectedReg.team_data.teamName || 'Roster'} ({selectedReg.team_data.members.length + 1})
+                          Team: {selectedReg.team_data.teamName || selectedReg.team_data.team_name || 'Roster'} ({selectedReg.team_data.members.length + 1} Total)
                         </span>
                       </div>
                       
                       <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-1">
                         {selectedReg.team_data.members.map((member: any, index: number) => {
                           const isLead = selectedReg.team_data.leadIndex === (index + 1)
+                          const isSenior = member.role === 'Senior Student'
                           return (
                             <div key={index} className="bg-black/10 rounded-xl p-4 border border-white/5 flex flex-col gap-2">
                               <div className="flex justify-between items-center mb-1">
-                                <span className="text-[9px] text-white/40 font-bold uppercase">Member {index + 2}</span>
+                                <span className="text-[9px] text-white/40 font-bold uppercase">
+                                  {isSenior ? (
+                                    <span className="text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">Senior Student</span>
+                                  ) : (
+                                    `Member ${index + 2}`
+                                  )}
+                                </span>
                                 {isLead && (
                                   <span className="text-[9px] bg-purple-500/10 border border-purple-500/20 text-purple-400 font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Team Lead</span>
                                 )}
@@ -933,6 +968,18 @@ export default function QRScanner({ eventId }: { eventId?: string }) {
                                   <span className="text-[8px] text-white/30 uppercase tracking-widest block">Roll No.</span>
                                   <span className="font-semibold text-blue-400 font-mono">{member.regNum || 'N/A'}</span>
                                 </div>
+                                {member.email && (
+                                  <div className="col-span-2">
+                                    <span className="text-[8px] text-white/30 uppercase tracking-widest block">Email</span>
+                                    <span className="text-white/80 font-mono text-[11px] truncate block">{member.email}</span>
+                                  </div>
+                                )}
+                                {member.phone && (
+                                  <div className="col-span-2">
+                                    <span className="text-[8px] text-white/30 uppercase tracking-widest block">Mobile</span>
+                                    <span className="text-white/80 font-mono text-[11px]">{member.phone}</span>
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center justify-between pt-2 border-t border-white/5 mt-1">
                                 <span className="text-[10px] text-white/40 font-bold uppercase">Status</span>
