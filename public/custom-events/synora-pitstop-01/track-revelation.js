@@ -141,10 +141,6 @@
             <div class="hud-clock-target">
               AUTO-REVEAL: 17 SEPTEMBER 2026 // 04:00 PM IST
             </div>
-            <div class="hud-simulation-bar">
-              <span class="simulation-tag">SIMULATION // 2-MIN TEST TIMER</span>
-              <button type="button" class="btn-restart-simulation" title="Reset countdown to 2 minutes">↻ RESTART 2-MIN TEST</button>
-            </div>
           </div>
         </div>
       `;
@@ -177,10 +173,6 @@
             </div>
             <div class="hud-clock-target">
               ALL 4 DOMAINS LIVE
-            </div>
-            <div class="hud-simulation-bar">
-              <span class="simulation-tag" style="color: #00e676; border-color: rgba(0, 230, 118, 0.4); background: rgba(0, 230, 118, 0.08);">SIMULATION COMPLETE // UNLOCKED</span>
-              <button type="button" class="btn-restart-simulation" title="Restart countdown to test again">↻ TEST 2-MIN COUNTDOWN AGAIN</button>
             </div>
           </div>
         </div>
@@ -514,15 +506,6 @@
       tracksRoute.after(hud);
     } else {
       trackList.before(hud);
-    }
-
-    // Attach restart simulation click handler
-    const restartBtn = hud.querySelector(".btn-restart-simulation");
-    if (restartBtn) {
-      restartBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.restartSynoraTestTimer();
-      });
     }
 
     // 2. Clear intervals
