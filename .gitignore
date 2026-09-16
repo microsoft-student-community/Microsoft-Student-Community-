@@ -85,6 +85,7 @@ Thumbs.db
 
 # Documents & temporary assets
 *.pdf
+!public/**/*.pdf
 
 
 
