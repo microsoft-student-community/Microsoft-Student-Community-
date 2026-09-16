@@ -1178,7 +1178,7 @@ export default function EventPortalTabs({
                   Check Team Details & Retrieve Ticket
                 </h2>
                 <p className="text-slate-500 text-sm">
-                  Enter the Team Lead&apos;s email address to recover your
+                  Enter your email address or registration number to recover your
                   registration form and QR code.
                 </p>
               </div>
@@ -1196,14 +1196,14 @@ export default function EventPortalTabs({
 
                   <div className="flex flex-col gap-2">
                     <label className="text-[13px] font-semibold text-[#a1a1aa] uppercase tracking-wider">
-                      Team Lead Email Address
+                      Email Address or Registration Number
                     </label>
                     <input
-                      type="email"
+                      type="text"
                       required
                       value={lookupEmail}
                       onChange={(e) => setLookupEmail(e.target.value)}
-                      placeholder="lead@university.edu"
+                      placeholder="you@university.edu or APXX11XXXX"
                       className="p-4 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-purple-500 text-lg transition-colors"
                     />
                   </div>

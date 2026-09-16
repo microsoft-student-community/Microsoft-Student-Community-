@@ -193,26 +193,69 @@ export async function submitPublicRegistration(eventId: string, formData: any) {
 }
 
 /**
- * Lookup a registration by event ID and team lead email.
+ * Lookup a registration by event ID and an email or registration number.
  */
-export async function lookupTeamRegistration(eventId: string, email: string) {
+export async function lookupTeamRegistration(eventId: string, lookupValue: string) {
  const supabase = createAdminClient();
+ const val = lookupValue.trim();
+ const lowerVal = val.toLowerCase();
 
- const { data, error } = await supabase
- .from("registrations")
- .select("*")
- .eq("event_id", eventId)
- .eq("lead_email", email.toLowerCase())
- .maybeSingle();
+ // 1. Check lead_email or form_data->>regNum
+ let { data } = await supabase
+   .from("registrations")
+   .select("*")
+   .eq("event_id", eventId)
+   .or(`lead_email.ilike.${lowerVal},form_data->>email.ilike.${lowerVal},form_data->>regNum.ilike.${lowerVal}`)
+   .maybeSingle();
 
- if (error || !data) {
- return { error: "No registration found for this email address." };
+ // 2. Check team_data members email
+ if (!data) {
+   const { data: emailMatch } = await supabase
+     .from("registrations")
+     .select("*")
+     .eq("event_id", eventId)
+     .contains("team_data", { members: [{ email: val }] })
+     .maybeSingle();
+   data = emailMatch;
+ }
+ if (!data) {
+   const { data: emailMatch2 } = await supabase
+     .from("registrations")
+     .select("*")
+     .eq("event_id", eventId)
+     .contains("team_data", { members: [{ email: lowerVal }] })
+     .maybeSingle();
+   data = emailMatch2;
+ }
+
+ // 3. Check team_data members regNum
+ if (!data) {
+   const { data: regMatch } = await supabase
+     .from("registrations")
+     .select("*")
+     .eq("event_id", eventId)
+     .contains("team_data", { members: [{ regNum: val }] })
+     .maybeSingle();
+   data = regMatch;
+ }
+ if (!data) {
+   const { data: regMatch2 } = await supabase
+     .from("registrations")
+     .select("*")
+     .eq("event_id", eventId)
+     .contains("team_data", { members: [{ regNum: val.toUpperCase() }] })
+     .maybeSingle();
+   data = regMatch2;
+ }
+
+ if (!data) {
+   return { error: "No registration found for this email address or registration number." };
  }
 
  return {
- success: true,
- hash_payload: data.hash_payload,
- registration: data,
+   success: true,
+   hash_payload: data.hash_payload,
+   registration: data,
  };
 }
 
