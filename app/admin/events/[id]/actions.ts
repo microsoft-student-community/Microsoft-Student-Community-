@@ -221,15 +221,15 @@ export async function importExternalRegistrations(eventId: string, rows: any[]) 
   let errors: string[] = [];
 
   for (const row of rows) {
-    const email = row['Email Address'] || row['Email'] || row['email'] || row["Candidate's Email"];
-    const name = row['Name'] || row['Full Name'] || row['name'] || row['First Name'] || row["Candidate's Name"];
+    const email = row['Email Address'] || row['Email'] || row['email'] || row["Candidate's Email"] || row['Username'] || row['Team Member 1 SRM Official Email ID'];
+    const name = row['Name'] || row['Full Name'] || row['name'] || row['First Name'] || row["Candidate's Name"] || row['Team Member 1 Name'];
     const teamName = row['Team Name'] || row['Team'] || row['team_name'];
-    const regNum = row['Registration Number'] || row['Registration No'] || row['Roll Number'] || row['reg_num'];
+    const regNum = row['Registration Number'] || row['Registration No'] || row['Roll Number'] || row['reg_num'] || row['Team Member 1 Registration Number'];
     const collegeName = row['College Name'] || row['College'] || row['Institution Name'] || row["Candidate's Organisation"];
     const year = row['Year of Study'] || row['Year'] || row['Year of Graduation'] || 'Unknown';
 
     if (!email) {
-      errors.push(`Row ${skipCount + successCount + 1}: Missing email address. Expected column name 'Email', 'Email Address', 'email', or 'Candidate\\'s Email'. Actual columns: ${Object.keys(row).join(', ')}`);
+      errors.push(`Row ${skipCount + successCount + 1}: Missing email address. Expected column name 'Email', 'Email Address', 'email', 'Candidate\\'s Email', 'Username', or 'Team Member 1 SRM Official Email ID'. Actual columns: ${Object.keys(row).join(', ')}`);
       skipCount++;
       continue;
     }
