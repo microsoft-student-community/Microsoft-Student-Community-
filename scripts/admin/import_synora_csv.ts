@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as dotenv from 'dotenv';
-import path from 'path';
+import * as path from 'path';
 
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
@@ -56,7 +56,7 @@ async function main() {
     columns: true,
     skip_empty_lines: true,
     trim: true,
-  });
+  }) as Record<string, string>[];
 
   console.log(`Found ${records.length} records in CSV.`);
 
@@ -74,7 +74,13 @@ async function main() {
     const teamName = record['Team Name'] || 'Unknown Team';
     
     // Extract Members
-    const members = [];
+    const members: {
+      fullName: string;
+      email: string;
+      regNum: string;
+      branch: string;
+      checked_in: boolean;
+    }[] = [];
     for (let i = 1; i <= 5; i++) {
       const name = record[`Team Member ${i} Name`];
       const email = record[`Team Member ${i} SRM Official Email ID`];

@@ -30,17 +30,14 @@ import PasswordRequestsTab from './PasswordRequestsTab'
 import { triggerHaptic } from '@/utils/haptic'
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'users' | 'events' | 'team' | 'analytics' | 'settings' | 'password_reqs'>('events')
+  const [activeTab, setActiveTab] = useState<'users' | 'events' | 'analytics' | 'settings' | 'password_reqs'>('events')
   const supabase = createClient()
 
   const [userRole, setUserRole] = useState<'admin' | 'core_member' | null>(null)
   const [users, setUsers] = useState<any[]>([])
   const [events, setEvents] = useState<any[]>([])
-  const [team, setTeam] = useState<any[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
   const [loadingEvents, setLoadingEvents] = useState(true)
-  const [loadingTeam, setLoadingTeam] = useState(true)
-  const [editingTeamMember, setEditingTeamMember] = useState<any>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [allowTeamsToggle, setAllowTeamsToggle] = useState(false)
   const [eventPricingType, setEventPricingType] = useState<'free' | 'paid'>('free')
@@ -63,7 +60,6 @@ export default function AdminPage() {
     checkUserRole()
     if (activeTab === 'users') fetchUsers()
     if (activeTab === 'events') fetchEvents()
-    if (activeTab === 'team') fetchTeam()
   }, [activeTab])
 
   async function checkUserRole() {
@@ -463,114 +459,6 @@ export default function AdminPage() {
     }
   }
 
-  async function fetchTeam() {
-    setLoadingTeam(true)
-    const { data, error } = await supabase.from('team_members').select('*').order('created_at', { ascending: true })
-    if (!error && data) {
-      const tierRank: Record<string, number> = { chief: 0, president: 0, board: 1, lead: 1, member: 2 }
-      setTeam([...data].sort((a, b) => (tierRank[a.tier] ?? 2) - (tierRank[b.tier] ?? 2)))
-    }
-    setLoadingTeam(false)
-  }
-
-  async function handleCreateTeam(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get('name') as string
-    const role = formData.get('role') as string
-    const tier = (formData.get('tier') as string) || 'member'
-    const linkedin_url = formData.get('linkedin_url') as string
-    const github_url = formData.get('github_url') as string
-    const twitter_url = formData.get('twitter_url') as string
-    const instagram_url = formData.get('instagram_url') as string
-    const email = formData.get('email') as string
-    const portfolio_url = formData.get('portfolio_url') as string
-    const imageFile = formData.get('image') as File
-
-    showStatus('create_team', 'Uploading and saving...', 'info')
-    
-    let image_url = ''
-    if (imageFile && imageFile.size > 0) {
-      try {
-        image_url = await uploadImage(imageFile, 'team')
-      } catch (err: any) {
-        showStatus('create_team', `Upload Failed: ${err.message}`, 'error')
-        return
-      }
-    }
-
-    // `tier` drives public /team sections (chief / board / member) via TeamClientWrapper
-    const payload = { name, role, tier, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
-
-    const { error } = await supabase.from('team_members').insert([payload])
-    if (error) {
-      showStatus('create_team', `Failed: ${error.message}`, 'error')
-    } else {
-      showStatus('create_team', 'Team Member Created Successfully!', 'success')
-      ;(e.target as HTMLFormElement).reset()
-      fetchTeam()
-    }
-  }
-
-  async function handleUpdateTeam(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    if (!editingTeamMember) return
-
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get('name') as string
-    const role = formData.get('role') as string
-    const tier = (formData.get('tier') as string) || editingTeamMember.tier || 'member'
-    const linkedin_url = formData.get('linkedin_url') as string
-    const github_url = formData.get('github_url') as string
-    const twitter_url = formData.get('twitter_url') as string
-    const instagram_url = formData.get('instagram_url') as string
-    const email = formData.get('email') as string
-    const portfolio_url = formData.get('portfolio_url') as string
-    const imageFile = formData.get('image') as File
-
-    showStatus('update_team', 'Uploading and updating...', 'info')
-    
-    let image_url = editingTeamMember.image_url || ''
-    if (imageFile && imageFile.size > 0) {
-      try {
-        image_url = await uploadImage(imageFile, 'team')
-      } catch (err: any) {
-        showStatus('update_team', `Upload Failed: ${err.message}`, 'error')
-        return
-      }
-    }
-
-    const payload = { name, role, tier, linkedin_url, github_url, twitter_url, instagram_url, email, portfolio_url, image_url, category: 'team' }
-
-    const { error } = await supabase.from('team_members').update(payload).eq('id', editingTeamMember.id)
-    if (error) {
-      showStatus('update_team', `Failed: ${error.message}`, 'error')
-    } else {
-      showStatus('update_team', 'Team Member Updated Successfully!', 'success')
-      setEditingTeamMember(null)
-      fetchTeam()
-    }
-  }
-
-  async function deleteTeam(id: string) {
-    if (confirm("Are you sure you want to delete this member?")) {
-      const { data: member } = await supabase.from('team_members').select('image_url').eq('id', id).single()
-      if (member?.image_url) {
-        try {
-          const url = member.image_url
-          if (url.includes('/storage/v1/object/public/images/')) {
-            const path = url.split('/storage/v1/object/public/images/')[1]
-            await supabase.storage.from('images').remove([path])
-          }
-        } catch (err) {
-          console.error('Failed to remove team member avatar from storage:', err)
-        }
-      }
-      await supabase.from('team_members').delete().eq('id', id)
-      fetchTeam()
-    }
-  }
-
   if (userRole === null) {
     return (
       <main className="route-loading" aria-label="Loading">
@@ -652,16 +540,6 @@ export default function AdminPage() {
                 }`}
               >
                 <i className="fas fa-calendar-alt w-4 text-blue-400/85"></i> Events
-              </button>
-              <button 
-                onClick={() => { triggerHaptic('light'); setActiveTab('team'); setIsMobileMenuOpen(false); }} 
-                className={`px-4 py-2.5 rounded-xl font-semibold text-xs transition-all text-left flex items-center gap-3 relative border ${
-                  activeTab === 'team' 
-                    ? 'bg-white/5 border-white/10 text-white shadow-[inset_0_1px_rgba(255,255,255,0.05),0_10px_20px_rgba(0,0,0,0.4)] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-purple-500 before:rounded-full' 
-                    : 'text-[#a1a1aa] hover:text-white border-transparent hover:bg-white/[0.01]'
-                }`}
-              >
-                <i className="fas fa-users w-4 text-purple-400/85"></i> Team Members
               </button>
               <button 
                 onClick={() => { triggerHaptic('light'); setActiveTab('analytics'); setIsMobileMenuOpen(false); }} 
@@ -1236,249 +1114,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TEAM TAB */}
-          {activeTab === 'team' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="mb-8">
-                <h2 className="text-3xl font-syne font-extrabold text-white tracking-tight">Team Directory</h2>
-                <p className="text-white/40 text-sm mt-1">Configure profile listings shown in the public team section.</p>
-              </div>
-              
-              {userRole === 'admin' && (
-                <div className="bg-[#18181b]/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 mb-8 shadow-xl">
-                  <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                    <i className="fas fa-user-plus text-purple-400"></i> Add Team Member
-                  </h3>
-                  <form onSubmit={handleCreateTeam} className="flex flex-col gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
-                        <input type="text" name="name" required placeholder="e.g. John Doe" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Role</label>
-                        <input type="text" name="role" required placeholder="e.g. Technical Lead" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Public Tier</label>
-                        <select name="tier" defaultValue="member" required className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all">
-                          <option value="chief">Chief Board (President / VP / MD)</option>
-                          <option value="board">Board / Lead</option>
-                          <option value="member">Core Team Member</option>
-                        </select>
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">LinkedIn URL</label>
-                        <input type="url" name="linkedin_url" placeholder="https://www.linkedin.com/in/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">GitHub URL</label>
-                        <input type="url" name="github_url" placeholder="https://github.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Twitter/X URL</label>
-                        <input type="url" name="twitter_url" placeholder="https://x.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Instagram URL</label>
-                        <input type="url" name="instagram_url" placeholder="https://instagram.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Email Address</label>
-                        <input type="email" name="email" placeholder="email@example.com" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Portfolio URL</label>
-                        <input type="url" name="portfolio_url" placeholder="https://yourwebsite.com" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2 bg-white/[0.02] border border-white/5 p-4 rounded-xl">
-                      <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Profile Picture (Upload)</label>
-                      <input type="file" name="image" accept="image/*" className="w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-all cursor-pointer" />
-                    </div>
-
-                    <div className="flex justify-between items-center mt-2">
-                      <div className={`text-xs font-semibold ${statusMsg?.type === 'error' ? 'text-red-400' : statusMsg?.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
-                        {statusMsg?.id === 'create_team' && statusMsg.msg}
-                      </div>
-                      <button type="submit" className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(59,130,246,0.2)] text-white">Save Member</button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* Team Members Cards */}
-              {loadingTeam ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className="bg-[#18181b]/20 border border-white/5 rounded-2xl p-6 flex flex-col items-center text-center animate-pulse">
-                      <div className="w-20 h-20 rounded-full bg-white/5 mb-4"></div>
-                      <div className="h-4 bg-white/10 rounded w-2/3 mb-2"></div>
-                      <div className="h-3 bg-white/5 rounded w-1/2 mb-4"></div>
-                      <div className="flex gap-3 mb-4">
-                        <div className="w-8 h-8 rounded-full bg-white/5"></div>
-                        <div className="w-8 h-8 rounded-full bg-white/5"></div>
-                      </div>
-                      <div className="w-full h-8 rounded-xl bg-white/5"></div>
-                    </div>
-                  ))}
-                </div>
-              ) : team.length === 0 ? (
-                <p className="text-white/40 text-center py-8">No team members found.</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {team.map(member => (
-                    <div key={member.id} className="bg-[#18181b]/30 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden group hover:border-blue-500/30 transition-all duration-300 shadow-lg">
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/15 flex items-center justify-center overflow-hidden mb-4 shadow-md group-hover:border-blue-500/40 transition-all">
-                        {member.image_url ? (
-                          <img
-                            src={member.image_url}
-                            alt={member.name}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <span className="text-2xl font-bold text-white/80">{member.name.charAt(0)}</span>
-                        )}
-                      </div>
-                      <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{member.name}</h3>
-                      <p className="text-xs text-white/50 mb-2 font-medium line-clamp-1">{member.role}</p>
-                      <span className="mb-4 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-white/5 border border-white/10 text-white/40">
-                        {member.tier === 'chief' || member.tier === 'president' ? 'Chief Board'
-                          : member.tier === 'board' || member.tier === 'lead' ? 'Board / Lead'
-                          : 'Core Member'}
-                      </span>
-                      
-                      <div className="flex gap-3 mb-4">
-                        {member.linkedin_url && (
-                          <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-blue-400 hover:border-blue-500/30 hover:bg-blue-500/10 transition-all" title="LinkedIn">
-                            <i className="fab fa-linkedin-in text-xs"></i>
-                          </a>
-                        )}
-                        {member.github_url && (
-                          <a href={member.github_url} target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 hover:bg-white/10 transition-all" title="GitHub">
-                            <i className="fab fa-github text-xs"></i>
-                          </a>
-                        )}
-                      </div>
-                      
-                      {userRole === 'admin' && (
-                        <div className="flex gap-2 w-full mt-2">
-                          <button onClick={() => { triggerHaptic('light'); setEditingTeamMember(member); }} className="flex-1 py-2 bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white border border-blue-500/20 hover:border-transparent rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer">
-                            Edit
-                          </button>
-                          <button onClick={() => { triggerHaptic('heavy'); deleteTeam(member.id); }} className="flex-1 py-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 hover:border-transparent rounded-xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer">
-                            Remove
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Edit Team Member Modal */}
-              {editingTeamMember && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-                  <div className="bg-[#18181b] border border-white/10 rounded-2xl p-6 w-full max-w-3xl shadow-2xl overflow-y-auto max-h-[90vh]">
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                        <i className="fas fa-user-edit text-blue-400"></i> Edit Team Member
-                      </h3>
-                      <button onClick={() => setEditingTeamMember(null)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all cursor-pointer">
-                        <i className="fas fa-times"></i>
-                      </button>
-                    </div>
-                    
-                    <form key={editingTeamMember.id} onSubmit={handleUpdateTeam} className="flex flex-col gap-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Full Name</label>
-                          <input type="text" name="name" required defaultValue={editingTeamMember.name} placeholder="e.g. John Doe" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Role</label>
-                          <input type="text" name="role" required defaultValue={editingTeamMember.role} placeholder="e.g. Technical Lead" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Public Tier</label>
-                          <select
-                            name="tier"
-                            defaultValue={
-                              editingTeamMember.tier === 'president' ? 'chief'
-                              : editingTeamMember.tier === 'lead' ? 'board'
-                              : (editingTeamMember.tier || 'member')
-                            }
-                            required
-                            className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all"
-                          >
-                            <option value="chief">Chief Board (President / VP / MD)</option>
-                            <option value="board">Board / Lead</option>
-                            <option value="member">Core Team Member</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">LinkedIn URL</label>
-                          <input type="url" name="linkedin_url" defaultValue={editingTeamMember.linkedin_url} placeholder="https://www.linkedin.com/in/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">GitHub URL</label>
-                          <input type="url" name="github_url" defaultValue={editingTeamMember.github_url} placeholder="https://github.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Twitter/X URL</label>
-                          <input type="url" name="twitter_url" defaultValue={editingTeamMember.twitter_url} placeholder="https://x.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Instagram URL</label>
-                          <input type="url" name="instagram_url" defaultValue={editingTeamMember.instagram_url} placeholder="https://instagram.com/..." className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Email Address</label>
-                          <input type="email" name="email" defaultValue={editingTeamMember.email} placeholder="email@example.com" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Portfolio URL</label>
-                          <input type="url" name="portfolio_url" defaultValue={editingTeamMember.portfolio_url} placeholder="https://yourwebsite.com" className="p-3 bg-black/40 border border-white/10 focus:border-blue-500/50 rounded-xl text-white outline-none transition-all placeholder:text-white/20" />
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col gap-2 bg-white/[0.02] border border-white/5 p-4 rounded-xl">
-                        <label className="text-[11px] font-bold text-[#a1a1aa] uppercase tracking-wider">Profile Picture (Upload)</label>
-                        <p className="text-xs text-white/50 mb-2">Leave blank to keep current picture</p>
-                        <input type="file" name="image" accept="image/*" className="w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-all cursor-pointer" />
-                      </div>
-
-                      <div className="flex justify-between items-center mt-6">
-                        <div className={`text-xs font-semibold ${statusMsg?.type === 'error' ? 'text-red-400' : statusMsg?.type === 'success' ? 'text-green-400' : 'text-blue-400'}`}>
-                          {statusMsg?.id === 'update_team' && statusMsg.msg}
-                        </div>
-                        <div className="flex gap-4">
-                          <button type="button" onClick={() => setEditingTeamMember(null)} className="px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl font-bold transition-all text-white/70">Cancel</button>
-                          <button type="submit" className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(59,130,246,0.2)] text-white">Save Changes</button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
 
           {/* ANALYTICS TAB */}
           {activeTab === 'analytics' && <AnalyticsDashboard />}

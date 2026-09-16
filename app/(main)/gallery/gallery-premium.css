@@ -3,6 +3,17 @@
    Microsoft Student Community · SRM University AP
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Iceland&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=stardom@400&f[]=satoshi@300,400,500,600,700&display=swap');
+
+:root {
+  --font-stardom: "Stardom", "Playfair Display", Georgia, serif;
+  --font-iceland: "Iceland", monospace, sans-serif;
+  --font-details: "Iceland", monospace, sans-serif;
+  --font-mono: "Iceland", monospace, sans-serif;
+  --font-narrative: "Satoshi", var(--font-narrative), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* ─── HERO SECTION ───────────────────────────────────────────────────────── */
 .gallery-hero {
   padding: 180px 0 40px;
@@ -55,7 +66,7 @@
 }
 
 .hero-badge-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono, monospace);
   font-size: 0.68rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -63,7 +74,7 @@
 }
 
 .gallery-hero-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-sans, 'Inter', sans-serif);
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 800;
   line-height: 1.05;
@@ -73,7 +84,7 @@
 }
 
 .gallery-hero-title .accent-serif {
-  font-family: var(--font-sans);
+  font-family: var(--font-stardom, "Playfair Display", Georgia, serif);
   font-style: italic;
   font-weight: 400;
   color: #50e6ff;
@@ -86,7 +97,7 @@
 }
 
 .gallery-hero-desc {
-  font-family: var(--font-sans);
+  font-family: var(--font-narrative, var(--font-sans, 'Inter', sans-serif));
   font-size: 1.05rem;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.7;
@@ -299,13 +310,13 @@
 .vf-lightbox {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 100000;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
 }
 
 .vf-lightbox.active {
@@ -314,46 +325,51 @@
 }
 
 .vf-lightbox-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(6, 7, 10, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(4, 5, 8, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 1;
 }
 
 .vf-close-btn {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  z-index: 10;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100002;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .vf-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg) scale(1.05);
 }
 
 .vf-lightbox-body {
   position: relative;
   z-index: 5;
-  width: 92%;
-  max-width: 1200px;
-  height: 82vh;
+  width: 94%;
+  max-width: 1300px;
+  height: 86vh;
+  max-height: 86vh;
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 30px;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: stretch;
 }
 
 .vf-viewport {
@@ -362,70 +378,88 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  min-height: 0;
+  min-width: 0;
+  border-radius: 20px;
+  background: rgba(10, 12, 18, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  padding: 16px;
 }
 
 .vf-nav-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
+  z-index: 20;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
 }
 
 .vf-nav-arrow.vf-prev {
-  left: 10px;
+  left: 16px;
 }
 
 .vf-nav-arrow.vf-next {
-  right: 10px;
+  right: 16px;
 }
 
 .vf-nav-arrow:hover {
-  background: rgba(0, 120, 212, 0.6);
+  background: rgba(0, 120, 212, 0.8);
   border-color: #0078d4;
   transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 120, 212, 0.5);
 }
 
 .vf-img-wrapper {
+  position: relative;
   width: 100%;
   height: 100%;
+  max-width: 100%;
   max-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
+  overflow: hidden;
+  border-radius: 14px;
 }
 
 .vf-img-wrapper img {
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  display: block;
 }
 
 /* Lightbox Panel */
 .vf-panel {
-  background: rgba(18, 20, 29, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(14, 16, 24, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
-  padding: 32px 24px;
+  padding: 32px 26px;
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(24px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   overflow-y: auto;
+  height: 100%;
+  min-height: 0;
 }
 
 .vf-panel-header {
@@ -787,22 +821,98 @@
     grid-auto-rows: 260px;
   }
 
+  .vf-lightbox {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
   .vf-lightbox-body {
-    grid-template-columns: 1fr;
-    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    max-height: 94vh;
     overflow-y: auto;
+    gap: 16px;
+    padding-top: 56px;
+    padding-bottom: 30px;
+  }
+
+  .vf-viewport {
+    width: 100%;
+    height: 52vh;
+    min-height: 280px;
+    max-height: 52vh;
+    flex-shrink: 0;
+    border-radius: 16px;
+  }
+
+  .vf-img-wrapper {
+    padding: 8px;
+  }
+
+  .vf-img-wrapper img {
+    max-height: calc(52vh - 16px);
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  .vf-nav-arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 0.95rem;
+  }
+
+  .vf-nav-arrow.vf-prev {
+    left: 8px;
+  }
+
+  .vf-nav-arrow.vf-next {
+    right: 8px;
   }
 
   .vf-panel {
+    width: 100%;
     height: auto;
+    flex-shrink: 0;
+    padding: 24px 20px;
+    border-radius: 16px;
+    overflow: visible;
   }
 }
 
 @media (max-width: 768px) {
+  .gallery-hero {
+    padding: 140px 0 28px;
+  }
+
+  .gallery-hero-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .gallery-hero-desc {
+    font-size: 0.92rem;
+    padding: 0 10px;
+  }
+
   .gallery-controls-wrapper {
     border-radius: 16px;
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .gallery-filter-pills {
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .filter-pill {
+    padding: 6px 14px;
+    font-size: 0.78rem;
   }
 
   .gallery-actions {
@@ -835,3 +945,42 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  .vf-close-btn {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .vf-lightbox-body {
+    padding-top: 50px;
+    max-height: 96vh;
+    gap: 14px;
+  }
+
+  .vf-viewport {
+    height: 46vh;
+    min-height: 240px;
+    max-height: 46vh;
+  }
+
+  .vf-img-wrapper img {
+    max-height: calc(46vh - 16px);
+  }
+
+  .vf-title {
+    font-size: 1.3rem;
+  }
+
+  .vf-desc {
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+
+  .vf-panel {
+    padding: 20px 16px;
+  }
+}

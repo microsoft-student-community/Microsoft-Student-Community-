@@ -37,7 +37,7 @@ export default function Loading() {
             fontSize: "0.9rem",
           }}
         >
-          FETCHING_TEAM...
+          LOADING...
         </span>
       </div>
     </div>
