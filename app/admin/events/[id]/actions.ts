@@ -680,7 +680,7 @@ export async function adminAddRegistration(eventId: string, data: any) {
   if (collegeName) formData.collegeName = collegeName;
   if (city) formData.city = city;
 
-  let teamData = null;
+  let teamData: any = null;
   let teamId = null;
 
   if (teamMembers.length > 0 || teamName) {

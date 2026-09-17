@@ -319,7 +319,7 @@ export default function ManualRegistrationModal({
                         {i === teamSize - 2 && teamSize > minTeamSize && (
                           <button
                             type="button"
-                            onClick={() => setTeamSize(s => Math.max(minTeamSize, s - 1))}
+                            onClick={() => setTeamSize((s: number) => Math.max(minTeamSize, s - 1))}
                             className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-400/10 transition-colors"
                           >
                             <Trash2 size={16} />
@@ -405,7 +405,7 @@ export default function ManualRegistrationModal({
                 {teamSize < maxTeamSize && (
                   <button
                     type="button"
-                    onClick={() => setTeamSize(s => Math.min(maxTeamSize, s + 1))}
+                    onClick={() => setTeamSize((s: number) => Math.min(maxTeamSize, s + 1))}
                     className="mt-4 w-full py-3 rounded-xl border border-dashed border-white/20 text-slate-400 hover:text-white hover:border-white/40 transition-all flex items-center justify-center gap-2 text-sm font-semibold"
                   >
                     <Plus size={16} /> Add Another Member
