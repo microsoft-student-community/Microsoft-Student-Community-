@@ -448,7 +448,7 @@ export default function EventPortalTabs({
     try {
       const htmlToImage = await import("html-to-image");
       const dataUrl = await htmlToImage.toPng(ticketRef.current, {
-        backgroundColor: "#F3F5F8",
+        backgroundColor: "#080A0F",
         pixelRatio: 2,
         style: { transform: "scale(1)", transformOrigin: "top left" },
         imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" // 1x1 transparent png
@@ -1400,7 +1400,7 @@ export default function EventPortalTabs({
               >
                 <X className="w-4 h-4" /> Close
               </button>
-              <div ref={ticketRef} className="w-full">
+              <div ref={ticketRef} className="w-full flex justify-center">
                 <TicketTemplate
                   event={event}
                   registration={currentReg}
@@ -1408,18 +1408,18 @@ export default function EventPortalTabs({
                   qrUrl={qrCodeUrl}
                 />
               </div>
-              <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full max-w-[420px]">
                 <button
                   onClick={downloadTicket}
-                  className="flex-1 py-3 px-6 bg-[#0078d4] hover:bg-[#0063b1] rounded-xl font-bold text-white transition-all shadow-[0_0_20px_rgba(0,120,212,0.3)] flex items-center justify-center gap-2 text-sm"
+                  className="flex-1 py-3 px-6 bg-[#E10600] hover:bg-[#B80500] rounded-xl font-bold text-white transition-all shadow-[0_0_20px_rgba(225,6,0,0.4)] flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
                 >
-                  <Download className="w-4 h-4" /> Download Ticket
+                  <Download className="w-4 h-4" /> Download Pass
                 </button>
                 <button
                   onClick={() => setShowTicketModal(false)}
                   className="flex-1 py-3 px-6 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
                 >
-                  <X className="w-4 h-4" /> Close Ticket
+                  <X className="w-4 h-4" /> Close Pass
                 </button>
               </div>
             </div>

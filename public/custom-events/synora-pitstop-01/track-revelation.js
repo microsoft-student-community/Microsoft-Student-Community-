@@ -54,12 +54,13 @@
     initRevelationSystem();
   };
 
-  // Official Problem Statement Domains (Four Titles)
+  // Official Problem Statement Domains (Five Tracks)
   const TRACK_DETAILS = {
     "01": { name: "Ai&ML", category: "INTELLIGENCE" },
     "02": { name: "CyberSec", category: "SECURITY" },
     "03": { name: "Full-Stack/Web-dev", category: "SOFTWARE" },
-    "04": { name: "Web3/Blockchain", category: "WEB3" }
+    "04": { name: "Web3/Blockchain", category: "WEB3" },
+    "05": { name: "Internet of Things (IoT)", category: "HARDWARE" }
   };
 
   let countdownTimer = null;
@@ -160,7 +161,7 @@
           <div class="hud-narrative-box">
             <h3 class="hud-main-title">OFFICIAL TRACKS &amp; <em>PROBLEM STATEMENTS LIVE</em></h3>
             <p class="hud-subtext">
-              Sectors 01–04 are decrypted. The four official problem statement domains are now live on the grid.
+              Sectors 01–05 are decrypted. The five official problem statement domains are now live on the grid.
             </p>
           </div>
           <div class="hud-clock-stage">
@@ -172,7 +173,7 @@
               TRACKS UNLOCKED
             </div>
             <div class="hud-clock-target">
-              ALL 4 DOMAINS LIVE
+              ALL 5 DOMAINS LIVE
             </div>
           </div>
         </div>
@@ -521,8 +522,13 @@
     // Remove any opened drawers if present
     document.querySelectorAll(".problem-statement-drawer").forEach((d) => d.remove());
 
-    // 3. Process track rows (ensuring only 01, 02, 03, 04 are shown)
-    const allRows = Array.from(trackList.querySelectorAll(".track-row"));
+    // 3. Process track rows (ensuring tracks 01 through 05 are supported)
+    let allRows = Array.from(trackList.querySelectorAll(".track-row"));
+    if (TRACK_DETAILS["05"] && allRows.length === 4) {
+      const cloned = allRows[3].cloneNode(true);
+      trackList.appendChild(cloned);
+      allRows.push(cloned);
+    }
     const activeRows = [];
 
     allRows.forEach((row, idx) => {
@@ -530,7 +536,7 @@
       const trackData = TRACK_DETAILS[trackId];
 
       if (!trackData) {
-        // Hide any rows beyond 04
+        // Hide any rows beyond 05
         row.style.display = "none";
         return;
       }
