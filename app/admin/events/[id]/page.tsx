@@ -97,7 +97,7 @@ export default async function AdminEventViewer({ params }: { params: Promise<{ i
 
           <CSVImportBlock eventId={event.id} />
 
-          <RegistrationsTable registrations={registrations || []} eventTitle={event.title} eventId={event.id} />
+          <RegistrationsTable registrations={registrations || []} eventTitle={event.title} eventId={event.id} event={event} />
         </div>
       </main>
     </div>

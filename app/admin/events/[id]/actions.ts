@@ -630,3 +630,130 @@ export async function syncOfflineCheckins(eventId: string, checkins: Array<{
   return { success: true, successCount, successIds, errors };
 }
 
+export async function adminAddRegistration(eventId: string, data: any) {
+  const supabase = await createClient()
+
+  // Verify access
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return { error: 'Unauthorized' }
+
+  const { data: profile } = await supabase
+    .from('member_profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .single()
+
+  if (!profile || (profile.role !== 'admin' && profile.role !== 'core_member')) {
+    return { error: 'Unauthorized' }
+  }
+
+  const supabaseAdmin = createAdminClient();
+
+  const {
+    fullName,
+    email,
+    regNum,
+    branch,
+    specialization,
+    collegeName,
+    city,
+    year,
+    teamMembers = [],
+    teamName,
+    teamLeadIndex = 0,
+    lookingForMembers = false,
+    maxTeamSize = 1,
+  } = data;
+
+  const leadEmail = email.toLowerCase().trim();
+
+  // Create form_data payload
+  const formData: any = {
+    fullName,
+    email: leadEmail,
+    year,
+  };
+  
+  if (regNum) formData.regNum = regNum;
+  if (branch) formData.branch = branch;
+  if (specialization) formData.specialization = specialization;
+  if (collegeName) formData.collegeName = collegeName;
+  if (city) formData.city = city;
+
+  let teamData = null;
+  let teamId = null;
+
+  if (teamMembers.length > 0 || teamName) {
+    // If it's a new team
+    teamData = {
+      teamName: teamName || `${fullName}'s Team`,
+      team_name: teamName || `${fullName}'s Team`,
+      leadIndex: teamLeadIndex,
+      team_lead_index: teamLeadIndex,
+      members: teamMembers.map((m: any) => ({
+        fullName: m.fullName,
+        email: m.email?.toLowerCase().trim(),
+        regNum: m.regNum,
+        branch: m.branch,
+        spec: m.spec,
+        year: m.year,
+        checked_in: false,
+      })),
+    };
+
+    // Note: Creating a formal "team" row could be added here if needed by the event,
+    // but the public action mostly inserts it into `teams` if needed. We'll mirror that logic.
+    const { data: newTeam, error: teamErr } = await supabaseAdmin
+      .from("teams")
+      .insert({
+        event_id: eventId,
+        team_name: teamData.teamName,
+        leader_email: leadEmail,
+        is_looking_for_members: lookingForMembers,
+        max_size: maxTeamSize,
+        current_size: 1 + teamMembers.length,
+      })
+      .select()
+      .single();
+
+    if (teamErr) {
+      console.error("Failed to create team record (admin):", teamErr);
+    } else {
+      teamId = newTeam.id;
+      teamData.team_id = newTeam.id;
+    }
+  }
+
+  const hashPayload = crypto.randomUUID();
+
+  // Automatically mark as paid for admin-added
+  formData.payment_status = "paid";
+  
+  const insertPayload: any = {
+    event_id: eventId,
+    lead_email: leadEmail,
+    form_data: formData,
+    team_data: teamData,
+    hash_payload: hashPayload,
+    checked_in: false,
+  };
+
+  const { error: regError } = await supabaseAdmin
+    .from("registrations")
+    .insert(insertPayload);
+
+  if (regError) {
+    if (regError.code === "23505") { // unique violation
+      return { error: "A registration with this email already exists." };
+    }
+    return { error: `Failed to insert registration: ${regError.message}` };
+  }
+
+  revalidatePath(`/admin/events/${eventId}`);
+  
+  return { 
+    success: true, 
+    hash_payload: hashPayload,
+    team_id: teamId,
+  };
+}

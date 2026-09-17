@@ -4,8 +4,9 @@ import { useState, useEffect, Fragment } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { assignCertificates, updateRegistrationDetails, deleteRegistration, deleteBulkRegistrations } from './actions'
 import IDCardModal from './IDCardModal'
+import ManualRegistrationModal from './ManualRegistrationModal'
 
-export default function RegistrationsTable({ registrations, eventTitle, eventId }: { registrations: any[], eventTitle: string, eventId: string }) {
+export default function RegistrationsTable({ registrations, eventTitle, eventId, event }: { registrations: any[], eventTitle: string, eventId: string, event: any }) {
   const [liveRegs, setLiveRegs] = useState<any[]>(registrations)
   const supabase = createClient()
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -20,6 +21,7 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
   const [isBulkDeleting, setIsBulkDeleting] = useState(false)
   const [isIDModalOpen, setIsIDModalOpen] = useState(false)
+  const [isManualRegOpen, setIsManualRegOpen] = useState(false)
 
   useEffect(() => {
     setLiveRegs(registrations)
@@ -230,9 +232,14 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
             className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 text-sm"
           />
         </div>
-        <button onClick={exportToCSV} className="w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
-          <i className="fas fa-download text-blue-400"></i> Export CSV
-        </button>
+        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+          <button onClick={exportToCSV} className="w-full md:w-auto px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
+            <i className="fas fa-download text-blue-400"></i> Export CSV
+          </button>
+          <button onClick={() => setIsManualRegOpen(true)} className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 text-white shadow-lg">
+            <i className="fas fa-plus"></i> Add Registration
+          </button>
+        </div>
       </div>
 
       {/* Floating Toolbar for Certificates */}
@@ -484,6 +491,14 @@ export default function RegistrationsTable({ registrations, eventTitle, eventId 
       onClose={() => setIsIDModalOpen(false)} 
       registrations={filteredRegs.filter(r => selectedIds.has(r.id))} 
       eventTitle={eventTitle}
+    />
+    <ManualRegistrationModal
+      event={event}
+      isOpen={isManualRegOpen}
+      onClose={() => setIsManualRegOpen(false)}
+      onSuccess={() => {
+        // Modal will refresh the page on success
+      }}
     />
   </>
 )
