@@ -1,6 +1,6 @@
 /**
  * SYNORA PITSTOP 01 — TELEMETRY TRACK REVELATION CONTROLLER
- * Automatically unlocks on September 17, 2026 at 4:00 PM IST (16:00:00).
+ * Automatically unlocks on September 17, 2026 at 5:00 PM IST (17:00:00).
  * Challenge Tracks: Ai&ML, CyberSec, Full-Stack/Web-dev, Web3/Blockchain
  */
 
@@ -10,9 +10,9 @@
   // ===========================================================================
   // TARGET REVEAL TIMESTAMP CONFIGURATION
   // ===========================================================================
-  // Official Production Date: September 17, 2026 at 4:00 PM IST (UTC+05:30)
-  // const PROD_REVEAL_TIMESTAMP = new Date("2026-09-17T16:00:00+05:30").getTime();
-  const PROD_REVEAL_TIMESTAMP = new Date("2026-09-17T16:00:00+05:30").getTime();
+  // Official Production Date: September 17, 2026 at 5:00 PM IST (UTC+05:30)
+  // const PROD_REVEAL_TIMESTAMP = new Date("2026-09-17T17:00:00+05:30").getTime();
+  const PROD_REVEAL_TIMESTAMP = new Date("2026-09-17T17:00:00+05:30").getTime();
 
   // Test Simulation Mode: 2 Minutes Duration
   const TEST_MODE_DURATION_MS = 2 * 60 * 1000;
@@ -40,7 +40,7 @@
       sessionStorage.removeItem(TEST_STORAGE_KEY);
     } catch (_) {}
 
-    // Real official event countdown: September 17, 2026 at 4:00 PM IST
+    // Real official event countdown: September 17, 2026 at 5:00 PM IST
     return PROD_REVEAL_TIMESTAMP;
   }
 
@@ -72,7 +72,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("synora_admin_preview") === "true") return true;
 
-    // Strict automatic reveal based on target timestamp: 17 Sep 2026 at 4:00 PM IST
+    // Strict automatic reveal based on target timestamp: 17 Sep 2026 at 5:00 PM IST
     return Date.now() >= REVEAL_TIMESTAMP;
   }
 
@@ -122,7 +122,7 @@
           <div class="hud-narrative-box">
             <h3 class="hud-main-title">TRACKS &amp; PROBLEM STATEMENTS <em>ENCRYPTED</em></h3>
             <p class="hud-subtext">
-              Official challenge directives, problem statements, and domain briefs are locked under Race Control encryption. Full telemetry stream unlocks automatically at 04:00 PM on September 17, 2026.
+              Official challenge directives, problem statements, and domain briefs are locked under Race Control encryption. Full telemetry stream unlocks automatically at 05:00 PM on September 17, 2026.
             </p>
           </div>
           <div class="hud-clock-stage">
@@ -140,7 +140,7 @@
               <div class="clock-segment"><span class="clock-num" id="cdSecs">${cd.seconds}</span><span class="clock-sub">SEC</span></div>
             </div>
             <div class="hud-clock-target">
-              AUTO-REVEAL: 17 SEPTEMBER 2026 // 04:00 PM IST
+              AUTO-REVEAL: 17 SEPTEMBER 2026 // 05:00 PM IST
             </div>
           </div>
         </div>
@@ -200,7 +200,7 @@
         <span class="f1-toast-icon">⚠️</span>
         <div>
           <strong>ACCESS RESTRICTED // DOSSIER SEALED</strong>
-          <p>Official Problem Statements PDF remains classified until the countdown reaches 00:00:00 (17 Sep 4:00 PM IST).</p>
+          <p>Official Problem Statements PDF remains classified until the countdown reaches 00:00:00 (17 Sep 5:00 PM IST).</p>
         </div>
       </div>
     `;
