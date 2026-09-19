@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz").replace(/\/+$/, "");
+
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/about", "/events", "/gallery", "/team"],
+      allow: ["/", "/about", "/events", "/gallery", "/team", "/custom-events/"],
       disallow: ["/admin", "/login", "/onboarding", "/ticket", "/api"],
     },
-    sitemap: "https://mscsrmap.xyz//sitemap.xml",
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
+

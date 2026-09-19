@@ -1,14 +1,14 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://mscsrmap.xyz/";
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz").replace(/\/+$/, "");
 
   return [
     {
       url: `${baseUrl}`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/about`,
@@ -34,5 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/custom-events/synora-pitstop-01`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
   ];
 }
+
