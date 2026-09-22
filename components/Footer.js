@@ -38,7 +38,7 @@ export default function Footer() {
                   <i className="fab fa-instagram"></i>
                 </a>
                   <a
-                    href="https://discord.gg/K5NC5wAhg"
+                    href="https://discord.gg/eeAu8MrNa"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

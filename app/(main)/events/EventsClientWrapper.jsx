@@ -319,7 +319,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
                   </div>
 
                   <a
-                    href="https://discord.gg/K5NC5wAhg"
+                    href="https://discord.gg/eeAu8MrNa"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="editorial-subtle-link"
@@ -367,7 +367,7 @@ export default function EventsClientWrapper({ events: initialEvents }) {
 
                 <div className="editorial-action-row">
                   <a
-                    href="https://discord.gg/K5NC5wAhg"
+                    href="https://discord.gg/eeAu8MrNa"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="editorial-primary-action"
