@@ -344,9 +344,23 @@ export default function AdminPage() {
     const imageFile = formData.get('image') as File
     const certificateHtml = formData.get('certificate_html') as string
     
-    const baseSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
-    const { data: existingEvent } = await supabase.from('events').select('slug').eq('slug', baseSlug).maybeSingle()
-    const slug = existingEvent ? `${baseSlug}-${Math.random().toString(36).substring(2, 6)}` : baseSlug
+    const baseSlug =
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '') || 'event'
+    const { data: existingEvents } = await supabase
+      .from('events')
+      .select('slug')
+    const usedSlugs = new Set(
+      (existingEvents || []).map((event) => event.slug).filter(Boolean),
+    )
+    let slug = baseSlug
+    let suffix = 2
+    while (usedSlugs.has(slug)) {
+      slug = `${baseSlug}-${suffix}`
+      suffix += 1
+    }
 
     const form_requirements: Record<string, any> = {
       req_reg_num: formData.get('req_reg_num') === 'on',

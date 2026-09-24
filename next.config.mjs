@@ -39,6 +39,20 @@ const nextConfig = {
     };
     return config;
   },
+  async redirects() {
+    return [
+      { source: '/events/zero-jam-umrz', destination: '/events/zero-jam', permanent: true },
+      { source: '/events/msc-tech-fest-9e30', destination: '/events/msc-tech-fest', permanent: true },
+      {
+        source: '/events/quantum-computing-workshop-2e7t',
+        destination: '/events/quantum-computing-workshop',
+        permanent: true,
+      },
+      { source: '/events/hack-x-msc-7a5v', destination: '/events/hack-x-msc', permanent: true },
+      { source: '/events/msc-tech-hunt-qbyo', destination: '/events/msc-tech-hunt', permanent: true },
+      { source: '/events/hack-2-0-msc-rd0h', destination: '/events/hack-2-0-msc', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

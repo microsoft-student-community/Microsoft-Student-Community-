@@ -197,3 +197,25 @@ export const teamMembers = [
   
 ];
 */
+
+/**
+ * Creates a stable, readable fragment ID for a team member on the public team
+ * page. The same slug is used by the page's structured data.
+ */
+export const getTeamMemberSlug = (name) =>
+  (name || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+export const allTeamMembers = [
+  ...chiefBoard,
+  ...boardMembers,
+  ...teamMembers,
+].map((member) => ({
+  ...member,
+  slug: getTeamMemberSlug(member.name),
+}));
