@@ -12,6 +12,8 @@ export default function ParticleBackground({
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     let particles = [];
     let animationFrameId;
     const mouse = { x: null, y: null, radius: 130 };
@@ -68,7 +70,7 @@ export default function ParticleBackground({
           const dx = mouse.x - this.x;
           const dy = mouse.y - this.y;
           const dist = Math.hypot(dx, dy);
-          if (dist < mouse.radius) {
+          if (dist > 0 && dist < mouse.radius) {
             const force = (mouse.radius - dist) / mouse.radius;
             // Gentle drift towards cursor
             this.x += (dx / dist) * force * 0.25;

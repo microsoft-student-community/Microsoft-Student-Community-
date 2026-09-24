@@ -54,9 +54,9 @@ export async function compressAndConvertImage(
       );
     };
 
-    img.onerror = (err) => {
+    img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(err);
+      reject(new Error("Failed to load the selected image."));
     };
   });
 }

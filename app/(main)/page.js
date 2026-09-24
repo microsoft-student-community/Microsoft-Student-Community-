@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import ParticleBackground from "@/components/ParticleBackground";
 
 export default function Home() {
   const videoRef = useRef(null);
@@ -11,46 +10,9 @@ export default function Home() {
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
-    // Loader logic
-    const loadingScreen = document.getElementById("loadingScreen");
-    const loaderRingFill = document.getElementById("loaderRingFill");
-    const loaderRingTrack = document.querySelector(".loader-ring-track");
-    const bgVideo = videoRef.current;
-
-    let progress = 0;
-    let loaderInterval;
-
-    const startLoader = () => {
-      document.documentElement.classList.remove("skip-loader");
-      if (loaderRingTrack) loaderRingTrack.style.strokeDashoffset = "0";
-
-      loaderInterval = setInterval(() => {
-        progress += Math.random() * 8 + 2;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(loaderInterval);
-          setTimeout(() => {
-            if (loadingScreen) loadingScreen.classList.add("fade-out");
-            document.documentElement.classList.add("skip-loader");
-            if (bgVideo) bgVideo.play().catch(() => { });
-          }, 400);
-        }
-        if (loaderRingFill) {
-          const circumference = 2 * Math.PI * 88;
-          const offset = circumference - (progress / 100) * circumference;
-          loaderRingFill.style.strokeDashoffset = offset;
-        }
-      }, 50);
-    };
-
-    if (document.documentElement.classList.contains("skip-loader")) {
-      if (loadingScreen) loadingScreen.style.display = "none";
-      if (bgVideo) bgVideo.play().catch(() => { });
-    } else {
-      startLoader();
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
     }
-
-    return () => clearInterval(loaderInterval);
   }, []);
 
   useEffect(() => {
@@ -111,56 +73,6 @@ export default function Home() {
 
   return (
     <main>
-      {/* Loading Screen ΓÇö Radiance Preloader */}
-      <div className="loading-screen" id="loadingScreen">
-        <div className="loader-glow-field"></div>
-        <div className="loader-particles">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div className="loading-content">
-          <div className="loading-logo-wrap">
-            <div className="loader-ring-wrap">
-              <svg className="loader-ring-svg" viewBox="0 0 200 200">
-                <circle
-                  className="loader-ring-track"
-                  cx="100"
-                  cy="100"
-                  r="88"
-                />
-                <circle
-                  className="loader-ring-fill"
-                  cx="100"
-                  cy="100"
-                  r="88"
-                  id="loaderRingFill"
-                />
-              </svg>
-            </div>
-            <img
-              src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png"
-              alt="MSC Logo"
-              className="loading-logo-img"
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-            />
-          </div>
-          <div className="loader-text-group">
-            <span className="loader-brand-line">
-              MICROSOFT STUDENT COMMUNITY
-            </span>
-            <span className="loader-chapter-line">SRM UNIVERSITY AP</span>
-          </div>
-        </div>
-      </div>
-
       {/* Background Video */}
       <video
         className="background-video"
@@ -177,7 +89,6 @@ export default function Home() {
         />
       </video>
       <div className="background-overlay" suppressHydrationWarning></div>
-      <ParticleBackground particleColor="rgba(0, 120, 212, alpha)" />
 
       {/* Checkpoint Navigation Dots */}
       <div className="checkpoint-nav">
