@@ -86,7 +86,7 @@ export const boardMembers = [
     twitter_url: "",
     instagram_url: "",
     email: "yuvraj_singh@srmap.edu.in",
-    portfolio_url: "",
+    portfolio_url: "yuvrajsingh07.vercel.app",
     image_url: "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Teams/YuvrajSingh_Technical%20Co-Lead.png",
   },
   {
