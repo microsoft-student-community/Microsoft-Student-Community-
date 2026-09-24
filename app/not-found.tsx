@@ -1,6 +1,5 @@
 import Link from "next/link";
 import ParticleBackground from "@/components/ParticleBackground";
-import FuzzyText from "@/components/FuzzyText";
 
 export default function NotFound() {
   return (
@@ -34,17 +33,17 @@ export default function NotFound() {
         }}
       >
         <div style={{ marginBottom: "0.5rem", display: "flex", justifyContent: "center" }}>
-          <FuzzyText 
-            baseIntensity={0.2} 
-            hoverIntensity={0.5} 
-            enableHover={true}
-            fontSize="5rem"
-            fontWeight={800}
-            fontFamily="Syne, sans-serif"
-            color="#0078d4"
+          <span
+            style={{
+              fontFamily: "Syne, sans-serif",
+              fontSize: "5rem",
+              fontWeight: 800,
+              color: "#0078d4",
+              lineHeight: 1,
+            }}
           >
             404
-          </FuzzyText>
+          </span>
         </div>
         <h1
           style={{

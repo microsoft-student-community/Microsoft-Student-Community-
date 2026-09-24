@@ -10,6 +10,7 @@ import {
   joinMatchmakingTeam,
 } from "@/app/(main)/events/actions";
 import { createClient } from "@/utils/supabase/client";
+import { getErrorMessage } from "@/utils/errors";
 import { X, Download } from "lucide-react";
 
 
@@ -18,12 +19,20 @@ function openRazorpayCheckout(options: any): Promise<any> {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.onload = () => {
-      const rzp = new (window as any).Razorpay({
-        ...options,
-        handler: (response: any) => resolve(response),
-        modal: { ondismiss: () => resolve(null) },
-      });
-      rzp.open();
+      try {
+        const rzp = new (window as any).Razorpay({
+          ...options,
+          handler: (response: any) => resolve(response),
+          modal: { ondismiss: () => resolve(null) },
+        });
+        rzp.open();
+      } catch (error: unknown) {
+        console.error(
+          "Razorpay checkout failed to open:",
+          getErrorMessage(error, "The payment window could not be opened."),
+        );
+        resolve(null);
+      }
     };
     script.onerror = () => {
       resolve(null); // Return null so the app doesn't crash on AdBlocker or network failure
@@ -48,7 +57,10 @@ function CertificatePreview({ member, reqs, event, currentReg }: any) {
     return () => observer.disconnect();
   }, [dimensions.w]);
 
-  const htmlContent = reqs.certificate_html
+  const certificateHtml =
+    typeof reqs.certificate_html === "string" ? reqs.certificate_html : "";
+
+  const htmlContent = certificateHtml
     .replace(
       /<link\s+([^>]*href="https:\/\/fonts\.googleapis\.com[^"]*")/gi,
       (match: string) => {
@@ -198,7 +210,8 @@ export default function EventPortalTabs({
     setLoading(true);
     setErrorMsg(null);
 
-    const formData = new FormData(e.currentTarget);
+    try {
+      const formData = new FormData(e.currentTarget);
     const baseData: any = {
       fullName: formData.get("fullName"),
       email: formData.get("email"),
@@ -378,6 +391,11 @@ export default function EventPortalTabs({
         setShowTicketModal(true);
       }
     }
+    } catch (error: unknown) {
+      setErrorMsg(getErrorMessage(error, "Registration failed. Please try again."));
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleLookupSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -385,7 +403,8 @@ export default function EventPortalTabs({
     setLookupLoading(true);
     setLookupError(null);
 
-    const res = await lookupTeamRegistration(event.id, lookupEmail);
+    try {
+      const res = await lookupTeamRegistration(event.id, lookupEmail);
     setLookupLoading(false);
 
     if (res?.error) {
@@ -395,6 +414,11 @@ export default function EventPortalTabs({
       if (res.registration) setCurrentReg(res.registration);
       setShowTicketModal(true);
     }
+    } catch (error: unknown) {
+      setLookupError(getErrorMessage(error, "Unable to find that registration."));
+    } finally {
+      setLookupLoading(false);
+    }
   }
 
   async function handleJoinSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -402,7 +426,8 @@ export default function EventPortalTabs({
     setJoinLoading(true);
     setErrorMsg(null);
 
-    const formData = new FormData(e.currentTarget);
+    try {
+      const formData = new FormData(e.currentTarget);
     const memberData = {
       fullName: formData.get("joinName"),
       email: formData.get("joinEmail"),
@@ -421,6 +446,11 @@ export default function EventPortalTabs({
       setSelectedJoinTeam(null);
       setShowTicketModal(true);
     }
+    } catch (error: unknown) {
+      setErrorMsg(getErrorMessage(error, "Unable to join this team."));
+    } finally {
+      setJoinLoading(false);
+    }
   }
 
   async function downloadTicket() {
@@ -433,12 +463,16 @@ export default function EventPortalTabs({
       try {
         // @ts-ignore
         const rules = (node as any).sheet?.cssRules;
-      } catch (e: any) {
-        if (e.name === 'SecurityError' && node.parentNode) {
+      } catch (error: unknown) {
+        if (node.parentNode) {
+          console.warn(
+            "Skipping inaccessible stylesheet while generating ticket:",
+            getErrorMessage(error, "The stylesheet could not be read."),
+          );
           problematicNodes.push({
             node,
             parent: node.parentNode,
-            nextSibling: node.nextSibling
+            nextSibling: node.nextSibling,
           });
           node.parentNode.removeChild(node);
         }
@@ -451,21 +485,34 @@ export default function EventPortalTabs({
         backgroundColor: "#080A0F",
         pixelRatio: 2,
         style: { transform: "scale(1)", transformOrigin: "top left" },
-        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" // 1x1 transparent png
+        imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", // 1x1 transparent png
+        onImageErrorHandler: () => undefined,
       });
       const link = document.createElement("a");
       link.download = `Event-Ticket-${currentHash?.substring(0, 8)}.png`;
       link.href = dataUrl;
       link.click();
-    } catch (err: any) {
-      console.error("Failed to generate ticket image:", err instanceof Event ? "DOM Event Error (likely an image failed to load)" : err);
+    } catch (err: unknown) {
+      const message = getErrorMessage(
+        err,
+        "The ticket image could not be generated. Please try again.",
+      );
+      console.error("Failed to generate ticket image:", message);
+      alert(message);
     } finally {
       // Restore the removed nodes
       problematicNodes.forEach(({ node, parent, nextSibling }) => {
-        if (nextSibling) {
-          parent.insertBefore(node, nextSibling);
-        } else {
-          parent.appendChild(node);
+        try {
+          if (nextSibling?.parentNode === parent) {
+            parent.insertBefore(node, nextSibling);
+          } else if (node.parentNode !== parent) {
+            parent.appendChild(node);
+          }
+        } catch (error: unknown) {
+          console.warn(
+            "Failed to restore stylesheet after ticket generation:",
+            getErrorMessage(error, "The stylesheet could not be restored."),
+          );
         }
       });
     }
@@ -517,6 +564,7 @@ export default function EventPortalTabs({
           pixelRatio: 2,
           imagePlaceholder:
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+          onImageErrorHandler: () => undefined,
         }),
         new Promise((_, reject) => setTimeout(() => reject(new Error("html-to-image timed out after 5 seconds")), 5000))
       ])) as string;
@@ -525,11 +573,17 @@ export default function EventPortalTabs({
       link.download = `${memberName.replace(/[^a-zA-Z0-9]/g, "_")}-Certificate.png`;
       link.href = dataUrl;
       link.click();
-    } catch (err: any) {
-      console.error("Failed to generate certificate image:", err instanceof Event ? "DOM Event Error (likely an image failed to load)" : err);
-      alert(`Failed to generate certificate: ${err instanceof Event ? "Image load error or CORS issue" : (err.message || err.toString())}`);
+    } catch (err: unknown) {
+      const message = getErrorMessage(
+        err,
+        "The certificate image could not be generated. Please try again.",
+      );
+      console.error("Failed to generate certificate image:", message);
+      alert(`Failed to generate certificate: ${message}`);
     } finally {
-      document.body.removeChild(container);
+      if (container.parentNode === document.body) {
+        document.body.removeChild(container);
+      }
     }
   }
 

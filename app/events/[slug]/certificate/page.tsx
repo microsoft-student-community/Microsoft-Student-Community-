@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, use, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { getErrorMessage } from "@/utils/errors";
 
 function CertificateDownloader({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -55,7 +56,9 @@ function CertificateDownloader({ params }: { params: Promise<{ slug: string }> }
         setStatus("Rendering certificate...");
         
         const rawHtml = event.form_requirements?.certificate_html;
-        if (!rawHtml) throw new Error("No certificate template configured for this event.");
+        if (typeof rawHtml !== "string" || !rawHtml.trim()) {
+          throw new Error("No certificate template configured for this event.");
+        }
 
         const htmlContent = rawHtml
           .replace(
@@ -80,6 +83,7 @@ function CertificateDownloader({ params }: { params: Promise<{ slug: string }> }
             backgroundColor: "#0a0a0b",
             pixelRatio: 2,
             imagePlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+            onImageErrorHandler: () => undefined,
             style: { transform: "scale(1)", transformOrigin: "top left" },
           });
 
@@ -92,8 +96,8 @@ function CertificateDownloader({ params }: { params: Promise<{ slug: string }> }
           setStatus("Certificate Downloaded!");
         }
 
-      } catch (err: any) {
-        setStatus(`Error: ${err.message || "Unknown error occurred"}`);
+      } catch (err: unknown) {
+        setStatus(`Error: ${getErrorMessage(err)}`);
       }
     }
 
