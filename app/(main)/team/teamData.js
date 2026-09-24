@@ -88,8 +88,8 @@ export const boardMembers = [
     email: "yuvraj_singh@srmap.edu.in",
     portfolio_url: "yuvrajsingh07.vercel.app",
     image_url: "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Teams/YuvrajSingh_Technical%20Co-Lead.png",
-  },
-  {
+  }
+  /**{
     name: "Design Lead Name",
     role: "Design & UI/UX Lead",
     linkedin_url: "https://linkedin.com/in/",
@@ -133,8 +133,12 @@ export const boardMembers = [
     portfolio_url: "",
     image_url: "",
   },
+  */
 ];
 
+export const teamMembers = [];
+
+/**
 export const teamMembers = [
   {
     name: "Frontend Developer",
@@ -190,4 +194,6 @@ export const teamMembers = [
     portfolio_url: "",
     image_url: "",
   },
+  
 ];
+*/
