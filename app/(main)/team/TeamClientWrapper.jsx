@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getTeamMemberSlug } from "./teamData";
 
 export default function TeamClientWrapper({
   chiefBoard,
@@ -408,6 +409,7 @@ export default function TeamClientWrapper({
                 return (
                   <div
                     key={id}
+                    id={getTeamMemberSlug(m.name)}
                     className={`tm-exposed-row msc-scroll-reveal ${
                       visibleElements.has(id) ? "tm-row-visible" : ""
                     }`}
@@ -487,6 +489,7 @@ export default function TeamClientWrapper({
                 return (
                   <div
                     key={id}
+                    id={getTeamMemberSlug(m.name)}
                     className={`tm-ledger-row msc-scroll-reveal ${
                       visibleElements.has(id) ? "tm-row-visible" : ""
                     }`}
@@ -564,6 +567,7 @@ export default function TeamClientWrapper({
                 return (
                   <div
                     key={id}
+                    id={getTeamMemberSlug(m.name)}
                     className={`tm-freq-cell msc-scroll-reveal ${
                       visibleElements.has(id) ? "tm-row-visible" : ""
                     }`}
