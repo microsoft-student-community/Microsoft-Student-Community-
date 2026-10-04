@@ -2,6 +2,10 @@ import { createPublicClient } from "@/utils/supabase/public";
 import EventsClientWrapper from "./EventsClientWrapper";
 import "./events-premium.css";
 
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"
+).replace(/\/+$/, "");
+
 export const revalidate = 60;
 
 const EVENT_SELECT = [
@@ -43,6 +47,7 @@ export async function generateMetadata() {
     const description = eventNames.length
       ? `Explore MSC SRMAP events at SRM University AP, including ${eventNames.join(", ")}. Find event details, dates, workshops, hackathons, and registration information.`
       : DEFAULT_DESCRIPTION;
+    const eventsUrl = `${SITE_URL}/events`;
 
     return {
       title: {
@@ -56,9 +61,9 @@ export async function generateMetadata() {
         "SRMAP workshops",
         ...eventNames,
       ],
-      alternates: { canonical: "/events" },
+      alternates: { canonical: eventsUrl },
       openGraph: {
-        url: "/events",
+        url: eventsUrl,
         title: "Events — Microsoft Student Community · SRM University AP",
         description,
         images: [
@@ -83,7 +88,7 @@ export async function generateMetadata() {
         absolute: "Events — Hackathons, Workshops & Tech Events | MSC SRMAP",
       },
       description: DEFAULT_DESCRIPTION,
-      alternates: { canonical: "/events" },
+      alternates: { canonical: `${SITE_URL}/events` },
     };
   }
 }
