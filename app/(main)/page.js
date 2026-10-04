@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-
+import { Analytics } from "@vercel/analytics/next"
 export default function Home() {
   const videoRef = useRef(null);
   const [formStatus, setFormStatus] = useState("");
@@ -73,6 +73,7 @@ export default function Home() {
 
   return (
     <main>
+      <Analytics />
       {/* Background Video */}
       <video
         className="background-video"
