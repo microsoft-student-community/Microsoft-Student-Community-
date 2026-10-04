@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { createPublicClient } from "@/utils/supabase/public";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import EventPortalClient from "./EventPortalClient";
 
 export const dynamic = "force-dynamic";
@@ -190,7 +190,9 @@ export async function generateMetadata({
 
   const title = `${event.title} — ${getEventLabel(event)} | Microsoft Student Community SRMAP`;
   const description = getEventDescription(event);
-  const eventPath = getEventPath(event.slug || slug);
+  const eventSlug = event.slug || slug;
+  const eventPath = getEventPath(eventSlug);
+  const eventUrl = `${SITE_URL}${eventPath}`;
   const image = getEventImage(event);
   const isPrivateView = Boolean(invite || view === "portal");
 
@@ -205,7 +207,7 @@ export async function generateMetadata({
       getEventLabel(event),
       "MSC SRMAP events",
     ],
-    alternates: { canonical: eventPath },
+    alternates: { canonical: eventUrl },
     robots: isPrivateView
       ? { index: false, follow: false }
       : {
@@ -220,7 +222,7 @@ export async function generateMetadata({
         },
     openGraph: {
       type: "website",
-      url: eventPath,
+      url: eventUrl,
       title,
       description,
       siteName: "Microsoft Student Community · SRM University AP",
@@ -251,7 +253,7 @@ export default async function EventPortalPage({
   const { invite, view } = await searchParams;
   const selectedEvent = await getEventBySlug(slug);
 
-  if (!selectedEvent) redirect("/events");
+  if (!selectedEvent) notFound();
 
   const structuredData = getEventStructuredData(selectedEvent, slug);
   const isSynoraEvent =

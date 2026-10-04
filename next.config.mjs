@@ -41,6 +41,25 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Enforce non-www (canonical domain per CNAME)
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.mscsrmap.xyz',
+          },
+        ],
+        destination: 'https://mscsrmap.xyz/:path*',
+        permanent: true,
+      },
+      // Remove trailing slashes (except root) for SEO consistency
+      {
+        source: '/:path+/',
+        destination: '/:path+',
+        permanent: true,
+      },
+      // Legacy event slug redirects
       { source: '/events/zero-jam-umrz', destination: '/events/zero-jam', permanent: true },
       { source: '/events/msc-tech-fest-9e30', destination: '/events/msc-tech-fest', permanent: true },
       {
