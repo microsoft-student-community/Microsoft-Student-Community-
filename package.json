@@ -16,6 +16,7 @@
     "@supabase/ssr": "^0.12.4",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",
+    "@vercel/analytics": "^2.0.1",
     "dotenv-cli": "^11.0.0",
     "exceljs": "^4.4.0",
     "framer-motion": "^13.0.0",
