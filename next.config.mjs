@@ -41,18 +41,6 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Enforce non-www (canonical domain per CNAME)
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.mscsrmap.xyz',
-          },
-        ],
-        destination: 'https://mscsrmap.xyz/:path*',
-        permanent: true,
-      },
       // Remove trailing slashes (except root) for SEO consistency
       {
         source: '/:path+/',
