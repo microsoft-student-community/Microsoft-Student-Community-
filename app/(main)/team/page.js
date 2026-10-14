@@ -3,7 +3,7 @@ import { allTeamMembers, chiefBoard, boardMembers, teamMembers } from "./teamDat
 import "./team-premium.css";
 
 const SITE_URL = (
-  process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.mscsrmap.xyz"
 ).replace(/\/+$/, "");
 const TEAM_URL = `${SITE_URL}/team`;
 

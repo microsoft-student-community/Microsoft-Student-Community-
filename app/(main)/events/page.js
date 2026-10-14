@@ -3,7 +3,7 @@ import EventsClientWrapper from "./EventsClientWrapper";
 import "./events-premium.css";
 
 const SITE_URL = (
-  process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.mscsrmap.xyz"
 ).replace(/\/+$/, "");
 
 export const revalidate = 60;

@@ -46,7 +46,7 @@ const getEventEntries = async (baseUrl: string, fallbackDate: Date) => {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (
-    process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"
+    process.env.NEXT_PUBLIC_APP_URL || "https://www.mscsrmap.xyz"
   ).replace(/\/+$/, "");
   const lastModified = new Date();
   const eventEntries = await getEventEntries(baseUrl, lastModified);

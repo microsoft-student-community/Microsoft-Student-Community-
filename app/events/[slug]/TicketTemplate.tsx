@@ -57,7 +57,7 @@ export const TicketTemplate = forwardRef<HTMLDivElement, TicketProps>((props, re
   const cleanId = rawId.replace(/[^a-zA-Z0-9]/g, "").substring(0, 8).toUpperCase();
   const registrationId = `MSC-PIT-${cleanId || "7X9A2F"}`;
   const collegeName = props.collegeName || formData.collegeName || "SRM University-AP";
-  const qrCodeUrl = props.qrCodeUrl || props.qrUrl || props.hashPayload || `https://mscsrmap.xyz/admin/checkin/${rawId}`;
+  const qrCodeUrl = props.qrCodeUrl || props.qrUrl || props.hashPayload || `https://www.mscsrmap.xyz/admin/checkin/${rawId}`;
   
   const teamName = props.teamName || teamData?.team_name || teamData?.teamName;
   const rawMemberCount = props.teamMembers ?? (teamData?.members ? teamData.members.length + 1 : undefined);

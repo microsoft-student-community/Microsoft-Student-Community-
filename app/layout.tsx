@@ -32,7 +32,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.mscsrmap.xyz"),
   title: {
     default: "Microsoft Student Community — SRM University AP",
     template: "%s | MSC SRMAP",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     "Web Development",
     "Microsoft Learn Student Ambassadors",
   ],
-  authors: [{ name: "Microsoft Student Community SRMAP", url: "https://mscsrmap.xyz" }],
+  authors: [{ name: "Microsoft Student Community SRMAP", url: "https://www.mscsrmap.xyz" }],
   creator: "Microsoft Student Community SRMAP",
   publisher: "Microsoft Student Community SRMAP",
   formatDetection: {
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     title: "Microsoft Student Community — SRM University AP",
     description:
       "Bridge the gap between classroom theory and production-grade code. Join the most active engineering collective at SRM University AP.",
-    url: "https://mscsrmap.xyz",
+    url: "https://www.mscsrmap.xyz",
     siteName: "Microsoft Student Community · SRM AP",
     images: [
       {
@@ -114,10 +114,10 @@ const organizationSchema = {
   "@graph": [
     {
       "@type": ["Organization", "EducationalOrganization"],
-      "@id": "https://mscsrmap.xyz/#organization",
+      "@id": "https://www.mscsrmap.xyz/#organization",
       name: "Microsoft Student Community - SRM University AP",
       alternateName: ["MSC SRMAP", "Microsoft Student Community SRMAP"],
-      url: "https://mscsrmap.xyz",
+      url: "https://www.mscsrmap.xyz",
       logo: {
         "@type": "ImageObject",
         url: "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png",
@@ -138,12 +138,12 @@ const organizationSchema = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://mscsrmap.xyz/#website",
-      url: "https://mscsrmap.xyz",
+      "@id": "https://www.mscsrmap.xyz/#website",
+      url: "https://www.mscsrmap.xyz",
       name: "Microsoft Student Community - SRM AP",
       description: "Bridge the gap between classroom theory and production-grade code.",
       publisher: {
-        "@id": "https://mscsrmap.xyz/#organization",
+        "@id": "https://www.mscsrmap.xyz/#organization",
       },
       inLanguage: "en-US",
     },

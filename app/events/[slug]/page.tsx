@@ -7,7 +7,7 @@ import EventPortalClient from "./EventPortalClient";
 export const dynamic = "force-dynamic";
 
 const SITE_URL = (
-  process.env.NEXT_PUBLIC_APP_URL || "https://mscsrmap.xyz"
+  process.env.NEXT_PUBLIC_APP_URL || "https://www.mscsrmap.xyz"
 ).replace(/\/+$/, "");
 const DEFAULT_EVENT_IMAGE =
   "https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/MSC%20Logo.png";
