@@ -10,9 +10,15 @@ export default function Home() {
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
+    const video = videoRef.current;
+    if (!video) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!prefersReducedMotion.matches) {
+      video.play().catch(() => {});
     }
+
+    return () => video.pause();
   }, []);
 
   useEffect(() => {
@@ -83,6 +89,7 @@ export default function Home() {
         id="bgVideo"
         preload="metadata"
         ref={videoRef}
+        aria-hidden="true"
       >
         <source
           src="https://lkbwunzswqbnoygxtilm.supabase.co/storage/v1/object/public/webpage/Microsoft_Student_Community_Title_Card.mp4"
@@ -92,7 +99,7 @@ export default function Home() {
       <div className="background-overlay" suppressHydrationWarning></div>
 
       {/* Checkpoint Navigation Dots */}
-      <div className="checkpoint-nav">
+      <nav className="checkpoint-nav" aria-label="Page sections">
         <a
           href="#home"
           className="checkpoint-dot active"
@@ -117,7 +124,7 @@ export default function Home() {
           data-section="contact"
           title="Contact"
         ></a>
-      </div>
+      </nav>
 
       {/* ===== HERO V3: MONUMENTAL CENTERED COMMAND CENTER ===== */}
       {/* ===== HERO: SPACIOUS KINETIC & TYPOGRAPHIC SHOWCASE (STRIPE / LINEAR STYLE) ===== */}
@@ -135,7 +142,7 @@ export default function Home() {
             <span className="eyebrow-text">MICROSOFT STUDENT COMMUNITY</span>
             <span className="eyebrow-sep">•</span>
             <span className="eyebrow-location">SRM UNIVERSITY AP</span>
-            <span className="eyebrow-status">CHAPTER &apos;26</span>
+            <span className="eyebrow-status">STUDENT-LED COMMUNITY</span>
           </div>
 
           {/* Monumental Typographic Display Heading (Stardom Serif) */}
@@ -164,14 +171,14 @@ export default function Home() {
             >
               <i className="fab fa-discord"></i>
               <span>Join Discord</span>
-              <span className="btn-counter-badge">50+ Active</span>
+              <span className="btn-counter-badge">Join the community</span>
             </a>
 
-            <a href="#upcoming" className="kinetic-btn-secondary">
+            <Link href="/events" className="kinetic-btn-secondary">
               <span className="beacon-indicator"></span>
-              <span>SYNORA &apos;26 Hackathon</span>
-              <span className="btn-tag-pill">SEP 17</span>
-            </a>
+              <span>Explore Events</span>
+              <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </Link>
           </div>
 
           {/* Telemetry Stream Marquee */}
@@ -181,11 +188,10 @@ export default function Home() {
               <div className="kinetic-ticker-batch">
                 <a href="#upcoming" className="telemetry-node telemetry-node-interactive">
                   <span className="telemetry-idx">01</span>
-                  <span className="telemetry-beacon live"></span>
-                  <span className="telemetry-title">SYNORA &apos;26</span>
+                  <span className="telemetry-beacon"></span>
+                  <span className="telemetry-title">Community Events</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">18-Hr National Hackathon</span>
-                  <span className="telemetry-status-tag">LIVE</span>
+                  <span className="telemetry-desc">Workshops &amp; Hackathons</span>
                 </a>
                 <span className="telemetry-divider">+</span>
 
@@ -210,18 +216,18 @@ export default function Home() {
                 <div className="telemetry-node">
                   <span className="telemetry-idx">04</span>
                   <i className="fa-solid fa-users telemetry-ico text-cyan-400"></i>
-                  <span className="telemetry-title">50+ Engineers</span>
+                  <span className="telemetry-title">Student Builders</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">Active Campus Guild</span>
+                  <span className="telemetry-desc">Learn, Build &amp; Share</span>
                 </div>
                 <span className="telemetry-divider">+</span>
 
                 <div className="telemetry-node">
                   <span className="telemetry-idx">05</span>
                   <i className="fa-solid fa-trophy telemetry-ico text-yellow-400"></i>
-                  <span className="telemetry-title">₹30,000+</span>
+                  <span className="telemetry-title">Build &amp; Compete</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">Hackathon Prize Pool</span>
+                  <span className="telemetry-desc">Turn Ideas Into Impact</span>
                 </div>
                 <span className="telemetry-divider">+</span>
 
@@ -248,11 +254,10 @@ export default function Home() {
               <div className="kinetic-ticker-batch" aria-hidden="true">
                 <a href="#upcoming" className="telemetry-node telemetry-node-interactive">
                   <span className="telemetry-idx">01</span>
-                  <span className="telemetry-beacon live"></span>
-                  <span className="telemetry-title">SYNORA &apos;26</span>
+                  <span className="telemetry-beacon"></span>
+                  <span className="telemetry-title">Community Events</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">18-Hr National Hackathon</span>
-                  <span className="telemetry-status-tag">LIVE</span>
+                  <span className="telemetry-desc">Workshops &amp; Hackathons</span>
                 </a>
                 <span className="telemetry-divider">+</span>
 
@@ -277,18 +282,18 @@ export default function Home() {
                 <div className="telemetry-node">
                   <span className="telemetry-idx">04</span>
                   <i className="fa-solid fa-users telemetry-ico text-cyan-400"></i>
-                  <span className="telemetry-title">50+ Engineers</span>
+                  <span className="telemetry-title">Student Builders</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">Active Campus Guild</span>
+                  <span className="telemetry-desc">Learn, Build &amp; Share</span>
                 </div>
                 <span className="telemetry-divider">+</span>
 
                 <div className="telemetry-node">
                   <span className="telemetry-idx">05</span>
                   <i className="fa-solid fa-trophy telemetry-ico text-yellow-400"></i>
-                  <span className="telemetry-title">₹30,000+</span>
+                  <span className="telemetry-title">Build &amp; Compete</span>
                   <span className="telemetry-sep">{"//"}</span>
-                  <span className="telemetry-desc">Hackathon Prize Pool</span>
+                  <span className="telemetry-desc">Turn Ideas Into Impact</span>
                 </div>
                 <span className="telemetry-divider">+</span>
 
@@ -383,30 +388,27 @@ export default function Home() {
       <section id="upcoming" className="upcoming">
         <div className="container">
           <div className="upcoming-header">
-            <h2 className="section-title">Upcoming Events</h2>
+            <h2 className="section-title">Find your next opportunity.</h2>
           </div>
 
-          <div className="event-free-stage">
-            {/* Date Display */}
-            <div className="event-free-date">
-              <span className="event-free-month">SEP</span>
-              <span className="event-free-day">17</span>
+          <div className="event-free-stage home-events-feature">
+            <div className="home-events-mark" aria-hidden="true">
+              <span className="home-events-mark-top">MSC</span>
+              <span className="home-events-mark-symbol">✳</span>
+              <span className="home-events-mark-bottom">COMMUNITY</span>
             </div>
 
-            {/* Event Core Information */}
             <div className="event-free-details">
-              <h3 className="event-free-title">SYNORA</h3>
+              <span className="home-section-kicker">LEARN · CONNECT · BUILD</span>
+              <h3 className="event-free-title">Make your next idea happen.</h3>
               <p className="event-free-description">
-                It is a fresher-oriented 18-hour technology event that combines 6 hours of orientation and technical talks with a 12-hour intensive hackathon, giving students a complete experience of learning, collaboration, and hands-on project building.
+                From hands-on workshops and technical sessions to community meetups and hackathons,
+                discover opportunities to learn with other student builders.
               </p>
               <div className="event-free-actions">
-                <Link
-                  href="/events"
-                  className="event-free-btn liquid-glass"
-                  title="Explore SYNORA Hackathon"
-                >
-                  <span>Event Details</span>
-                  <i className="fa-solid fa-arrow-right"></i>
+                <Link href="/events" className="event-free-btn liquid-glass" title="Explore MSC events">
+                  <span>Explore all events</span>
+                  <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
                 </Link>
               </div>
             </div>

@@ -18,8 +18,8 @@ export default function Navbar() {
       const overlay = document.querySelector(".background-overlay");
       if (overlay) {
         const overlayOpacity =
-          0.7 + 0.15 * Math.min(window.scrollY / window.innerHeight, 1);
-        overlay.style.background = `rgba(0, 0, 0, ${overlayOpacity})`;
+          0.68 + 0.18 * Math.min(window.scrollY / window.innerHeight, 1);
+        overlay.style.setProperty("--home-overlay-opacity", overlayOpacity.toFixed(2));
       }
     };
 
@@ -46,10 +46,20 @@ export default function Navbar() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = "";
+  }, [pathname]);
+
+  useEffect(() => () => {
+    document.body.style.overflow = "";
+  }, []);
+
   const toggleMenu = (e) => {
     e.stopPropagation();
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = !isMenuOpen ? "hidden" : "";
+    const nextOpen = !isMenuOpen;
+    setIsMenuOpen(nextOpen);
+    document.body.style.overflow = nextOpen ? "hidden" : "";
   };
 
   const closeMenu = () => {
@@ -75,7 +85,7 @@ export default function Navbar() {
     : {};
 
   return (
-    <nav className="navbar liquid-glass" style={navbarStyle}>
+    <nav className="navbar liquid-glass" style={navbarStyle} aria-label="Main navigation">
       <div className="nav-container">
         <Link href="/" className="nav-logo-link" onClick={closeMenu}>
           <img
@@ -89,12 +99,13 @@ export default function Navbar() {
             height={40}
           />
         </Link>
-        <ul className={`nav-menu ${isMenuOpen ? "active" : ""}`} ref={navRef}>
+        <ul id="primary-navigation" className={`nav-menu ${isMenuOpen ? "active" : ""}`} ref={navRef}>
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 className={`nav-link ${pathname === link.href ? "active" : ""}`}
+                aria-current={pathname === link.href ? "page" : undefined}
                 onClick={closeMenu}
               >
                 {link.label}
@@ -114,15 +125,19 @@ export default function Navbar() {
             </Link>
           </li>
         </ul>
-        <div
+        <button
+          type="button"
           className={`hamburger ${isMenuOpen ? "active" : ""}`}
           onClick={toggleMenu}
           ref={hamburgerRef}
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls="primary-navigation"
         >
           <span></span>
           <span></span>
           <span></span>
-        </div>
+        </button>
       </div>
     </nav>
   );
