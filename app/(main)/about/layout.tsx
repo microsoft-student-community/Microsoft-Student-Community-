@@ -38,13 +38,13 @@ const breadcrumbSchema = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://www.mscsrmap.xyz",
+      item: "https://mscsrmap.xyz",
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "About",
-      item: "https://www.mscsrmap.xyz/about",
+      item: "https://mscsrmap.xyz/about",
     },
   ],
 };
