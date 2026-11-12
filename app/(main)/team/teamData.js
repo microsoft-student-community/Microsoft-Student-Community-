@@ -44,17 +44,6 @@ export const chiefBoard = [
   },
   {
     role: "General Secretary",
-    name: "K Akhil",
-    linkedin_url: "https://www.linkedin.com/in/akhil-koppuravuri-390363324/",
-    github_url: "",
-    twitter_url: "",
-    instagram_url: "",
-    email: "akhil_koppuravuri@srmap.edu.in",
-    portfolio_url: "",
-    image_url: "https://nakwfnivpodkvperbfkf.supabase.co/storage/v1/object/public/Teams/AKHIL.jpeg",
-  },
-  {
-    role: "General Secretary",
     name: "A Jahnavi",
     linkedin_url: "https://www.linkedin.com/in/jahnavi-alaham/",
     github_url: "",
