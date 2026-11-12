@@ -163,7 +163,7 @@ export default function Home() {
           {/* Clean Dual-Action Buttons */}
           <div className="kinetic-hero-actions" role="toolbar" aria-label="Primary Actions">
             <a
-              href="https://discord.gg/eeAu8MrNa"
+              href="https://discord.gg/tpUmma5rHn"
               target="_blank"
               rel="noopener noreferrer"
               className="kinetic-btn-primary"
